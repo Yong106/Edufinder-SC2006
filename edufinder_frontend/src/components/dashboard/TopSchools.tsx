@@ -12,7 +12,7 @@ import { Icon } from '@iconify/react';
 
 
 
-const TopPayingClients = () => {
+const TopSchools = () => {
   const TopEmployeesData = [
     {
       id: '1',
@@ -106,4 +106,4 @@ const TopPayingClients = () => {
   );
 };
 
-export default TopPayingClients;
+export default TopSchools;

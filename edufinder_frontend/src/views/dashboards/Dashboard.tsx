@@ -1,4 +1,4 @@
-import TopPayingClients from 'src/components/dashboard/TopPayingClients';
+import TopSchools from 'src/components/dashboard/TopSchools.tsx';
 import Header from 'src/layouts/full/header/Header';
 
 const Dashboard = () => {
@@ -6,7 +6,7 @@ const Dashboard = () => {
     <>
       <Header/>
       <div className="lg:col-span-8 col-span-12 pt-8">
-        <TopPayingClients />
+        <TopSchools />
       </div>
     </>
   );

@@ -2,7 +2,7 @@ import ProductCards from 'src/components/dashboard/ProductCards';
 import ProductSales from 'src/components/dashboard/ProductSales';
 import RecentTransactionCard from 'src/components/dashboard/RecentTransactions';
 import SalesProfit from 'src/components/dashboard/SalesProfit';
-import TopPayingClients from 'src/components/dashboard/TopPayingClients';
+import TopSchools from 'src/components/dashboard/TopSchools.tsx';
 import TrafficDistribution from 'src/components/dashboard/TrafficDistribution';
 
 const CompareSchools = () => {
@@ -10,7 +10,7 @@ const CompareSchools = () => {
     <>
         <h1 className="font-semibold text-4xl pb-5">Compare Schools</h1>
       <div className="lg:col-span-8 col-span-12 pt-8">
-        <TopPayingClients />
+        <TopSchools />
       </div>
       <div className="grid grid-cols-12 gap-6">
         <div className="lg:col-span-8 col-span-12">
