@@ -1,10 +1,4 @@
-import ProductCards from 'src/components/dashboard/ProductCards';
-import ProductSales from 'src/components/dashboard/ProductSales';
-import RecentTransactionCard from 'src/components/dashboard/RecentTransactions';
-import SalesProfit from 'src/components/dashboard/SalesProfit';
 import TopSchools from 'src/components/dashboard/TopSchools.tsx';
-import TrafficDistribution from 'src/components/dashboard/TrafficDistribution';
-import Header from 'src/layouts/full/header/Header';
 
 const SavedSchools = () => {
   return (
