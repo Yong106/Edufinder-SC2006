@@ -14,16 +14,20 @@ import java.util.Date;
 @Component
 public class JwtSessionProvider implements SessionProvider {
 
-    @Value("${app.jwt.secret}")
-    private String SECRET_KEY;
-    @Value("${app.jwt.expiration}")
-    private long EXPIRATION_TIME;
+    private final Key key;
+    private final long expirationTime;
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    public JwtSessionProvider(
+        @Value("${app.jwt.secret}") String secretKey,
+        @Value("${app.jwt.expiration}") long expirationTime
+    ) {
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        this.expirationTime = expirationTime;
+    }
 
     public String generateToken(Long userId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
+        Date expiryDate = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
                 .setSubject(Long.toString(userId))

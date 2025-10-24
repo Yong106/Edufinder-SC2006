@@ -2,6 +2,7 @@ package com.sc2006.g5.edufinder.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.sc2006.g5.edufinder.dto.request.LoginRequest;
 import com.sc2006.g5.edufinder.dto.request.SignupRequest;
@@ -12,6 +13,7 @@ import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.repository.UserRepository;
 import com.sc2006.g5.edufinder.security.SessionProvider;
 
+@Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
