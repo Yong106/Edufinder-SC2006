@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.sc2006.g5.edufinder.exception.UserNotFoundException;
+import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.model.CustomUserDetails;
 import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.repository.UserRepository;
@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException());
+            .orElseThrow(() -> new UserNotFoundException(id));
 
         return new CustomUserDetails(user);
     }

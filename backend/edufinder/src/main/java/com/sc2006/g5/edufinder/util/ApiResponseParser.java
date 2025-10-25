@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sc2006.g5.edufinder.dto.api.ApiRecord;
 import com.sc2006.g5.edufinder.dto.api.ApiResponse;
-import com.sc2006.g5.edufinder.exception.JsonDecodingException;
+import com.sc2006.g5.edufinder.exception.util.JsonDecodingException;
 
 @Component
 public class ApiResponseParser {

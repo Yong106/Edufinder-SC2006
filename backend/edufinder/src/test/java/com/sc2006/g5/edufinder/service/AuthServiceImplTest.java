@@ -26,8 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.sc2006.g5.edufinder.dto.request.LoginRequest;
 import com.sc2006.g5.edufinder.dto.request.SignupRequest;
-import com.sc2006.g5.edufinder.exception.DuplicateUsernameException;
-import com.sc2006.g5.edufinder.exception.InvalidCredentialsException;
+import com.sc2006.g5.edufinder.exception.auth.DuplicateUsernameException;
+import com.sc2006.g5.edufinder.exception.auth.InvalidCredentialsException;
 import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.repository.UserRepository;
 import com.sc2006.g5.edufinder.security.SessionProvider;
