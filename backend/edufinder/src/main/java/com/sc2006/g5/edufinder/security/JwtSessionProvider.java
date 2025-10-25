@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.sc2006.g5.edufinder.exception.InvalidJwtTokenException;
+import com.sc2006.g5.edufinder.exception.security.InvalidAuthTokenException;
 
 import java.security.Key;
 import java.util.Date;
@@ -43,8 +43,10 @@ public class JwtSessionProvider implements SessionProvider {
             Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
             String userId = claims.getSubject();
             return Long.parseLong(userId);
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new InvalidJwtTokenException(token);
+        } catch (ExpiredJwtException e) {
+            throw new InvalidAuthTokenException("Token expired.");
+        } catch (JwtException | IllegalArgumentException e){
+            throw new InvalidAuthTokenException("Invalid Token.");
         }
     }
 }
