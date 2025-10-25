@@ -13,6 +13,18 @@ export type SchoolType =
   | 'INDEPENDENT SCHOOL'
   | 'SPECIALISED SCHOOL';
 
+export type CcaType =
+  | 'PHYSICAL SPORTS'
+  | 'CLUBS AND SOCIETIES'
+  | 'VISUAL AND PERFORMING ARTS'
+  | 'UNIFORMED GROUPS'
+  | 'OTHERS';
+
+export interface Cca {
+  type: CcaType;
+  name: string;
+}
+
 export type SessionCode = 'FULL DAY' | 'SINGLE SESSION';
 
 export interface School {
@@ -20,8 +32,9 @@ export interface School {
   name: string;
   location: string;
 
-  ccas: string[];      // Co-curricular activities
+  ccas: Cca[];      // Co-curricular activities
   subjects: string[];
+  moeProgrammes: string[]; // Signature MOE programmes e.g. bicultural studies
 
   level: Level;
   natureCode: NatureCode;
@@ -38,6 +51,15 @@ export interface School {
   email: string;
   phoneNumber: string;
   faxNumber: string;
+
+  sapInd: boolean;
+  autonomousInd: boolean;
+  giftedInd: boolean;
+  ipInd: boolean;
+
+  motherTongue1: string | null;
+  motherTongue2: string | null;
+  motherTongue3: string | null;
 
   minCutOffPoint: number | null;
   maxCutOffPoint: number | null;
