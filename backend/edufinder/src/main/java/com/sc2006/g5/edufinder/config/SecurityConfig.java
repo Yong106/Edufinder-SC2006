@@ -29,7 +29,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/api/schools/**", "/error").permitAll()
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+            .httpBasic(httpBasic -> httpBasic.disable())
+            .formLogin(form -> form.disable());
 
         return http.build();
     }

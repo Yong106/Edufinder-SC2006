@@ -36,6 +36,15 @@ public class AuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws IOException, ServletException{
 
+        String path = request.getServletPath();
+
+        if (path.startsWith("/api/auth") || 
+            path.startsWith("/api/schools"))
+        {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         Cookie[] cookies = request.getCookies();
         String token = null;
 
@@ -49,8 +58,7 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         if (token == null) {
-            System.out.println("Missing Token");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing token");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing token.");
             return;
         }
 
@@ -72,7 +80,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
-
+        
         filterChain.doFilter(request, response);
     }
 }
