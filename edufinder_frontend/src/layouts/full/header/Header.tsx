@@ -148,7 +148,7 @@ const Header = () => {
   return (
     <>
       <header>
-        <h1 className="font-semibold text-4xl pb-5">Search Schools</h1>
+        <h1 className="font-semibold text-4xl pb-5 text-primary">Search Schools</h1>
         <Navbar fluid className={`rounded-lg bg-white shadow-md  py-4 `}>
           <div className="flex gap-3 items-center justify-between w-full ">
             <div className="flex gap-2 items-center">
@@ -441,7 +441,7 @@ const Header = () => {
                       type="number"
                       value={minCOP}
                       onChange={(e) => {
-                        setMinCOP(e.target.value); // Store as string
+                        setMinCOP(e.target.value); 
                       }}
                       onBlur={(e) => {
                         const v = parseInt(e.target.value, 10);
@@ -461,7 +461,7 @@ const Header = () => {
                       type="number"
                       value={maxCOP}
                       onChange={(e) => {
-                        setMaxCOP(e.target.value); // Store as string
+                        setMaxCOP(e.target.value);
                       }}
                       onBlur={(e) => {
                         const v = parseInt(e.target.value, 10);

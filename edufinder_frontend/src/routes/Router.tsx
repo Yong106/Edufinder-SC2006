@@ -16,20 +16,9 @@ const Dashboard = Loadable(lazy(() => import('../views/dashboards/Dashboard')));
 const SavedSchools = Loadable(lazy(() => import('../views/dashboards/SavedSchools')));
 const CompareSchools = Loadable(lazy(() => import('../views/dashboards/CompareSchools')));
 
-// utilities
-const Typography = Loadable(lazy(() => import("../views/typography/Typography")));
-const Table = Loadable(lazy(() => import("../views/tables/Table")));
-const Form = Loadable(lazy(() => import("../views/forms/Form")));
-const Alert = Loadable(lazy(() => import("../views/alerts/Alerts")));
-const Buttons = Loadable(lazy(() => import("../views/buttons/Buttons")));
-
-// icons
-const Solar = Loadable(lazy(() => import("../views/icons/Solar")));
-
 // authentication
 const Login = Loadable(lazy(() => import('../views/auth/login/Login')));
 const Register = Loadable(lazy(() => import('../views/auth/register/Register')));
-const SamplePage = Loadable(lazy(() => import('../views/sample-page/SamplePage')));
 const Error = Loadable(lazy(() => import('../views/auth/error/Error')));
 
 const Router = [
@@ -40,13 +29,6 @@ const Router = [
       { path: '/', exact: true, element: <Dashboard/> },
       { path: '/savedschools', exact: true, element: <SavedSchools/> },
       { path: '/compareschools', exact: true, element: <CompareSchools/> },
-      { path: '/ui/typography', exact: true, element: <Typography/> },
-      { path: '/ui/table', exact: true, element: <Table/> },
-      { path: '/ui/form', exact: true, element: <Form/> },
-      { path: '/ui/alert', exact: true, element: <Alert/> },
-      { path: '/ui/buttons', exact: true, element: <Buttons/> },
-      { path: '/icons/solar', exact: true, element: <Solar /> },
-      { path: '/sample-page', exact: true, element: <SamplePage /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

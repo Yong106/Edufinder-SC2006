@@ -16,7 +16,7 @@
   --font-*: initial;
   --font-sans: "Plus Jakarta Sans", sans-serif;
 
-  --color-primary: oklch(0.6 0.1613 247.83);
+  --color-primary: oklch(0.55 0.1613 247.83);
   --color-secondary: oklch(0.57 0.0172 241.96);
   --color-info: oklch(0.7811 0.1209 218.04);
   --color-success: oklch(0.7676 0.1533 156.87);
