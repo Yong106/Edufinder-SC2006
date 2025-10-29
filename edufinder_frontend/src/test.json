@@ -1,0 +1,403 @@
+[
+  {
+    "id": 1,
+    "name": "ADMIRALTY PRIMARY SCHOOL",
+    "location": "WOODLANDS",
+    "ccas": [
+      {
+        "name": "ART AND CRAFTS",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "CHINESE DANCE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "CHOIR",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "DESIGN AND INNOVATION",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "ENGLISH LANGUAGE, DRAMA AND DEBATING",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "FOOTBALL",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "GIRL GUIDES (BROWNIES)",
+        "type": "UNIFORMED GROUPS"
+      },
+      {
+        "name": "GUITAR ENSEMBLE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "GUZHENG ENSEMBLE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "INDIAN DANCE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "INFOCOMM TECHNOLOGY (COMPUTING)",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "MALAY DANCE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "MODULAR CCA (SPORTS)",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "PHOTOGRAPHY",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "ROPE SKIPPING",
+        "type": "OTHERS"
+      },
+      {
+        "name": "SCOUTS",
+        "type": "UNIFORMED GROUPS"
+      },
+      {
+        "name": "TRACK AND FIELD",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "WUSHU",
+        "type": "PHYSICAL SPORTS"
+      }
+    ],
+    "subjects": [
+      "Art",
+      "Bengali Language",
+      "Chinese Language",
+      "English Language",
+      "Foundation Chinese Language",
+      "Foundation English Language",
+      "Foundation Malay Language",
+      "Foundation Mathematics",
+      "Foundation Science",
+      "Foundation Tamil Language",
+      "Gujarati Language",
+      "Higher Chinese Language",
+      "Higher Malay Language",
+      "Higher Tamil Language",
+      "Hindi Language",
+      "Malay Language",
+      "Mathematics",
+      "Music",
+      "Physical Education",
+      "Punjabi Language",
+      "Science",
+      "Social Studies",
+      "Tamil Language",
+      "Urdu Language"
+    ],
+    "level": "PRIMARY",
+    "natureCode": "CO-ED SCHOOL",
+    "type": "GOVERNMENT SCHOOL",
+    "sessionCode": "FULL DAY",
+    "address": "11 WOODLANDS CIRCLE",
+    "postalCode": "738907",
+    "nearbyMrtStation": "Admiralty Station",
+    "nearbyBusStation": "TIBS 965, 964, 913",
+    "website": "https://admiraltypri.moe.edu.sg/",
+    "email": "ADMIRALTY_PS@MOE.EDU.SG",
+    "phoneNumber": "63620598",
+    "faxNumber": "63627512",
+    "moeProgrammes": [
+      "Learning for Life Programme",
+      "Applied Learning Programme"
+    ],
+    "sapInd": false,
+    "autonomousId": false,
+    "giftedInd": false,
+    "ipInd": false,
+    "motherTongue1": "Chinese",
+    "motherTongue2": "Malay",
+    "motherTongue3": "Tamil",
+    "minCutOffPoint": 240,
+    "maxCutOffPoint": 260
+  },
+  {
+    "id": 2,
+    "name": "ADMIRALTY SECONDARY SCHOOL",
+    "location": "WOODLANDS",
+    "ccas": [
+      {
+        "name": "ART AND CRAFTS",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "BADMINTON",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "CONCERT BAND",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "DIGITAL MEDIA",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "ENGLISH DRAMA",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "GUZHENG ENSEMBLE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "MEDIA RESOURCE LIBRARY",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "MODERN DANCE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "NATIONAL CADET CORPS (LAND)",
+        "type": "UNIFORMED GROUPS"
+      },
+      {
+        "name": "NATIONAL CIVIL DEFENCE CADET CORPS",
+        "type": "UNIFORMED GROUPS"
+      },
+      {
+        "name": "NATIONAL POLICE CADET CORPS",
+        "type": "UNIFORMED GROUPS"
+      },
+      {
+        "name": "NETBALL",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "RED CROSS YOUTH",
+        "type": "UNIFORMED GROUPS"
+      },
+      {
+        "name": "ROBOTICS",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "RUGBY",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "STUDENT LEADERSHIP (COUNCIL)",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "STUDENT LEADERSHIP (HOUSE)",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "TRACK AND FIELD",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "WUSHU",
+        "type": "PHYSICAL SPORTS"
+      }
+    ],
+    "subjects": [
+      "Additional Mathematics",
+      "Arabic Language as 3rd Lang",
+      "Art",
+      "Basic Chinese Language",
+      "Basic Malay Language",
+      "Basic Tamil Language",
+      "Bengali Language",
+      "Biology",
+      "Burmese Language",
+      "Chemistry",
+      "Chinese Language",
+      "Chinese Language (Special Programme)",
+      "Chinese Language Syllabus B",
+      "Computer Applications",
+      "Computing",
+      "Design & Technology",
+      "Design and Technology",
+      "Elements of Business Skills",
+      "English Language",
+      "Food & Consumer  Education",
+      "Food & Consumer Education",
+      "French Language",
+      "Geography",
+      "Gujarati Language",
+      "Higher Chinese Language",
+      "Higher Malay Language",
+      "Higher Music",
+      "Higher Tamil Language",
+      "Hindi Language",
+      "History",
+      "Humanities (Geography)",
+      "Humanities (History)",
+      "Humanities (Literature in English)",
+      "Humanities (SS, Geography)",
+      "Humanities (SS, History)",
+      "Humanities (SS, Humanities Exposure Modules)",
+      "Humanities (SS, Literature in English)",
+      "Humanities (SS, Literature in Malay)",
+      "Literature in English",
+      "Malay Language",
+      "Mathematics",
+      "Music",
+      "Nutrition and Food Science",
+      "Physical Education",
+      "Physics",
+      "Principles of Accounts",
+      "Punjabi Language",
+      "Science",
+      "Science (Chem, Bio)",
+      "Science (Phy, Bio)",
+      "Science (Phy, Chem)",
+      "Social Studies",
+      "Tamil Language",
+      "Urdu Language"
+    ],
+    "level": "SECONDARY (S1-S5)",
+    "natureCode": "CO-ED SCHOOL",
+    "type": "GOVERNMENT SCHOOL",
+    "sessionCode": "SINGLE SESSION",
+    "address": "31 WOODLANDS CRESCENT",
+    "postalCode": "737916",
+    "nearbyMrtStation": "ADMIRALTY MRT",
+    "nearbyBusStation": "904",
+    "website": "http://www.admiraltysec.moe.edu.sg",
+    "email": "Admiralty_SS@moe.edu.sg",
+    "phoneNumber": "63651733",
+    "faxNumber": "63652774",
+    "moeProgrammes": [
+      "Bicultural Elective Programme",
+      "STEM Applied Learning Programme"
+    ],
+    "sapInd": false,
+    "autonomousId": false,
+    "giftedInd": false,
+    "ipInd": false,
+    "motherTongue1": "Chinese",
+    "motherTongue2": "Malay",
+    "motherTongue3": null,
+    "minCutOffPoint": 220,
+    "maxCutOffPoint": 240
+  },
+  {
+    "id": 3,
+    "name": "AHMAD IBRAHIM PRIMARY SCHOOL",
+    "location": "YISHUN",
+    "ccas": [
+      {
+        "name": "ART AND CRAFTS",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "BADMINTON",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "BASKETBALL",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "CHINESE DANCE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "CHOIR",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "FOOTBALL",
+        "type": "PHYSICAL SPORTS"
+      },
+      {
+        "name": "INDIAN DANCE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "MALAY DANCE",
+        "type": "VISUAL AND PERFORMING ARTS"
+      },
+      {
+        "name": "PHOTOGRAPHY",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "ROBOTICS",
+        "type": "CLUBS AND SOCIETIES"
+      },
+      {
+        "name": "ROPE SKIPPING",
+        "type": "OTHERS"
+      },
+      {
+        "name": "SCOUTS",
+        "type": "UNIFORMED GROUPS"
+      },
+      {
+        "name": "STUDENT LEADERSHIP (PREFECT)",
+        "type": "CLUBS AND SOCIETIES"
+      }
+    ],
+    "subjects": [
+      "Art",
+      "Chinese Language",
+      "English Language",
+      "Foundation Chinese Language",
+      "Foundation English Language",
+      "Foundation Malay Language",
+      "Foundation Mathematics",
+      "Foundation Science",
+      "Foundation Tamil Language",
+      "Higher Chinese Language",
+      "Higher Malay Language",
+      "Higher Tamil Language",
+      "Hindi Language",
+      "Malay Language",
+      "Mathematics",
+      "Music",
+      "Physical Education",
+      "Punjabi Language",
+      "Science",
+      "Social Studies",
+      "Tamil Language"
+    ],
+    "level": "PRIMARY",
+    "natureCode": "CO-ED SCHOOL",
+    "type": "GOVERNMENT SCHOOL",
+    "sessionCode": "SINGLE SESSION",
+    "address": "10 YISHUN STREET 11",
+    "postalCode": "768643",
+    "nearbyMrtStation": "Yishun",
+    "nearbyBusStation": "Yishun Ring Road - 812 (white plate); Yishun Ave 2 - 169, 804, 965, 117, 883",
+    "website": "http://www.ahmadibrahimpri.moe.edu.sg",
+    "email": "AIPS@MOE.EDU.SG",
+    "phoneNumber": "67592906",
+    "faxNumber": "67592927",
+    "moeProgrammes": [
+      "Environmental Education Programme",
+      "Innovation & Design LLP"
+    ],
+    "sapInd": false,
+    "autonomousId": false,
+    "giftedInd": false,
+    "ipInd": false,
+    "motherTongue1": "Malay",
+    "motherTongue2": "Tamil",
+    "motherTongue3": null,
+    "minCutOffPoint": 230,
+    "maxCutOffPoint": 250
+  }
+]

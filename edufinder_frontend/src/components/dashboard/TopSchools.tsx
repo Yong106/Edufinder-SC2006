@@ -9,36 +9,11 @@ import {
 } from 'flowbite-react';
 import CardBox from 'src/components/shared/CardBox';
 import { Icon } from '@iconify/react';
+import { School } from 'src/types/school/school.ts';
 
 
 
-const TopSchools = () => {
-  const TopEmployeesData = [
-    {
-      id: '1',
-      name: 'Commonwealth Secondary School',
-      address: '698 West Coast Road',
-      status: 'Available',
-      cut_off_point: '12',
-      statuscolor: 'success',
-    },
-    {
-      id: '2',
-      name: 'Boon Lay Secondary School',
-      address: '11 Jurong West Street 65',
-      status: 'Available',
-      cut_off_point: '22',
-      statuscolor: 'success',
-    },
-    {
-      id: '3',
-      name: 'Juying Secondary School',
-      address: '33 Jurong West Street 91',
-      status: 'Available',
-      cut_off_point: '22',
-      statuscolor: 'success',
-    },
-  ];
+const TopSchools = ({schools}: {schools: School[]}) => {
 
   return (
     <>
@@ -59,7 +34,7 @@ const TopSchools = () => {
               </TableHeadCell>
             </TableHead>
             <TableBody className="">
-              {TopEmployeesData.map((item, index) => (
+              {schools.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell className="whitespace-nowrap">
                     <div className="flex gap-4 items-center">
@@ -83,7 +58,7 @@ const TopSchools = () => {
                     </p>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <p className="text-ld text-sm  font-medium">{item.cut_off_point}</p>
+                    <p className="text-ld text-sm  font-medium">{item.minCutOffPoint} - {item.maxCutOffPoint}</p>
                   </TableCell>
                   <TableCell className="whitespace-nowrap ">
                     <Button

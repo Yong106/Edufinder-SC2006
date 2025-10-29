@@ -3,7 +3,7 @@ import Table from 'src/views/tables/Table.tsx';
 import { TableBody, TableCell, TableHeadCell, TableRow } from 'flowbite-react';
 import { Cca, CcaType, School } from 'src/types/school/school.ts';
 
-const SchoolInfoCards = (school: School) => {
+const SchoolInfoCards = ({school}: {school: School}) => {
 
   const tags = [
     school.sapInd && "SAP",
@@ -173,3 +173,5 @@ const SchoolInfoCards = (school: School) => {
     </div>
   )
 }
+
+export default SchoolInfoCards;
