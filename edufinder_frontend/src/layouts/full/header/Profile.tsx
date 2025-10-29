@@ -23,7 +23,6 @@ const Profile = () => {
           </span>
         )}
       >
-
         <DropdownItem
           as={Link}
           to="#"
