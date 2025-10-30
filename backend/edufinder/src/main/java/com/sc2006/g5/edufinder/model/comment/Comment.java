@@ -1,9 +1,12 @@
-package com.sc2006.g5.edufinder.model;
+package com.sc2006.g5.edufinder.model.comment;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.sc2006.g5.edufinder.model.DbSchool;
+import com.sc2006.g5.edufinder.model.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
