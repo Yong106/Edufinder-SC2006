@@ -112,11 +112,10 @@ public class VoteServiceImplTest {
             ))).thenAnswer(invocation -> invocation.getArgument(0));
 
             SetVoteRequest request = SetVoteRequest.builder()
-                .commentId(COMMENT_WITH_VOTE_ID)
                 .voteType(NEW_VOTE_TYPE)
                 .build();
 
-            voteServiceImpl.setVote(EXISTED_USER_ID, request);
+            voteServiceImpl.setVote(EXISTED_USER_ID, COMMENT_WITH_VOTE_ID, request);
 
             verify(voteRepository, times(1)).findById(any());
             verify(userRepository, never()).findById(any());
@@ -136,11 +135,10 @@ public class VoteServiceImplTest {
             ))).thenAnswer(invocation -> invocation.getArgument(0));
 
             SetVoteRequest request = SetVoteRequest.builder()
-                .commentId(COMMENT_WITHOUT_VOTE_ID)
                 .voteType(NEW_VOTE_TYPE)
                 .build();
 
-            voteServiceImpl.setVote(EXISTED_USER_ID, request);
+            voteServiceImpl.setVote(EXISTED_USER_ID, COMMENT_WITHOUT_VOTE_ID, request);
 
             verify(voteRepository, times(1)).findById(any());
             verify(userRepository, times(1)).findById(any());
@@ -155,12 +153,11 @@ public class VoteServiceImplTest {
                 .thenReturn(Optional.empty());
 
             SetVoteRequest request = SetVoteRequest.builder()
-                .commentId(COMMENT_WITH_VOTE_ID)
                 .voteType(NEW_VOTE_TYPE)
                 .build();
             
             assertThrows(UserNotFoundException.class, () -> {
-                voteServiceImpl.setVote(INVALID_USER_ID, request);
+                voteServiceImpl.setVote(INVALID_USER_ID, COMMENT_WITH_VOTE_ID, request);
             });
 
             verify(voteRepository, times(1)).findById(any());
@@ -176,12 +173,11 @@ public class VoteServiceImplTest {
                 .thenReturn(Optional.empty());
 
             SetVoteRequest request = SetVoteRequest.builder()
-                .commentId(INVALID_COMMENT_ID)
                 .voteType(NEW_VOTE_TYPE)
                 .build();
             
             assertThrows(CommentNotFoundException.class, () -> {
-                voteServiceImpl.setVote(EXISTED_USER_ID, request);
+                voteServiceImpl.setVote(EXISTED_USER_ID, INVALID_COMMENT_ID, request);
             });
 
             verify(voteRepository, times(1)).findById(any());

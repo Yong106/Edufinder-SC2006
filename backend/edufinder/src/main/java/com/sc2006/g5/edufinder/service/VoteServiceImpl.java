@@ -1,6 +1,5 @@
 package com.sc2006.g5.edufinder.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sc2006.g5.edufinder.dto.request.SetVoteRequest;
@@ -14,22 +13,17 @@ import com.sc2006.g5.edufinder.repository.CommentRepository;
 import com.sc2006.g5.edufinder.repository.UserRepository;
 import com.sc2006.g5.edufinder.repository.VoteRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    @Autowired
-    public VoteServiceImpl(VoteRepository voteRepository, UserRepository userRepository, CommentRepository commentRepository){
-        this.voteRepository = voteRepository;
-        this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
-    }
-
-    public void setVote(Long userId, SetVoteRequest setVoteRequest) {
-        Long commentId = setVoteRequest.getCommentId();
+    public void setVote(Long userId, Long commentId, SetVoteRequest setVoteRequest) {
         VoteId voteId = new VoteId(commentId, userId);
 
         Vote vote = voteRepository.findById(voteId)

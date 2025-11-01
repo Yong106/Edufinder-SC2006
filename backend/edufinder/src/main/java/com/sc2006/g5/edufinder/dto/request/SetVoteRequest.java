@@ -15,8 +15,5 @@ import lombok.NoArgsConstructor;
 public class SetVoteRequest {
 
     @NotNull
-    private Long commentId;
-
-    @NotNull
     private VoteType voteType;
 }
