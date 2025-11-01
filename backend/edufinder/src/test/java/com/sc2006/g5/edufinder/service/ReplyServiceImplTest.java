@@ -100,25 +100,26 @@ public class ReplyServiceImplTest {
                 return reply;
             });
 
-            ReplyResponse replyResponse = ReplyResponse.builder()
+            ReplyResponse mapperResponse = ReplyResponse.builder()
                 .id(NEW_REPLY_ID)
                 .build();
 
             when(replyMapper.toReplyResponse(argThat(reply -> 
                 reply.getId().equals(NEW_REPLY_ID)
-            ))).thenReturn(replyResponse);
+            ))).thenReturn(mapperResponse);
 
             CreateReplyRequest request = CreateReplyRequest.builder()
                 .content(NEW_REPLY_CONTENT)
                 .build();
 
-            ReplyResponse response = replyServiceImpl.createReply(EXISTED_USER_ID, EXISTED_COMMENT_ID, request);
+            ReplyResponse serviceResponse = replyServiceImpl.createReply(EXISTED_USER_ID, EXISTED_COMMENT_ID, request);
 
-            assertEquals(replyResponse, response);
+            assertEquals(mapperResponse, serviceResponse);
 
             verify(userRepository, times(1)).findById(any());
             verify(commentRepository, times(1)).findById(any());
             verify(replyRepository, times(1)).save(any());
+            verify(replyMapper, times(1)).toReplyResponse(any());
         }
 
         @Test

@@ -1,6 +1,7 @@
 package com.sc2006.g5.edufinder.model.comment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -51,6 +52,7 @@ public class Comment {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reply> replies;
+    @Builder.Default
+    private List<Reply> replies = new ArrayList<>();
 
 }

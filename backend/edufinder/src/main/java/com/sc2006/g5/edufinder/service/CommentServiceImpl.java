@@ -29,8 +29,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentsResponse getCommentsBySchoolId(Long userId, Long schoolId) {
-
-
         if(!schoolRepository.existsById(schoolId)){
             throw new SchoolNotFoundException(schoolId);
         }
@@ -48,7 +46,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void createComment(Long userId, Long schoolId, CreateCommentRequest createCommentRequest) {
+    public CommentResponse createComment(Long userId, Long schoolId, CreateCommentRequest createCommentRequest) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -62,6 +60,8 @@ public class CommentServiceImpl implements CommentService {
             .build();
 
         commentRepository.save(comment);
+
+        return commentMapper.toCommentResponse(userId, comment);
     }
 
     @Override

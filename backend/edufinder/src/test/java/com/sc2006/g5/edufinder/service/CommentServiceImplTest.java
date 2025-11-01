@@ -65,6 +65,8 @@ public class CommentServiceImplTest {
 
     private static final Long USER_COMMENT_ID = 21L;
     private static final Long OTHER_COMMENT_ID = 22L;
+    private static final Long NEW_COMMENT_ID = 13L;
+
     private static final String NEW_COMMENT_CONTENT = "new";
 
     @BeforeEach
@@ -155,17 +157,33 @@ public class CommentServiceImplTest {
                 comment.getContent().equals(NEW_COMMENT_CONTENT) &&
                 comment.getUser().getId().equals(EXISTED_USER_ID) &&
                 comment.getSchool().getId().equals(EXISTED_SCHOOL_ID)
-            ))).thenAnswer(invocation -> invocation.getArgument(0));
+            ))).thenAnswer(invocation -> {
+                Comment comment = invocation.getArgument(0);
+                comment.setId(NEW_COMMENT_ID);
+                return comment;
+            });
+
+            CommentResponse mapperResponse = CommentResponse.builder()
+                .id(NEW_COMMENT_ID)
+                .build();
+
+            when(commentMapper.toCommentResponse(
+                argThat(userId -> userId.equals(EXISTED_USER_ID)), 
+                argThat(comment -> comment.getId().equals(NEW_COMMENT_ID)) 
+            )).thenReturn(mapperResponse);
 
             CreateCommentRequest request = CreateCommentRequest.builder()
                 .content(NEW_COMMENT_CONTENT)
                 .build();
             
-            commentServiceImpl.createComment(EXISTED_USER_ID, EXISTED_SCHOOL_ID, request);
+            CommentResponse serviceResponse = commentServiceImpl.createComment(EXISTED_USER_ID, EXISTED_SCHOOL_ID, request);
+
+            assertEquals(mapperResponse, serviceResponse);
 
             verify(userRepository, times(1)).findById(any());
             verify(schoolRepository, times(1)).findById(any());
             verify(commentRepository, times(1)).save(any());
+            verify(commentMapper, times(1)).toCommentResponse(any(), any());
         }
 
         @Test
