@@ -15,7 +15,4 @@ public class CreateReplyRequest {
     @NotNull
     private String content;
 
-    @NotNull
-    private Long commentId;
-
 }

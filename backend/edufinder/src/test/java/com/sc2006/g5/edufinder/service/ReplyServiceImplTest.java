@@ -1,5 +1,6 @@
 package com.sc2006.g5.edufinder.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -23,9 +24,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.sc2006.g5.edufinder.dto.request.CreateReplyRequest;
+import com.sc2006.g5.edufinder.dto.response.ReplyResponse;
 import com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException;
 import com.sc2006.g5.edufinder.exception.security.AccessDeniedException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
+import com.sc2006.g5.edufinder.mapper.ReplyMapper;
 import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.model.comment.Reply;
@@ -45,6 +48,9 @@ public class ReplyServiceImplTest {
     @Mock
     CommentRepository commentRepository;
 
+    @Mock
+    ReplyMapper replyMapper;
+
     @InjectMocks
     ReplyServiceImpl replyServiceImpl;
 
@@ -56,6 +62,7 @@ public class ReplyServiceImplTest {
 
     private static final Long USER_REPLY_ID = 21L;
     private static final Long OTHER_REPLY_ID = 22L;
+    private static final Long NEW_REPLY_ID = 23L;
 
     private static final String NEW_REPLY_CONTENT = "new";
 
@@ -83,18 +90,31 @@ public class ReplyServiceImplTest {
         @Test
         @DisplayName("should create reply when request valid")
         void shouldCreateReplyWhenRequestValid(){
-            CreateReplyRequest request = CreateReplyRequest.builder()
-                .commentId(EXISTED_COMMENT_ID)
-                .content(NEW_REPLY_CONTENT)
-                .build();
-
             when(replyRepository.save(argThat(reply -> 
                 reply.getContent().equals(NEW_REPLY_CONTENT) && 
                 reply.getUser().getId().equals(EXISTED_USER_ID) &&
                 reply.getComment().getId().equals(EXISTED_COMMENT_ID)
-            ))).thenAnswer(invocation -> invocation.getArgument(0));
+            ))).thenAnswer(invocation -> {
+                Reply reply = invocation.getArgument(0);
+                reply.setId(NEW_REPLY_ID);
+                return reply;
+            });
 
-            replyServiceImpl.createReply(EXISTED_USER_ID, request);
+            ReplyResponse replyResponse = ReplyResponse.builder()
+                .id(NEW_REPLY_ID)
+                .build();
+
+            when(replyMapper.toReplyResponse(argThat(reply -> 
+                reply.getId().equals(NEW_REPLY_ID)
+            ))).thenReturn(replyResponse);
+
+            CreateReplyRequest request = CreateReplyRequest.builder()
+                .content(NEW_REPLY_CONTENT)
+                .build();
+
+            ReplyResponse response = replyServiceImpl.createReply(EXISTED_USER_ID, EXISTED_COMMENT_ID, request);
+
+            assertEquals(replyResponse, response);
 
             verify(userRepository, times(1)).findById(any());
             verify(commentRepository, times(1)).findById(any());
@@ -108,12 +128,11 @@ public class ReplyServiceImplTest {
                 .thenReturn(Optional.empty());
 
             CreateReplyRequest request = CreateReplyRequest.builder()
-                .commentId(EXISTED_COMMENT_ID)
                 .content(NEW_REPLY_CONTENT)
                 .build();
             
             assertThrowsExactly(UserNotFoundException.class, () -> {
-                replyServiceImpl.createReply(INVALID_USER_ID, request);
+                replyServiceImpl.createReply(INVALID_USER_ID, EXISTED_COMMENT_ID, request);
             });
 
             verify(userRepository, times(1)).findById(any());
@@ -128,12 +147,11 @@ public class ReplyServiceImplTest {
                 .thenReturn(Optional.empty());
 
             CreateReplyRequest request = CreateReplyRequest.builder()
-                .commentId(INVALID_COMMENT_ID)
                 .content(NEW_REPLY_CONTENT)
                 .build();
             
             assertThrowsExactly(CommentNotFoundException.class, () -> {
-                replyServiceImpl.createReply(EXISTED_USER_ID, request);
+                replyServiceImpl.createReply(EXISTED_USER_ID, INVALID_COMMENT_ID, request);
             });
 
             verify(userRepository, times(1)).findById(any());
