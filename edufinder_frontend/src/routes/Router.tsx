@@ -3,6 +3,7 @@
 import  { lazy } from 'react';
 import { Navigate, createBrowserRouter } from "react-router";
 import Loadable from 'src/layouts/full/shared/loadable/Loadable';
+import SchoolDetails from 'src/views/dashboards/SchoolDetails.tsx';
 
 
 
@@ -29,6 +30,7 @@ const Router = [
       { path: '/', exact: true, element: <Dashboard/> },
       { path: '/savedschools', exact: true, element: <SavedSchools/> },
       { path: '/compareschools', exact: true, element: <CompareSchools/> },
+      { path: '/schools/:id', exact: true, element: <SchoolDetails/> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

@@ -2,6 +2,7 @@ import { RouterProvider } from "react-router";
 import { ThemeModeScript, ThemeProvider } from 'flowbite-react';
 import customTheme from './utils/theme/custom-theme';
 import router from "./routes/Router";
+import { SchoolProvider } from "./context/SchoolProvider";
 
 function App() {
 
@@ -9,7 +10,9 @@ function App() {
     <>
       <ThemeModeScript />
       <ThemeProvider theme={customTheme}>
-      <RouterProvider router={router} />
+        <SchoolProvider>
+          <RouterProvider router={router} />
+        </SchoolProvider>
       </ThemeProvider>
     </>
   );
