@@ -32,7 +32,7 @@ import com.sc2006.g5.edufinder.exception.security.AccessDeniedException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.mapper.CommentMapper;
 import com.sc2006.g5.edufinder.model.school.DbSchool;
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.repository.CommentRepository;
 import com.sc2006.g5.edufinder.repository.DbSchoolRepository;

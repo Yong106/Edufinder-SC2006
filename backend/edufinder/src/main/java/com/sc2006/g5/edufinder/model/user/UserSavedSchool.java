@@ -1,6 +1,4 @@
-package com.sc2006.g5.edufinder.model;
-
-import com.sc2006.g5.edufinder.model.embedded_id.UserSavedSchoolId;
+package com.sc2006.g5.edufinder.model.user;
 
 import com.sc2006.g5.edufinder.model.school.DbSchool;
 import jakarta.persistence.EmbeddedId;

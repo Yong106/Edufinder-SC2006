@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sc2006.g5.edufinder.dto.request.CreateReplyRequest;
 import com.sc2006.g5.edufinder.dto.response.ReplyResponse;
-import com.sc2006.g5.edufinder.model.CustomUserDetails;
+import com.sc2006.g5.edufinder.model.user.CustomUserDetails;
 import com.sc2006.g5.edufinder.service.ReplyService;
 
 import jakarta.validation.Valid;

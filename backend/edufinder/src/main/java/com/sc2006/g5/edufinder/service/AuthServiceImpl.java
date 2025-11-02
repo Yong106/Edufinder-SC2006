@@ -9,7 +9,7 @@ import com.sc2006.g5.edufinder.dto.request.SignupRequest;
 import com.sc2006.g5.edufinder.exception.auth.DuplicateUsernameException;
 import com.sc2006.g5.edufinder.exception.auth.InvalidCredentialsException;
 import com.sc2006.g5.edufinder.exception.auth.InvalidPasswordException;
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.repository.UserRepository;
 import com.sc2006.g5.edufinder.security.SessionProvider;
 
@@ -33,14 +33,13 @@ public class AuthServiceImpl implements AuthService {
         String password = loginRequest.getPassword();
 
         User user = userRepository.findOneByUsername(username)
-            .orElseThrow(() -> new InvalidCredentialsException());
+            .orElseThrow(InvalidCredentialsException::new);
 
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new InvalidCredentialsException();
         }
 
-        String token = sessionProvider.generateToken(user.getId());
-        return token;
+        return sessionProvider.generateToken(user.getId());
     }
 
     @Override
@@ -64,9 +63,8 @@ public class AuthServiceImpl implements AuthService {
             .build();
 
         userRepository.save(user);
-        String token = sessionProvider.generateToken(user.getId());
 
-        return token;
+        return sessionProvider.generateToken(user.getId());
     }
 
 }

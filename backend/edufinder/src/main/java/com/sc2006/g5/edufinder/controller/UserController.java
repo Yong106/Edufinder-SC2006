@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sc2006.g5.edufinder.dto.request.SavedSchoolRequest;
 import com.sc2006.g5.edufinder.dto.response.SavedSchoolResponse;
-import com.sc2006.g5.edufinder.model.CustomUserDetails;
+import com.sc2006.g5.edufinder.model.user.CustomUserDetails;
 import com.sc2006.g5.edufinder.service.UserService;
 
 import jakarta.validation.Valid;

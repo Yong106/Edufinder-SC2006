@@ -1,4 +1,4 @@
-package com.sc2006.g5.edufinder.model;
+package com.sc2006.g5.edufinder.model.user;
 
 import java.time.LocalDateTime;
 

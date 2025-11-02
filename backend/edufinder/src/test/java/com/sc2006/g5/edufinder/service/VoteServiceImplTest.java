@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.sc2006.g5.edufinder.dto.request.SetVoteRequest;
 import com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.model.comment.Vote;
 import com.sc2006.g5.edufinder.model.comment.VoteId;
@@ -156,9 +156,9 @@ public class VoteServiceImplTest {
                 .voteType(NEW_VOTE_TYPE)
                 .build();
             
-            assertThrows(UserNotFoundException.class, () -> {
-                voteServiceImpl.setVote(INVALID_USER_ID, COMMENT_WITH_VOTE_ID, request);
-            });
+            assertThrows(UserNotFoundException.class, () ->
+                voteServiceImpl.setVote(INVALID_USER_ID, COMMENT_WITH_VOTE_ID, request)
+            );
 
             verify(voteRepository, times(1)).findById(any());
             verify(userRepository, times(1)).findById(any());
@@ -176,9 +176,9 @@ public class VoteServiceImplTest {
                 .voteType(NEW_VOTE_TYPE)
                 .build();
             
-            assertThrows(CommentNotFoundException.class, () -> {
-                voteServiceImpl.setVote(EXISTED_USER_ID, INVALID_COMMENT_ID, request);
-            });
+            assertThrows(CommentNotFoundException.class, () ->
+                voteServiceImpl.setVote(EXISTED_USER_ID, INVALID_COMMENT_ID, request)
+            );
 
             verify(voteRepository, times(1)).findById(any());
             verify(userRepository, times(1)).findById(any());
