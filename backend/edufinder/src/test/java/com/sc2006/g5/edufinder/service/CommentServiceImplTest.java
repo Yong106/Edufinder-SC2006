@@ -31,7 +31,7 @@ import com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException;
 import com.sc2006.g5.edufinder.exception.security.AccessDeniedException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.mapper.CommentMapper;
-import com.sc2006.g5.edufinder.model.DbSchool;
+import com.sc2006.g5.edufinder.model.school.DbSchool;
 import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.repository.CommentRepository;
@@ -108,9 +108,9 @@ public class CommentServiceImplTest {
             CommentsResponse response = commentServiceImpl.getCommentsBySchoolId(EXISTED_USER_ID, EXISTED_SCHOOL_ID);
             List<CommentResponse> responses = response.getComments();
 
-            assertEquals(responses.size(), 2);
-            assertEquals(responses.get(0).getId(), USER_COMMENT_ID);
-            assertEquals(responses.get(1).getId(), OTHER_COMMENT_ID);
+            assertEquals(2, responses.size());
+            assertEquals(USER_COMMENT_ID, responses.get(0).getId());
+            assertEquals(OTHER_COMMENT_ID, responses.get(1).getId());
 
             verify(schoolRepository, times(1)).existsById(any());
             verify(commentMapper, times(2)).toCommentResponse(any(), any());
@@ -196,9 +196,9 @@ public class CommentServiceImplTest {
                 .content(NEW_COMMENT_CONTENT)
                 .build();
             
-            assertThrowsExactly(UserNotFoundException.class, () -> {
-                commentServiceImpl.createComment(INVALID_USER_ID, EXISTED_SCHOOL_ID, request);
-            });
+            assertThrowsExactly(UserNotFoundException.class, () ->
+                commentServiceImpl.createComment(INVALID_USER_ID, EXISTED_SCHOOL_ID, request)
+            );
 
             verify(userRepository, times(1)).findById(any());
             verify(schoolRepository, never()).findById(any());
@@ -215,9 +215,9 @@ public class CommentServiceImplTest {
                 .content(NEW_COMMENT_CONTENT)
                 .build();
             
-            assertThrowsExactly(SchoolNotFoundException.class, () -> {
-                commentServiceImpl.createComment(EXISTED_USER_ID, INVALID_SCHOOL_ID, request);
-            });
+            assertThrowsExactly(SchoolNotFoundException.class, () ->
+                commentServiceImpl.createComment(EXISTED_USER_ID, INVALID_SCHOOL_ID, request)
+            );
 
             verify(userRepository, times(1)).findById(any());
             verify(schoolRepository, times(1)).findById(any());
@@ -264,13 +264,13 @@ public class CommentServiceImplTest {
         @Test
         @DisplayName("should throw when user not owner")
         void shouldThrowWhenUserNotOwner(){            
-            assertThrowsExactly(AccessDeniedException.class, () -> {
-                commentServiceImpl.deleteComment(EXISTED_USER_ID, OTHER_COMMENT_ID);
-            });
+            assertThrowsExactly(AccessDeniedException.class, () ->
+                commentServiceImpl.deleteComment(EXISTED_USER_ID, OTHER_COMMENT_ID)
+            );
 
-            assertThrowsExactly(AccessDeniedException.class, () -> {
-                commentServiceImpl.deleteComment(INVALID_USER_ID, USER_COMMENT_ID);
-            });
+            assertThrowsExactly(AccessDeniedException.class, () ->
+                commentServiceImpl.deleteComment(INVALID_USER_ID, USER_COMMENT_ID)
+            );
 
             verify(commentRepository, times(2)).findOneByIdAndUserId(any(), any());
             verify(commentRepository, never()).delete(any());

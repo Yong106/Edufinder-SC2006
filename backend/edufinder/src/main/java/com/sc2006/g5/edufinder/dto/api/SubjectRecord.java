@@ -3,13 +3,11 @@ package com.sc2006.g5.edufinder.dto.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Builder
 @Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)

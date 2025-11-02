@@ -30,7 +30,7 @@ import com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserAlreadySaveSchoolException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserNotSaveSchoolException;
-import com.sc2006.g5.edufinder.model.DbSchool;
+import com.sc2006.g5.edufinder.model.school.DbSchool;
 import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.repository.DbSchoolRepository;
 import com.sc2006.g5.edufinder.repository.UserRepository;
@@ -102,9 +102,9 @@ public class UserServiceImplTest {
             SavedSchoolResponse response = userServiceImpl.getSavedSchoolIds(EXISTED_USER_ID);
             List<Long> savedSchoolIds = response.getSavedSchoolIds();
             
-            assertEquals(savedSchoolIds.size(), 2);
-            assertEquals(savedSchoolIds.get(0), SAVED_SCHOOL_ID_1);
-            assertEquals(savedSchoolIds.get(1), SAVED_SCHOOL_ID_2);
+            assertEquals(2, savedSchoolIds.size());
+            assertEquals(SAVED_SCHOOL_ID_1, savedSchoolIds.get(0));
+            assertEquals(SAVED_SCHOOL_ID_2, savedSchoolIds.get(1));
 
             verify(userRepository, times(1)).existsById(any());
             verify(userSavedSchoolRepository, times(1)).findSchoolIdsByUserId(any());

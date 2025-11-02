@@ -1,11 +1,17 @@
 package com.sc2006.g5.edufinder.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,103 +19,100 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.sc2006.g5.edufinder.dto.response.SchoolResponse;
-import com.sc2006.g5.edufinder.model.ApiSchool;
-import com.sc2006.g5.edufinder.model.DbSchool;
+import com.sc2006.g5.edufinder.dto.response.SchoolsResponse;
+import com.sc2006.g5.edufinder.mapper.SchoolMapper;
+import com.sc2006.g5.edufinder.model.school.ApiSchool;
+import com.sc2006.g5.edufinder.model.school.DbSchool;
 import com.sc2006.g5.edufinder.repository.ApiSchoolRepository;
 import com.sc2006.g5.edufinder.repository.DbSchoolRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class SchoolServiceImplTest {
+
     @Mock
     private ApiSchoolRepository apiSchoolRepository;
 
     @Mock
     private DbSchoolRepository dbSchoolRepository;
 
+    @Mock
+    private SchoolMapper schoolMapper;
+
     @InjectMocks
     private SchoolServiceImpl schoolServiceImpl;
 
-    @Test
-    void getAllSchools_test(){
-        final ApiSchool apiSchool1 = ApiSchool.builder()
-            .name("name1")
-            .location("location1")
-            .address("address1")
-            .postalCode("postal1")
-            .website("web1")
-            .email("email1")
-            .phoneNumber("phone1")
-            .faxNumber("fax1")
-            .nearbyMrtStation("mrt1, mrt2")
-            .nearbyBusStation("bus1, bus2")
-            .level("level1")
-            .natureCode("n1")
-            .type("type1")
-            .sessionCode("s1")
-            .ccas(List.of("cca1", "cca2"))
-            .subjects(List.of("subject1", "subject2"))
-            .build();
+    private static final Long SCHOOL_ID_1 = 1L;
+    private static final Long SCHOOL_ID_2 = 2L;
 
-        final ApiSchool apiSchool2 = ApiSchool.builder()
-            .name("name2")
-            .location("location2")
-            .address("address2")
-            .postalCode("postal2")
-            .website("web2")
-            .email("email2")
-            .phoneNumber("phone2")
-            .faxNumber("fax2")
-            .nearbyMrtStation("mrt2, mrt3")
-            .nearbyBusStation("bus2, bus3")
-            .level("level2")
-            .natureCode("n2")
-            .type("type2")
-            .sessionCode("s2")
-            .ccas(List.of("cca2", "cca3"))
-            .subjects(List.of("subject2", "subject3"))
-            .build();
-        
-        final DbSchool dbSchool1 = DbSchool.builder()
-            .id(1L)
-            .name(apiSchool1.getName())
-            .minCutOffPoint(1)
-            .maxCutOffPoint(5)
-            .build();
+    private static final String SCHOOL_NAME_1 = "name1";
+    private static final String SCHOOL_NAME_2 = "name2";
 
-        when(apiSchoolRepository.getApiSchools())
-            .thenReturn(List.of(apiSchool1, apiSchool2));
-        
-        when(dbSchoolRepository.findByName(apiSchool1.getName()))
-            .thenReturn(List.of(dbSchool1));
-        
-        when(dbSchoolRepository.save(argThat(dbSchool ->
-            dbSchool.getName().equals(apiSchool2.getName()) &&
-            dbSchool.getMinCutOffPoint() == null && 
-            dbSchool.getMaxCutOffPoint() == null
-        ))).thenAnswer(invocation -> invocation.getArgument(0));
+    @Nested
+    @DisplayName("getAllSchools()")
+    class GetAllSchoolsTest{
 
-        List<SchoolResponse> responses = schoolServiceImpl.getAllSchools();
-        assertEquals(2, responses.size());
-        
-        SchoolResponse response = responses.get(0);
-        assertEquals(dbSchool1.getId(), response.getId());
-        assertEquals(apiSchool1.getName(), response.getName());
-        assertEquals(apiSchool1.getLocation(), response.getLocation());
-        assertEquals(apiSchool1.getAddress(), response.getAddress());
-        assertEquals(apiSchool1.getPostalCode(), response.getPostalCode());
-        assertEquals(apiSchool1.getWebsite(), response.getWebsite());
-        assertEquals(apiSchool1.getEmail(), response.getEmail());
-        assertEquals(apiSchool1.getPhoneNumber(), response.getPhoneNumber());
-        assertEquals(apiSchool1.getFaxNumber(), response.getFaxNumber());
-        assertEquals(apiSchool1.getLevel(), response.getLevel());
-        assertEquals(apiSchool1.getNatureCode(), response.getNatureCode());
-        assertEquals(apiSchool1.getType(), response.getType());
-        assertEquals(apiSchool1.getSessionCode(), response.getSessionCode());
-        assertEquals(apiSchool1.getNearbyBusStation(), response.getNearbyBusStation());
-        assertEquals(apiSchool1.getNearbyMrtStation(), response.getNearbyMrtStation());
-        assertEquals(apiSchool1.getSubjects(), response.getSubjects());
-        assertEquals(apiSchool1.getCcas(), response.getCcas());
-        assertEquals(dbSchool1.getMinCutOffPoint(), response.getMinCutOffPoint());
-        assertEquals(dbSchool1.getMaxCutOffPoint(), response.getMaxCutOffPoint());
+        @Test
+        @DisplayName("should return all school when request valid")
+        void shouldReturnAllSchoolWhenRequestValid(){
+            final ApiSchool apiSchool1 = ApiSchool.builder()
+                    .name(SCHOOL_NAME_1)
+                    .build();
+
+            final ApiSchool apiSchool2 = ApiSchool.builder()
+                    .name(SCHOOL_NAME_2)
+                    .build();
+
+            final DbSchool dbSchool1 = DbSchool.builder()
+                    .id(SCHOOL_ID_1)
+                    .name(SCHOOL_NAME_1)
+                    .build();
+
+            when(apiSchoolRepository.getApiSchools())
+                    .thenReturn(List.of(apiSchool1, apiSchool2));
+
+            when(dbSchoolRepository.findOneByName(SCHOOL_NAME_1))
+                    .thenReturn(Optional.of(dbSchool1));
+
+            when(dbSchoolRepository.findOneByName(SCHOOL_NAME_2))
+                    .thenReturn(Optional.empty());
+
+            when(dbSchoolRepository.save(argThat(dbSchool ->
+                    dbSchool.getName().equals(apiSchool2.getName()) &&
+                            dbSchool.getMinCutOffPoint() == null &&
+                            dbSchool.getMaxCutOffPoint() == null
+            ))).thenAnswer(invocation -> {
+                DbSchool dbSchool = invocation.getArgument(0);
+                dbSchool.setId(SCHOOL_ID_2);
+                return dbSchool;
+            });
+
+            when(schoolMapper.toSchoolResponse(any(ApiSchool.class), any(DbSchool.class)))
+                    .thenAnswer(invocation -> {
+                        ApiSchool apiSchool = invocation.getArgument(0);
+                        DbSchool dbSchool = invocation.getArgument(1);
+
+                        return SchoolResponse.builder()
+                                .id(dbSchool.getId())
+                                .name(apiSchool.getName())
+                                .build();
+                    });
+
+            SchoolsResponse schoolsResponse = schoolServiceImpl.getAllSchools();
+            List<SchoolResponse> schoolResponses = schoolsResponse.getSchools();
+            assertEquals(2, schoolResponses.size());
+
+            SchoolResponse schoolResponse1 = schoolResponses.get(0);
+            assertEquals(SCHOOL_ID_1, schoolResponse1.getId());
+            assertEquals(SCHOOL_NAME_1, schoolResponse1.getName());
+
+            SchoolResponse schoolResponse2 = schoolResponses.get(1);
+            assertEquals(SCHOOL_ID_2, schoolResponse2.getId());
+            assertEquals(SCHOOL_NAME_2, schoolResponse2.getName());
+
+            verify(apiSchoolRepository, times(1)).getApiSchools();
+            verify(dbSchoolRepository, times(2)).findOneByName(any());
+            verify(dbSchoolRepository, times(1)).save(any());
+            verify(schoolMapper, times(2)).toSchoolResponse(any(), any());
+        }
     }
 }

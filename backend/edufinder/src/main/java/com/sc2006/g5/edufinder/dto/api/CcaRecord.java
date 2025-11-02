@@ -4,19 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Builder
 @Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CcaRecord extends ApiRecord {
+
     @JsonProperty("School_name")
     private String schoolName;
 
     @JsonProperty("cca_grouping_desc")
     private String cca;
+
+    @JsonProperty("cca_generic_name")
+    private String type;
+
 }

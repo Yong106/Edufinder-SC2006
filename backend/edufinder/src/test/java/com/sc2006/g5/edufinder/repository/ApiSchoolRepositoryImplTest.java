@@ -1,22 +1,23 @@
 package com.sc2006.g5.edufinder.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.Map;
 
+import com.sc2006.g5.edufinder.dto.api.*;
+import com.sc2006.g5.edufinder.mapper.SchoolMapper;
+import com.sc2006.g5.edufinder.model.school.Cca;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.sc2006.g5.edufinder.dto.api.ApiLink;
-import com.sc2006.g5.edufinder.dto.api.ApiResponse;
-import com.sc2006.g5.edufinder.dto.api.ApiResult;
-import com.sc2006.g5.edufinder.dto.api.CcaRecord;
-import com.sc2006.g5.edufinder.dto.api.SchoolRecord;
-import com.sc2006.g5.edufinder.dto.api.SubjectRecord;
-import com.sc2006.g5.edufinder.model.ApiSchool;
+import com.sc2006.g5.edufinder.model.school.ApiSchool;
 import com.sc2006.g5.edufinder.service.ApiClientService;
 import com.sc2006.g5.edufinder.util.ApiResponseParser;
 
@@ -31,260 +32,221 @@ public class ApiSchoolRepositoryImplTest {
     @Mock
     private ApiResponseParser apiResponseParser;
 
+    @Mock
+    private SchoolMapper schoolMapper;
+
     @InjectMocks
     private ApiSchoolRepositoryImpl apiSchoolRepositoryImpl;
 
-    @Test
-    void getApiSchools_test(){
-        final String apiDomain = "https://data.gov.sg/";
-        final String apiEndpoint = "api/action/datastore_search?resource_id=";
-        final String generalInformationDatasetId = "d_688b934f82c1059ed0a6993d2a829089";
-        final String subjectsDatasetId = "d_f1d144e423570c9d84dbc5102c2e664d";
-        final String ccasDatasetId = "d_9aba12b5527843afb0b2e8e4ed6ac6bd";
+    private static final String API_DOMAIN = "https://data.gov.sg/";
+    private static final String API_ENDPOINT = "api/action/datastore_search?resource_id=";
 
-        final String nextSchoolApiEndpoint = "nextSchoolApiEndpoint";
-        final String nextSubjectApiEndpoint = "nextSubjectApiEndpoint";
-        final String nextCcaApiEndpoint = "nextCcaApiEndpoint";
+    private static final String GENERAL_INFORMATION_DATASET_ID = "d_688b934f82c1059ed0a6993d2a829089";
+    private static final String SUBJECTS_DATASET_ID = "d_f1d144e423570c9d84dbc5102c2e664d";
+    private static final String CCAS_DATASET_ID = "d_9aba12b5527843afb0b2e8e4ed6ac6bd";
+    private static final String MOE_PROGRAMMES_DATASET_ID = "d_b0697d22a7837a4eddf72efb66a36fc2";
 
-        final String schoolJson = "schoolJson";
-        final String nextSchoolJson = "nextSchoolJson";
+    private static final String NEXT_SCHOOL_API_ENDPOINT = "nextSchoolApiEndpoint";
+    private static final String NEXT_SUBJECT_API_ENDPOINT = "nextSubjectApiEndpoint";
+    private static final String NEXT_CCA_API_ENDPOINT = "nextCcaApiEndpoint";
+    private static final String NEXT_PROGRAMMES_API_ENDPOINT = "nextProgrammeApiEndpoint";
 
-        final String subjectJson = "subjectJson";
-        final String nextSubjectJson = "nextSubjectJson";
+    private static final String SCHOOL_JSON = "schoolJson";
+    private static final String NEXT_SCHOOL_JSON = "nextSchoolJson";
 
-        final String ccaJson = "ccaJson";
-        final String nextCcaJson = "nextCcaJson";
+    private static final String SUBJECT_JSON = "subjectJson";
+    private static final String NEXT_SUBJECT_JSON = "nextSubjectJson";
 
-        final SchoolRecord schoolRecord1 = SchoolRecord.builder()
-            .name("name1")
-            .location("location1")
-            .address("address1")
-            .postalCode("postal1")
-            .website("web1")
-            .email("email1")
-            .phoneNumber("phone1")
-            .faxNumber("fax1")
-            .nearbyMrtStation("mrt1, mrt2")
-            .nearbyBusStation("bus1, bus2")
-            .level("level1")
-            .natureCode("n1")
-            .type("type1")
-            .sessionCode("s1")
-            .build();
+    private static final String CCA_JSON = "ccaJson";
+    private static final String NEXT_CCA_JSON = "nextCcaJson";
 
-        final SchoolRecord schoolRecord2 = SchoolRecord.builder()
-            .name("name2")
-            .location("location2")
-            .address("address2")
-            .postalCode("postal2")
-            .website("web2")
-            .email("email2")
-            .phoneNumber("phone2")
-            .faxNumber("fax2")
-            .nearbyMrtStation("mrt2, mrt3")
-            .nearbyBusStation("bus2, bus3")
-            .level("level2")
-            .natureCode("n2")
-            .type("type2")
-            .sessionCode("s2")
-            .build();
+    private static final String PROGRAMME_JSON = "programmeJson";
+    private static final String NEXT_PROGRAMME_JSON = "nextProgrammeJson";
 
-        final SchoolRecord schoolRecord3 = SchoolRecord.builder()
-            .name("name3")
-            .location("location3")
-            .address("address3")
-            .postalCode("postal3")
-            .website("web3")
-            .email("email3")
-            .phoneNumber("phone3")
-            .faxNumber("fax3")
-            .nearbyMrtStation("mrt2, mrt3")
-            .nearbyBusStation("bus2, bus3")
-            .level("level3")
-            .natureCode("n3")
-            .type("type3")
-            .sessionCode("s3")
-            .build();
+    private static final String SCHOOL_NAME_1 = "school1";
+    private static final String SCHOOL_NAME_2 = "school2";
+    
+    private static final String SUBJECT_1 = "subject1";
+    private static final String SUBJECT_2 = "subject2";
+    private static final String SUBJECT_3 = "subject3";
+    
+    private static final String CCA_NAME_1 = "cca1";
+    private static final String CCA_TYPE_1 = "ccaType1";
+    private static final String CCA_NAME_2 = "cca2";
+    private static final String CCA_TYPE_2 = "ccaType2";
+    
+    private static final String PROGRAMME_1 = "Programme1";
+    private static final String PROGRAMME_2 = "Programme2";
+    
+    @Nested
+    @DisplayName("getAllApiSchools()")
+    class GetAllApiSchoolsTests {
 
-        final ApiLink schoolLink = ApiLink.builder()
-            .next(nextSchoolApiEndpoint)
-            .build();
-        
-        final ApiResult<SchoolRecord> schoolResult = ApiResult.<SchoolRecord>builder()
-            .records(List.of(schoolRecord1, schoolRecord2))
-            .link(schoolLink)
-            .total(3)
-            .build();
+        @Test
+        @DisplayName("should return api schools")
+        void shouldReturnApiSchools() {
+            SchoolRecord schoolRecord1 = SchoolRecord.builder()
+                .name(SCHOOL_NAME_1)
+                .build();
             
-        final ApiResponse<SchoolRecord> schoolResponse = ApiResponse.<SchoolRecord>builder()
-            .success(true)
-            .result(schoolResult)
-            .build();
-
-        final ApiLink nextSchoolLink = ApiLink.builder()
-            .next(null)
-            .build();
-
-        final ApiResult<SchoolRecord> nextSchoolResult = ApiResult.<SchoolRecord>builder()
-            .records(List.of(schoolRecord3))
-            .link(nextSchoolLink)
-            .total(3)
-            .build();
+            SchoolRecord schoolRecord2 = SchoolRecord.builder()
+                .name(SCHOOL_NAME_2)
+                .build();
             
-        final ApiResponse<SchoolRecord> nextSchoolResponse = ApiResponse.<SchoolRecord>builder()
-            .success(true)
-            .result(nextSchoolResult)
-            .build();
-        
-        final SubjectRecord subjectRecord1 = SubjectRecord.builder()
-            .schoolName(schoolRecord1.getName())
-            .subject("subject1")
-            .build();
-
-        final SubjectRecord subjectRecord2 = SubjectRecord.builder()
-            .schoolName(schoolRecord1.getName())
-            .subject("subject2")
-            .build();
-
-        final SubjectRecord subjectRecord3 = SubjectRecord.builder()
-            .schoolName(schoolRecord1.getName())
-            .subject("subject3")
-            .build();
-
-        final ApiLink nextSubjectLink = ApiLink.builder()
-            .next(nextSubjectApiEndpoint)
-            .build();
-
-        final ApiResult<SubjectRecord> subjectResult = ApiResult.<SubjectRecord>builder()
-            .records(List.of(subjectRecord1, subjectRecord2))
-            .link(nextSubjectLink)
-            .total(3)
-            .build();
+            ApiResponse<SchoolRecord> schoolResponse = mockResponse(List.of(schoolRecord1), 2, NEXT_SCHOOL_API_ENDPOINT);
+            ApiResponse<SchoolRecord> nextSchoolResponse = mockResponse(List.of(schoolRecord2), 2, null);
             
-        final ApiResponse<SubjectRecord> subjectResponse = ApiResponse.<SubjectRecord>builder()
-            .success(true)
-            .result(subjectResult)
-            .build();
-
-        final ApiResult<SubjectRecord> nextSubjectResult = ApiResult.<SubjectRecord>builder()
-            .records(List.of(subjectRecord3))
-            .link(nextSubjectLink)
-            .total(3)
-            .build();
-
-        final ApiResponse<SubjectRecord> nextSubjectResponse = ApiResponse.<SubjectRecord>builder()
-            .success(true)
-            .result(nextSubjectResult)
-            .build();
-
-        
-        final CcaRecord ccaRecord1 = CcaRecord.builder()
-            .schoolName(schoolRecord1.getName())
-            .cca("cca1")
-            .build();
-
-        final CcaRecord ccaRecord2 = CcaRecord.builder()
-            .schoolName(schoolRecord1.getName())
-            .cca("cca2")
-            .build();
-
-        final CcaRecord ccaRecord3 = CcaRecord.builder()
-            .schoolName(schoolRecord1.getName())
-            .cca("cca3")
-            .build();
-
-        final ApiLink nextCcaLink = ApiLink.builder()
-            .next(nextCcaApiEndpoint)
-            .build();
-
-        final ApiResult<CcaRecord> ccaResult = ApiResult.<CcaRecord>builder()
-            .records(List.of(ccaRecord1, ccaRecord2))
-            .link(nextCcaLink)
-            .total(3)
-            .build();
+            SubjectRecord subjectRecord1 = SubjectRecord.builder()
+                .schoolName(SCHOOL_NAME_1)
+                .subject(SUBJECT_1)
+                .build();
             
-        final ApiResponse<CcaRecord> ccaResponse = ApiResponse.<CcaRecord>builder()
-            .success(true)
-            .result(ccaResult)
-            .build();
-
-        final ApiResult<CcaRecord> nextCcaResult = ApiResult.<CcaRecord>builder()
-            .records(List.of(ccaRecord3))
-            .link(nextCcaLink)
-            .total(3)
-            .build();
+            SubjectRecord subjectRecord2 = SubjectRecord.builder()
+                .schoolName(SCHOOL_NAME_1)
+                .subject(SUBJECT_2)
+                .build();
             
-        final ApiResponse<CcaRecord> nextCcaResponse = ApiResponse.<CcaRecord>builder()
-            .success(true)
-            .result(nextCcaResult)
-            .build();
+            SubjectRecord subjectRecord3 = SubjectRecord.builder()
+                .schoolName(SCHOOL_NAME_2)
+                .subject(SUBJECT_3)
+                .build();
 
+            ApiResponse<SubjectRecord> subjectResponse = mockResponse(List.of(subjectRecord1, subjectRecord2), 3, NEXT_SUBJECT_API_ENDPOINT);
+            ApiResponse<SubjectRecord> nextSubjectResponse = mockResponse(List.of(subjectRecord3), 3, null);
+            
+            CcaRecord ccaRecord1 = CcaRecord.builder()
+                .schoolName(SCHOOL_NAME_1)
+                .cca(CCA_NAME_1)
+                .type(CCA_TYPE_1)
+                .build();
 
-        when(apiClientService.get(apiDomain + apiEndpoint + generalInformationDatasetId, null))
-            .thenReturn(schoolJson);
+            CcaRecord ccaRecord2 = CcaRecord.builder()
+                .schoolName(SCHOOL_NAME_2)
+                .cca(CCA_NAME_2)
+                .type(CCA_TYPE_2)
+                .build();
+            
+            ApiResponse<CcaRecord> ccaResponse = mockResponse(List.of(ccaRecord1), 2, NEXT_CCA_API_ENDPOINT);
+            ApiResponse<CcaRecord> nextCcaResponse = mockResponse(List.of(ccaRecord2), 2, null);
+            
+            ProgrammeRecord programmeRecord1 = ProgrammeRecord.builder()
+                .schoolName(SCHOOL_NAME_1)
+                .programme(PROGRAMME_1)
+                .build();
+            
+            ProgrammeRecord programmeRecord2 = ProgrammeRecord.builder()
+                .schoolName(SCHOOL_NAME_2)
+                .programme(PROGRAMME_2)
+                .build();
 
-        when(apiClientService.get(apiDomain + nextSchoolApiEndpoint, null))
-            .thenReturn(nextSchoolJson);
+            ApiResponse<ProgrammeRecord> programmeResponse = mockResponse(List.of(programmeRecord1, programmeRecord1), 3, NEXT_PROGRAMMES_API_ENDPOINT);
+            ApiResponse<ProgrammeRecord> nextProgrammeResponse = mockResponse(List.of(programmeRecord2), 3, null);
 
-        when(apiClientService.get(apiDomain + apiEndpoint + subjectsDatasetId, null))
-            .thenReturn(subjectJson);
+            when(apiClientService.get(API_DOMAIN + API_ENDPOINT + GENERAL_INFORMATION_DATASET_ID, null))
+                    .thenReturn(SCHOOL_JSON);
 
-        when(apiClientService.get(apiDomain + nextSubjectApiEndpoint, null))
-            .thenReturn(nextSubjectJson);
+            when(apiClientService.get(API_DOMAIN + NEXT_SCHOOL_API_ENDPOINT, null))
+                    .thenReturn(NEXT_SCHOOL_JSON);
 
-        when(apiClientService.get(apiDomain + apiEndpoint +  ccasDatasetId, null))
-            .thenReturn(ccaJson);
+            when(apiClientService.get(API_DOMAIN + API_ENDPOINT + SUBJECTS_DATASET_ID, null))
+                    .thenReturn(SUBJECT_JSON);
 
-         when(apiClientService.get(apiDomain + nextCcaApiEndpoint, null))
-            .thenReturn(nextCcaJson);
+            when(apiClientService.get(API_DOMAIN + NEXT_SUBJECT_API_ENDPOINT, null))
+                    .thenReturn(NEXT_SUBJECT_JSON);
+
+            when(apiClientService.get(API_DOMAIN + API_ENDPOINT + CCAS_DATASET_ID, null))
+                    .thenReturn(CCA_JSON);
+
+            when(apiClientService.get(API_DOMAIN + NEXT_CCA_API_ENDPOINT, null))
+                    .thenReturn(NEXT_CCA_JSON);
+
+            when(apiClientService.get(API_DOMAIN + API_ENDPOINT + MOE_PROGRAMMES_DATASET_ID, null))
+                    .thenReturn(PROGRAMME_JSON);
+
+            when(apiClientService.get(API_DOMAIN + NEXT_PROGRAMMES_API_ENDPOINT, null))
+                    .thenReturn(NEXT_PROGRAMME_JSON);
+
+            when(apiResponseParser.parseApiRecord(SCHOOL_JSON, SchoolRecord.class))
+                    .thenReturn(schoolResponse);
+
+            when(apiResponseParser.parseApiRecord(NEXT_SCHOOL_JSON, SchoolRecord.class))
+                    .thenReturn(nextSchoolResponse);
+
+            when(apiResponseParser.parseApiRecord(SUBJECT_JSON, SubjectRecord.class))
+                    .thenReturn(subjectResponse);
+
+            when(apiResponseParser.parseApiRecord(NEXT_SUBJECT_JSON, SubjectRecord.class))
+                    .thenReturn(nextSubjectResponse);
+
+            when(apiResponseParser.parseApiRecord(CCA_JSON, CcaRecord.class))
+                    .thenReturn(ccaResponse);
+
+            when(apiResponseParser.parseApiRecord(NEXT_CCA_JSON, CcaRecord.class))
+                    .thenReturn(nextCcaResponse);
+
+            when(apiResponseParser.parseApiRecord(PROGRAMME_JSON, ProgrammeRecord.class))
+                    .thenReturn(programmeResponse);
+
+            when(apiResponseParser.parseApiRecord(NEXT_PROGRAMME_JSON, ProgrammeRecord.class))
+                    .thenReturn(nextProgrammeResponse);
+
+            List<SchoolRecord> expectedSchoolRecords = List.of(schoolRecord1, schoolRecord2);
+            Map<String, List<String>> expectedSubjectMap = Map.of(
+                SCHOOL_NAME_1, List.of(SUBJECT_1, SUBJECT_2),
+                SCHOOL_NAME_2, List.of(SUBJECT_3)
+            );
+            Map<String, List<Cca>> expectedCcaMap = Map.of(
+                SCHOOL_NAME_1, List.of(new Cca(CCA_NAME_1, CCA_TYPE_1)),
+                SCHOOL_NAME_2, List.of(new Cca(CCA_NAME_2, CCA_TYPE_2))
+            );
+            Map<String, List<String>> expectedProgrammeMap = Map.of(
+                SCHOOL_NAME_1, List.of(PROGRAMME_1),
+                SCHOOL_NAME_2, List.of(PROGRAMME_2)
+            );
+
+            ApiSchool apiSchool1 = ApiSchool.builder()
+                .name(SCHOOL_NAME_1)
+                .build();
+
+            ApiSchool apiSchool2 = ApiSchool.builder()
+                .name(SCHOOL_NAME_2)
+                .build();
+
+            when(schoolMapper.toApiSchools(
+                argThat(schoolRecords -> schoolRecords.equals(expectedSchoolRecords)),
+                argThat(subjectMap -> subjectMap.equals(expectedSubjectMap)),
+                argThat(ccaMap -> ccaMap.equals(expectedCcaMap)),
+                argThat(programmeMap -> programmeMap.equals(expectedProgrammeMap))
+            )).thenReturn(List.of(apiSchool1, apiSchool2));
+
+            List<ApiSchool> schools = apiSchoolRepositoryImpl.getApiSchools();
+            assertEquals(List.of(apiSchool1, apiSchool2), schools);
+
+            verify(apiClientService, times(8)).get(any(), any());
+            verify(apiResponseParser, times(8)).parseApiRecord(any(), any());
+            verify(schoolMapper, times(1)).toApiSchools(any(), any(), any(), any());
+
+            apiSchoolRepositoryImpl.getApiSchools(); // Test cached
+            verify(apiClientService, times(8)).get(any(), any());
+            verify(apiResponseParser, times(8)).parseApiRecord(any(), any());
+            verify(schoolMapper, times(1)).toApiSchools(any(), any(), any(), any());
+        }
         
-        when(apiResponseParser.parseApiRecord(schoolJson, SchoolRecord.class))
-            .thenReturn(schoolResponse);
-
-        when(apiResponseParser.parseApiRecord(nextSchoolJson, SchoolRecord.class))
-            .thenReturn(nextSchoolResponse);
-
-        when(apiResponseParser.parseApiRecord(subjectJson, SubjectRecord.class))
-            .thenReturn(subjectResponse);
-        
-        when(apiResponseParser.parseApiRecord(nextSubjectJson, SubjectRecord.class))
-            .thenReturn(nextSubjectResponse);
-        
-        when(apiResponseParser.parseApiRecord(ccaJson, CcaRecord.class))
-            .thenReturn(ccaResponse);
-
-        when(apiResponseParser.parseApiRecord(nextCcaJson, CcaRecord.class))
-            .thenReturn(nextCcaResponse);
-
-        List<ApiSchool> schools = apiSchoolRepositoryImpl.getApiSchools();
-        assertEquals(3, schools.size());
-
-        ApiSchool school = schools.get(0);
-        assertEquals(schoolRecord1.getName(), school.getName());
-        assertEquals(schoolRecord1.getLocation(), school.getLocation());
-        assertEquals(schoolRecord1.getAddress(), school.getAddress());
-        assertEquals(schoolRecord1.getPostalCode(), school.getPostalCode());
-        assertEquals(schoolRecord1.getWebsite(), school.getWebsite());
-        assertEquals(schoolRecord1.getEmail(), school.getEmail());
-        assertEquals(schoolRecord1.getPhoneNumber(), school.getPhoneNumber());
-        assertEquals(schoolRecord1.getFaxNumber(), school.getFaxNumber());
-        assertEquals(schoolRecord1.getLevel(), school.getLevel());
-        assertEquals(schoolRecord1.getNatureCode(), school.getNatureCode());
-        assertEquals(schoolRecord1.getType(), school.getType());
-        assertEquals(schoolRecord1.getSessionCode(), school.getSessionCode());
-        assertEquals(schoolRecord1.getNearbyBusStation(), school.getNearbyBusStation());
-        assertEquals(schoolRecord1.getNearbyMrtStation(), school.getNearbyMrtStation());
-
-        List<String> subjects = school.getSubjects();
-        assertEquals(3, subjects.size());
-        assertEquals(subjectRecord1.getSubject(), subjects.get(0));
-        assertEquals(subjectRecord2.getSubject(), subjects.get(1));
-        assertEquals(subjectRecord3.getSubject(), subjects.get(2));
-
-        List<String> ccas = school.getCcas();
-        assertEquals(3, ccas.size());
-        assertEquals(ccaRecord1.getCca(), ccas.get(0));
-        assertEquals(ccaRecord2.getCca(), ccas.get(1));
-        assertEquals(ccaRecord3.getCca(), ccas.get(2));
+        private <R extends ApiRecord> ApiResponse<R> mockResponse(List<R> records, int total, String next) {
+            ApiLink link = ApiLink.builder()
+                .next(next)
+                .build();
+            
+            ApiResult<R> result = ApiResult.<R>builder()
+                .records(records)
+                .link(link)
+                .total(total)
+                .build();
+            
+            return ApiResponse.<R>builder()
+                .success(true)
+                .result(result)
+                .build();
+        }
     }
 }

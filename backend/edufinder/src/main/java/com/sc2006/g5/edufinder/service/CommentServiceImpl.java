@@ -11,7 +11,7 @@ import com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException;
 import com.sc2006.g5.edufinder.exception.security.AccessDeniedException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.mapper.CommentMapper;
-import com.sc2006.g5.edufinder.model.DbSchool;
+import com.sc2006.g5.edufinder.model.school.DbSchool;
 import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.repository.CommentRepository;
@@ -38,11 +38,9 @@ public class CommentServiceImpl implements CommentService {
             .map(comment -> commentMapper.toCommentResponse(userId, comment))
             .toList();
 
-        CommentsResponse response = CommentsResponse.builder()
+        return CommentsResponse.builder()
             .comments(commentResponses)
             .build();
-
-        return response;
     }
 
     @Override
@@ -67,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long userId, Long commentId) {
         Comment comment = commentRepository.findOneByIdAndUserId(commentId, userId)
-            .orElseThrow(() -> new AccessDeniedException());
+            .orElseThrow(AccessDeniedException::new);
 
         commentRepository.delete(comment);
     }

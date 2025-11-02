@@ -1,4 +1,4 @@
-package com.sc2006.g5.edufinder.model;
+package com.sc2006.g5.edufinder.model.school;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
