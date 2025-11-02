@@ -1,16 +1,14 @@
-package com.sc2006.g5.edufinder.dto.response;
+package com.sc2006.g5.edufinder.model.school;
 
 import java.util.List;
 
-import com.sc2006.g5.edufinder.model.school.Cca;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class SchoolResponse {
+public class ApiSchool {
 
-    private Long id;
     private String name;
 
     private List<Cca> ccas;

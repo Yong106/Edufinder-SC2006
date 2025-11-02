@@ -1,23 +1,23 @@
 package com.sc2006.g5.edufinder.dto.api;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiResult<R extends ApiRecord> {
-    private List<R> records;
+public class ProgrammeRecord extends ApiRecord {
 
-    @JsonProperty("_links")
-    private ApiLink link;
+    @JsonProperty("school_name")
+    private String schoolName;
 
-    private int total;
+    @JsonProperty("moe_programme_desc")
+    private String programme;
+
 }

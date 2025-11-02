@@ -11,7 +11,7 @@ import com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserAlreadySaveSchoolException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserNotSaveSchoolException;
-import com.sc2006.g5.edufinder.model.DbSchool;
+import com.sc2006.g5.edufinder.model.school.DbSchool;
 import com.sc2006.g5.edufinder.model.User;
 import com.sc2006.g5.edufinder.model.UserSavedSchool;
 import com.sc2006.g5.edufinder.model.embedded_id.UserSavedSchoolId;
@@ -40,11 +40,10 @@ public class UserServiceImpl implements UserService {
         if(!userRepository.existsById(userId)) throw new UserNotFoundException(userId);
 
         List<Long> schoolIds = userSavedSchoolRepository.findSchoolIdsByUserId(userId);
-        SavedSchoolResponse response = SavedSchoolResponse.builder()
+
+        return SavedSchoolResponse.builder()
             .savedSchoolIds(schoolIds)
             .build();
-
-        return response;
     }
 
     @Override

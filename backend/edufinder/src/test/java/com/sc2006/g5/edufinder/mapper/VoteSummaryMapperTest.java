@@ -77,9 +77,9 @@ public class VoteSummaryMapperTest {
         void shouldReturnUserVoteTypeWhenUserVoted(){
             VoteSummaryResponse response = voteSummaryMapper.buildVoteSummary(VOTED_USER_ID, COMMENT_ID);
 
-            assertEquals(response.getUserVoteType(), USER_VOTE_TYPE);
-            assertEquals(response.getUpvoteCount(), UPVOTE_COUNT);
-            assertEquals(response.getDownvoteCount(), DOWNVOTE_COUNT);
+            assertEquals(USER_VOTE_TYPE, response.getUserVoteType());
+            assertEquals(UPVOTE_COUNT, response.getUpvoteCount());
+            assertEquals(DOWNVOTE_COUNT, response.getDownvoteCount());
 
             verify(voteRepository, times(1)).findById(any());
             verify(voteRepository, times(2)).countByIdCommentIdAndVoteType(any(), any());
@@ -90,9 +90,9 @@ public class VoteSummaryMapperTest {
         void shouldReturnNoVoteWhenUserNotVoted(){
             VoteSummaryResponse response = voteSummaryMapper.buildVoteSummary(NOT_VOTED_USER_ID, COMMENT_ID);
 
-            assertEquals(response.getUserVoteType(), VoteType.NOVOTE);
-            assertEquals(response.getUpvoteCount(), UPVOTE_COUNT);
-            assertEquals(response.getDownvoteCount(), DOWNVOTE_COUNT);
+            assertEquals(VoteType.NOVOTE, response.getUserVoteType());
+            assertEquals(UPVOTE_COUNT, response.getUpvoteCount());
+            assertEquals(DOWNVOTE_COUNT, response.getDownvoteCount());
 
             verify(voteRepository, times(1)).findById(any());
             verify(voteRepository, times(2)).countByIdCommentIdAndVoteType(any(), any());
@@ -103,9 +103,9 @@ public class VoteSummaryMapperTest {
         void shouldReturnNoVoteWhenAnonymous(){
             VoteSummaryResponse response = voteSummaryMapper.buildVoteSummary(null, COMMENT_ID);
 
-            assertEquals(response.getUserVoteType(), VoteType.NOVOTE);
-            assertEquals(response.getUpvoteCount(), UPVOTE_COUNT);
-            assertEquals(response.getDownvoteCount(), DOWNVOTE_COUNT);
+            assertEquals(VoteType.NOVOTE, response.getUserVoteType());
+            assertEquals(UPVOTE_COUNT, response.getUpvoteCount());
+            assertEquals(DOWNVOTE_COUNT, response.getDownvoteCount());
 
             verify(voteRepository, never()).findById(any());
             verify(voteRepository, times(2)).countByIdCommentIdAndVoteType(any(), any());
