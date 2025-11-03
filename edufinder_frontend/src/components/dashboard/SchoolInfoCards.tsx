@@ -15,7 +15,8 @@ const SchoolInfoCards = ({school}: {school: School}) => {
     school.motherTongue1,
     school.motherTongue2,
     school.motherTongue3
-  ].filter(Boolean).join(", ");
+  ].filter(mt => !!mt && mt.toUpperCase() !== "NA")
+    .join(", ");
 
   const groupCcas = (ccas: Cca[]) => {
     return ccas.reduce<Record<CcaType, string[]>>((acc, cca) => {
@@ -44,13 +45,13 @@ const SchoolInfoCards = ({school}: {school: School}) => {
   return (
     <div>
       {/* General Information */}
-      <CardBox>
+      <CardBox className="m-2">
         <h5>General Information</h5>
         <div className="overflow-x-auto overflow-y-hidden">
-          <Table className="">
+          <Table className="table-fixed w-full">
             <TableBody className="border-0">
               <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Location</TableCell>
+                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Location</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -60,7 +61,7 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Website</TableCell>
+                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Website</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -74,14 +75,14 @@ const SchoolInfoCards = ({school}: {school: School}) => {
         </div>
       </CardBox>
       {/* School Details */}
-      <CardBox>
+      <CardBox className="m-2">
         <h5>Details</h5>
         <div className="overflow-x-auto overflow-y-hidden">
           <Table className="">
             <TableBody className="border-0">
               {/* School Type */}
               <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Type</TableCell>
+                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Type</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -107,14 +108,14 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{tags}</p>
+                      <p className="text-ld text-sm  font-medium">{tags.length == 0 ? "-" : tags}</p>
                     </div>
                   </div>
                 </TableCell>
               </TableRow>
               {/* Mother Tongues Offered */}
               <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Mother Tongues</TableCell>
+                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">Mother Tongues</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -128,17 +129,16 @@ const SchoolInfoCards = ({school}: {school: School}) => {
         </div>
       </CardBox>
       {/* Programmes */}
-      <CardBox>
+      <CardBox className="m-2">
         <h5>General Information</h5>
         <div className="overflow-x-auto overflow-y-hidden">
           <Table className="">
             <TableBody className="border-0">
               <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">CCAs</TableCell>
+                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">CCAs</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.address}</p>
                       <ul>
                         {
                           Object.entries(groupedCcas).map(([type, items]) =>
@@ -156,11 +156,11 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Special Programmes</TableCell>
+                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Special Programmes</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.programmes.join(", ")}</p>
+                      <p className="text-ld text-sm  font-medium">{school.programmes.length == 0 ? "-" : school.programmes.join(", ")}</p>
                     </div>
                   </div>
                 </TableCell>
