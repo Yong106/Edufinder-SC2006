@@ -1,6 +1,7 @@
 import CardBox from 'src/components/shared/CardBox.tsx';
 import { Table, TableBody, TableCell, TableRow } from 'flowbite-react';
 import { Cca, CcaType, School } from 'src/types/school/school.ts';
+import LocationMap from 'src/views/dashboards/LocationMap.tsx';
 
 const SchoolInfoCards = ({school}: {school: School}) => {
 
@@ -169,6 +170,7 @@ const SchoolInfoCards = ({school}: {school: School}) => {
           </Table>
         </div>
       </CardBox>
+      <LocationMap postalCode = {school.postalCode}/>
     </div>
   )
 }

@@ -15,6 +15,7 @@
     "@google/generative-ai": "^0.24.1",
     "@svgr/rollup": "8.1.0",
     "@tabler/icons-react": "^2.39.0",
+    "@vis.gl/react-google-maps": "^1.7.0",
     "apexcharts": "3.48.0",
     "chance": "^1.1.12",
     "date-fns": "^4.1.0",
