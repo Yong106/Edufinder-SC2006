@@ -15,6 +15,9 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
+import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import com.sc2006.g5.edufinder.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +34,7 @@ import com.sc2006.g5.edufinder.exception.user.UserAlreadySaveSchoolException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserNotSaveSchoolException;
 import com.sc2006.g5.edufinder.model.school.DbSchool;
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.repository.DbSchoolRepository;
 import com.sc2006.g5.edufinder.repository.UserRepository;
 import com.sc2006.g5.edufinder.repository.UserSavedSchoolRepository;
@@ -48,34 +51,27 @@ public class UserServiceImplTest {
     @Mock
     UserSavedSchoolRepository userSavedSchoolRepository;
 
+    @Mock
+    UserMapper userMapper;
+
     @InjectMocks
     UserServiceImpl userServiceImpl;
 
     private static final Long EXISTED_USER_ID = 1L;
     private static final Long INVALID_USER_ID = 2L;
 
-    private static final Long SAVED_SCHOOL_ID_1 = 1L;
-    private static final Long SAVED_SCHOOL_ID_2 = 2L;
-    private static final Long NEW_SAVED_SCHOOL_ID = 3L;
-    private static final Long INVALID_SCHOOL_ID = 4L;
+    private static final Long SAVED_SCHOOL_ID_1 = 11L;
+    private static final Long SAVED_SCHOOL_ID_2 = 12L;
+    private static final Long NEW_SAVED_SCHOOL_ID = 13L;
+    private static final Long INVALID_SCHOOL_ID = 14L;
 
     @BeforeEach
     void setup(){
-        final User user = User.builder()
-            .id(EXISTED_USER_ID)
-            .build();
-
         lenient().when(userRepository.existsById(EXISTED_USER_ID))
             .thenReturn(true);
 
         lenient().when(userRepository.existsById(INVALID_USER_ID))
             .thenReturn(false);
-
-        lenient().when(userRepository.findById(EXISTED_USER_ID))
-            .thenReturn(Optional.of(user));
-
-        lenient().when(userRepository.findById(INVALID_USER_ID))
-            .thenReturn(Optional.empty());
 
         lenient().when(userSavedSchoolRepository.existsByUserIdAndSchoolId(anyLong(), anyLong()))
             .thenAnswer(invocation -> {
@@ -87,6 +83,121 @@ public class UserServiceImplTest {
                     schoolId.equals(SAVED_SCHOOL_ID_2)
                 );
             });
+    }
+
+    @Nested
+    @DisplayName("getUserByUsername()")
+    class GetUserByUsernameTest {
+
+        private static final String EXISTED_USERNAME = "user";
+        private static final String INVALID_USERNAME = "invalid";
+
+        @Test
+        @DisplayName("shouldReturnUserWhenUsernameExisted")
+        void shouldReturnUserWhenUsernameExisted() {
+            User user = User.builder()
+                .id(EXISTED_USER_ID)
+                .username(EXISTED_USERNAME)
+                .build();
+
+            UserResponse expectedResponse = UserResponse.builder()
+                .id(EXISTED_USER_ID)
+                .username(EXISTED_USERNAME)
+                .build();
+
+            when(userRepository.findOneByUsername(EXISTED_USERNAME))
+                .thenReturn(Optional.of(user));
+
+            when(userMapper.toUserResponse(user))
+                .thenReturn(expectedResponse);
+
+            UserResponse serviceResponse = userServiceImpl.getUserByUsername(EXISTED_USERNAME);
+
+            assertEquals(expectedResponse, serviceResponse);
+
+            verify(userRepository, times(1)).findOneByUsername(any());
+            verify(userMapper, times(1)).toUserResponse(any());
+        }
+
+        @Test
+        @DisplayName("should throw when username not existed")
+        void shouldThrowWhenUsernameNotExisted() {
+            when(userRepository.findOneByUsername(INVALID_USERNAME))
+                .thenReturn(Optional.empty());
+
+            assertThrowsExactly(UserNotFoundException.class, () ->
+                userServiceImpl.getUserByUsername(INVALID_USERNAME)
+            );
+
+            verify(userRepository, times(1)).findOneByUsername(any());
+            verify(userMapper, never()).toUserResponse(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("editUser()")
+    class EditUserTest {
+
+        String OLD_POSTAL_CODE = "old_postal_code";
+        String NEW_POSTAL_CODE = "new_postal_code";
+
+        @Test
+        @DisplayName("should edit and return user response when request valid")
+        void shouldEditAndReturnUserResponseWhenRequestValid() {
+            User user = User.builder()
+                .id(EXISTED_USER_ID)
+                .postalCode(OLD_POSTAL_CODE)
+                .build();
+
+            UserResponse expectedResponse = UserResponse.builder()
+                .id(EXISTED_USER_ID)
+                .build();
+
+            when(userRepository.findById(EXISTED_USER_ID))
+                .thenReturn(Optional.of(user));
+
+            when(userRepository.save(argThat(editedUser ->
+                editedUser.getId().equals(EXISTED_USER_ID) &&
+                editedUser.getPostalCode().equals(NEW_POSTAL_CODE)
+            ))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            when(userMapper.toUserResponse(argThat(editedUser ->
+                editedUser.getId().equals(EXISTED_USER_ID) &&
+                editedUser.getPostalCode().equals(NEW_POSTAL_CODE)
+            ))).thenReturn(expectedResponse);
+
+            EditUserRequest request = EditUserRequest.builder()
+                .postalCode(NEW_POSTAL_CODE)
+                .build();
+
+            UserResponse serviceResponse = userServiceImpl.editUser(EXISTED_USER_ID, request);
+
+            assertEquals(expectedResponse, serviceResponse);
+
+            verify(userRepository, times(1)).findById(any());
+            verify(userRepository, times(1)).save(any());
+            verify(userMapper, times(1)).toUserResponse(any());
+        }
+
+        @Test
+        @DisplayName("should throw when user not found")
+        void shouldThrowWhenUserNotFound() {
+            when(userRepository.findById(INVALID_USER_ID))
+                .thenReturn(Optional.empty());
+
+            EditUserRequest request = EditUserRequest.builder()
+                .postalCode(NEW_POSTAL_CODE)
+                .build();
+
+
+            assertThrowsExactly(UserNotFoundException.class, () ->
+                userServiceImpl.editUser(INVALID_USER_ID, request)
+            );
+
+            verify(userRepository, times(1)).findById(any());
+            verify(userRepository, never()).save(any());
+            verify(userMapper, never()).toUserResponse(any());
+        }
     }
 
     @Nested
@@ -126,6 +237,16 @@ public class UserServiceImplTest {
     @DisplayName("addSavedSchool()")
     class addSavedSchoolTest {
 
+        @BeforeEach
+        void setup(){
+            final User user = User.builder()
+                    .id(EXISTED_USER_ID)
+                    .build();
+
+            lenient().when(userRepository.findById(EXISTED_USER_ID))
+                    .thenReturn(Optional.of(user));
+        }
+
         @Test
         @DisplayName("should add saved school when request valid")
         void shouldSaveSchoolWhenIsSaving(){
@@ -156,6 +277,9 @@ public class UserServiceImplTest {
         @Test
         @DisplayName("should throw when user not found")
         void shouldThrowWhenUserNotFound(){
+            when(userRepository.findById(INVALID_USER_ID))
+                    .thenReturn(Optional.empty());
+
             SavedSchoolRequest request = SavedSchoolRequest.builder()
                 .schoolId(NEW_SAVED_SCHOOL_ID)
                 .build();

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sc2006.g5.edufinder.dto.request.CreateCommentRequest;
 import com.sc2006.g5.edufinder.dto.response.CommentResponse;
 import com.sc2006.g5.edufinder.dto.response.CommentsResponse;
-import com.sc2006.g5.edufinder.model.CustomUserDetails;
+import com.sc2006.g5.edufinder.model.user.CustomUserDetails;
 import com.sc2006.g5.edufinder.service.CommentService;
 
 import jakarta.validation.Valid;

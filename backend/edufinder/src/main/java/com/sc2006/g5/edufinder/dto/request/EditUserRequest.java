@@ -10,12 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupRequest {
+public class EditUserRequest {
 
     @NotNull
-    private String username;
-
-    @NotNull
-    private String password;
-
+    private String postalCode;
 }

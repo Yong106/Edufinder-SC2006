@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.sc2006.g5.edufinder.model.UserSavedSchool;
-import com.sc2006.g5.edufinder.model.embedded_id.UserSavedSchoolId;
+import com.sc2006.g5.edufinder.model.user.UserSavedSchool;
+import com.sc2006.g5.edufinder.model.user.UserSavedSchoolId;
 
 public interface UserSavedSchoolRepository extends JpaRepository<UserSavedSchool, UserSavedSchoolId> {
     @Query("SELECT uss.id.schoolId FROM UserSavedSchool uss WHERE uss.id.userId = :userId")

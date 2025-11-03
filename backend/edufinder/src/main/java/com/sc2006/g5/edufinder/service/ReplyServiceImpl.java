@@ -8,7 +8,7 @@ import com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException;
 import com.sc2006.g5.edufinder.exception.security.AccessDeniedException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.mapper.ReplyMapper;
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.model.comment.Reply;
 import com.sc2006.g5.edufinder.repository.CommentRepository;
@@ -47,7 +47,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public void deleteReply(Long userId, Long replyId) {
         Reply reply = replyRepository.findOneByIdAndUserId(replyId, userId)
-            .orElseThrow(() -> new AccessDeniedException());
+            .orElseThrow(AccessDeniedException::new);
 
         replyRepository.delete(reply);
     }

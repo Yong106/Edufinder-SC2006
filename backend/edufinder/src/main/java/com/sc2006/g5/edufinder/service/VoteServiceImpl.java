@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.sc2006.g5.edufinder.dto.request.SetVoteRequest;
 import com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.model.comment.Vote;
 import com.sc2006.g5.edufinder.model.comment.VoteId;
