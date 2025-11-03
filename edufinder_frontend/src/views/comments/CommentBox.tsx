@@ -4,7 +4,7 @@ import { UserComment, UserReply } from 'src/types/comment/userComment.ts';
 const CommentBox = ({comment}: {comment: UserComment}) => {
 
   return (
-    <div>
+    <div className="mt-2 mb-2">
       <CardBox key={comment.id} className="mt-2 mb-2">
         <div className="flex gap-4 items-center">
           <div className="w-full md:pe-0 pe-10">
