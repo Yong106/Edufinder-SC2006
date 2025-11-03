@@ -37,7 +37,7 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 //        refreshApiSchools();
 //    }
 
-    @Scheduled(fixedRate = 7 * 24 * 60 * 60 * 1000)
+    //@Scheduled(fixedRate = 7 * 24 * 60 * 60 * 1000)
     public void refreshApiSchools() {
         List<SchoolRecord> schoolRecords = getSchoolGeneralInformation();
         Map<String, List<String>> subjectMap = getSchoolSubjects();
