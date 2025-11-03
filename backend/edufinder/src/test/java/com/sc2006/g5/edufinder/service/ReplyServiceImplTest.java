@@ -29,7 +29,7 @@ import com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException;
 import com.sc2006.g5.edufinder.exception.security.AccessDeniedException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.mapper.ReplyMapper;
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.model.comment.Comment;
 import com.sc2006.g5.edufinder.model.comment.Reply;
 import com.sc2006.g5.edufinder.repository.CommentRepository;
@@ -132,9 +132,9 @@ public class ReplyServiceImplTest {
                 .content(NEW_REPLY_CONTENT)
                 .build();
             
-            assertThrowsExactly(UserNotFoundException.class, () -> {
-                replyServiceImpl.createReply(INVALID_USER_ID, EXISTED_COMMENT_ID, request);
-            });
+            assertThrowsExactly(UserNotFoundException.class, () ->
+                replyServiceImpl.createReply(INVALID_USER_ID, EXISTED_COMMENT_ID, request)
+            );
 
             verify(userRepository, times(1)).findById(any());
             verify(commentRepository, never()).findById(any());
@@ -151,9 +151,9 @@ public class ReplyServiceImplTest {
                 .content(NEW_REPLY_CONTENT)
                 .build();
             
-            assertThrowsExactly(CommentNotFoundException.class, () -> {
-                replyServiceImpl.createReply(EXISTED_USER_ID, INVALID_COMMENT_ID, request);
-            });
+            assertThrowsExactly(CommentNotFoundException.class, () ->
+                replyServiceImpl.createReply(EXISTED_USER_ID, INVALID_COMMENT_ID, request)
+            );
 
             verify(userRepository, times(1)).findById(any());
             verify(commentRepository, times(1)).findById(any());
@@ -200,13 +200,13 @@ public class ReplyServiceImplTest {
         @Test
         @DisplayName("should throw when user not owner")
         void shouldThrowWhenUserNotOwner(){            
-            assertThrowsExactly(AccessDeniedException.class, () -> {
-                replyServiceImpl.deleteReply(EXISTED_USER_ID, OTHER_REPLY_ID);
-            });
+            assertThrowsExactly(AccessDeniedException.class, () ->
+                replyServiceImpl.deleteReply(EXISTED_USER_ID, OTHER_REPLY_ID)
+            );
 
-            assertThrowsExactly(AccessDeniedException.class, () -> {
-                replyServiceImpl.deleteReply(INVALID_USER_ID, USER_REPLY_ID);
-            });
+            assertThrowsExactly(AccessDeniedException.class, () ->
+                replyServiceImpl.deleteReply(INVALID_USER_ID, USER_REPLY_ID)
+            );
 
             verify(replyRepository, times(2)).findOneByIdAndUserId(any(), any());
             verify(replyRepository, never()).delete(any());

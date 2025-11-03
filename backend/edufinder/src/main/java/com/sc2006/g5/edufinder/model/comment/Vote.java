@@ -1,6 +1,6 @@
 package com.sc2006.g5.edufinder.model.comment;
 
-import com.sc2006.g5.edufinder.model.User;
+import com.sc2006.g5.edufinder.model.user.User;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

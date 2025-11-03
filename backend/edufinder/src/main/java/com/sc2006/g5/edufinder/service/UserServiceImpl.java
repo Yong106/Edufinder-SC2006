@@ -2,7 +2,10 @@ package com.sc2006.g5.edufinder.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
+import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import com.sc2006.g5.edufinder.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.sc2006.g5.edufinder.dto.request.SavedSchoolRequest;
@@ -12,9 +15,9 @@ import com.sc2006.g5.edufinder.exception.user.UserAlreadySaveSchoolException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserNotSaveSchoolException;
 import com.sc2006.g5.edufinder.model.school.DbSchool;
-import com.sc2006.g5.edufinder.model.User;
-import com.sc2006.g5.edufinder.model.UserSavedSchool;
-import com.sc2006.g5.edufinder.model.embedded_id.UserSavedSchoolId;
+import com.sc2006.g5.edufinder.model.user.User;
+import com.sc2006.g5.edufinder.model.user.UserSavedSchool;
+import com.sc2006.g5.edufinder.model.user.UserSavedSchoolId;
 import com.sc2006.g5.edufinder.repository.DbSchoolRepository;
 import com.sc2006.g5.edufinder.repository.UserRepository;
 import com.sc2006.g5.edufinder.repository.UserSavedSchoolRepository;
@@ -22,18 +25,34 @@ import com.sc2006.g5.edufinder.repository.UserSavedSchoolRepository;
 import jakarta.transaction.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final DbSchoolRepository dbSchoolRepository; 
     private final UserSavedSchoolRepository userSavedSchoolRepository;
+    private final UserMapper userMapper;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, DbSchoolRepository dbSchoolRepository, UserSavedSchoolRepository userSavedSchoolRepository){
-        this.userRepository = userRepository;
-        this.dbSchoolRepository = dbSchoolRepository;
-        this.userSavedSchoolRepository = userSavedSchoolRepository;
+    @Override
+    public UserResponse getUserByUsername(String username) {
+        User user = userRepository.findOneByUsername(username)
+            .orElseThrow(() -> new UserNotFoundException(username));
+
+        return userMapper.toUserResponse(user);
     }
+
+    @Override
+    public UserResponse editUser(Long userId, EditUserRequest request) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
+
+        user.setPostalCode(request.getPostalCode());
+
+        userRepository.save(user);
+
+        return userMapper.toUserResponse(user);
+    }
+
 
     @Override
     public SavedSchoolResponse getSavedSchoolIds(Long userId) {

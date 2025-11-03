@@ -1,50 +1,56 @@
 package com.sc2006.g5.edufinder.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
+import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import com.sc2006.g5.edufinder.dto.request.SavedSchoolRequest;
 import com.sc2006.g5.edufinder.dto.response.SavedSchoolResponse;
-import com.sc2006.g5.edufinder.model.CustomUserDetails;
+import com.sc2006.g5.edufinder.model.user.CustomUserDetails;
 import com.sc2006.g5.edufinder.service.UserService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/users/saved-schools")
+@RequestMapping("api/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService){
-        this.userService = userService;
+    @PutMapping
+    public UserResponse editUser(
+        @AuthenticationPrincipal CustomUserDetails user,
+        @Valid @RequestBody EditUserRequest editUserRequest
+    ){
+        Long userId = user.getId();
+
+        return userService.editUser(userId, editUserRequest);
     }
 
-    @GetMapping
-    public SavedSchoolResponse getSavedSchoolIds(Authentication auth){
-        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+    @GetMapping("/saved-schools")
+    public SavedSchoolResponse getSavedSchoolIds(@AuthenticationPrincipal CustomUserDetails user){
         Long userId = user.getId();
 
         return userService.getSavedSchoolIds(userId);
     }
 
-    @PostMapping
-    public void addSavedSchool(Authentication auth, @Valid @RequestBody SavedSchoolRequest savedSchoolRequest){
-        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+    @PostMapping("/saved-schools")
+    public void addSavedSchool(
+        @AuthenticationPrincipal CustomUserDetails user,
+        @Valid @RequestBody SavedSchoolRequest savedSchoolRequest
+    ){
         Long userId = user.getId();
 
         userService.addSavedSchool(userId, savedSchoolRequest);
     }
 
-    @DeleteMapping
-    public void removeSavedSchool(Authentication auth, @Valid @RequestBody SavedSchoolRequest savedSchoolRequest){
-        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+    @DeleteMapping("/saved-schools")
+    public void removeSavedSchool(
+        @AuthenticationPrincipal CustomUserDetails user,
+        @Valid @RequestBody SavedSchoolRequest savedSchoolRequest
+    ){
         Long userId = user.getId();
 
         userService.removeSavedSchool(userId, savedSchoolRequest);

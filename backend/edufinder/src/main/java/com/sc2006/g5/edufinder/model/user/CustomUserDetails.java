@@ -1,4 +1,4 @@
-package com.sc2006.g5.edufinder.model;
+package com.sc2006.g5.edufinder.model.user;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +13,6 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user){
         this.user = user;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
