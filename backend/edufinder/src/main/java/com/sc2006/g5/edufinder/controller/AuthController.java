@@ -58,9 +58,9 @@ public class AuthController {
     public ResponseEntity<?> logout() {
         ResponseCookie cookie = createCookie(null, 0);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
             .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .body(null);
+            .build();
     }
 
     private ResponseCookie createCookie(String token, long maxAge) {

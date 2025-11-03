@@ -24,15 +24,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getHttpStatus()).body(body);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleUnexpected(Exception e) {
-        Map<String, Object> body = Map.of(
-            "timestamp", LocalDateTime.now(),
-            "status", 500,
-            "error", "Internal Server Error",
-            "message", e.getMessage()
-        );
-        e.printStackTrace();
-        return ResponseEntity.status(500).body(body);
-    }
 }
