@@ -10,6 +10,7 @@ import {
 import CardBox from 'src/components/shared/CardBox';
 import { Icon } from '@iconify/react';
 import { School } from 'src/types/school/school.ts';
+import { Link } from 'react-router';
 
 
 
@@ -37,11 +38,13 @@ const TopSchools = ({schools}: {schools: School[]}) => {
               {schools.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell className="whitespace-nowrap">
-                    <div className="flex gap-4 items-center">
-                      <div className="w-full md:pe-0 pe-10">
-                        <p className="text-ld text-sm  font-medium">{item.name}</p>
+                    <Link to={`/school/${item.id}`}>
+                      <div className="flex gap-4 items-center">
+                        <div className="w-full md:pe-0 pe-10">
+                          <p className="text-ld text-sm  font-medium">{item.name}</p>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell className="whitespace-nowrap ">
                     <p className="text-sm text-ld font-medium flex items-center gap-2">

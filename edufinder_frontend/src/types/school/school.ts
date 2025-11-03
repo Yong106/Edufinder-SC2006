@@ -34,7 +34,7 @@ export interface School {
 
   ccas: Cca[];      // Co-curricular activities
   subjects: string[];
-  moeProgrammes: string[]; // Signature MOE programmes e.g. bicultural studies
+  programmes: string[]; // Signature MOE programmes e.g. bicultural studies
 
   level: Level;
   natureCode: NatureCode;

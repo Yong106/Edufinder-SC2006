@@ -1,6 +1,5 @@
 import CardBox from 'src/components/shared/CardBox.tsx';
-import Table from 'src/views/tables/Table.tsx';
-import { TableBody, TableCell, TableHeadCell, TableRow } from 'flowbite-react';
+import { Table, TableBody, TableCell, TableRow } from 'flowbite-react';
 import { Cca, CcaType, School } from 'src/types/school/school.ts';
 
 const SchoolInfoCards = ({school}: {school: School}) => {
@@ -44,14 +43,14 @@ const SchoolInfoCards = ({school}: {school: School}) => {
 
   return (
     <div>
-      <!-- General Information -->
+      {/* General Information */}
       <CardBox>
         <h5>General Information</h5>
         <div className="overflow-x-auto overflow-y-hidden">
           <Table className="">
             <TableBody className="border-0">
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">Location</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Location</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -61,7 +60,7 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">Website</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Website</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -74,15 +73,15 @@ const SchoolInfoCards = ({school}: {school: School}) => {
           </Table>
         </div>
       </CardBox>
-      <!-- School Details -->
+      {/* School Details */}
       <CardBox>
         <h5>Details</h5>
         <div className="overflow-x-auto overflow-y-hidden">
           <Table className="">
             <TableBody className="border-0">
-              <!-- School Type -->
+              {/* School Type */}
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">Type</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Type</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -91,9 +90,9 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                   </div>
                 </TableCell>
               </TableRow>
-              <!-- School Nature -->
+              {/* School Nature */}
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">Nature</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Nature</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -102,9 +101,9 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                   </div>
                 </TableCell>
               </TableRow>
-              <!-- SAP / Autonomous / Gifted / Independent -->
+              {/*} SAP / Autonomous / Gifted / Independent */}
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">Tags</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Tags</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -113,9 +112,9 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                   </div>
                 </TableCell>
               </TableRow>
-              <!-- Mother Tongues Offered -->
+              {/* Mother Tongues Offered */}
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">Mother Tongues</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Mother Tongues</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -128,14 +127,14 @@ const SchoolInfoCards = ({school}: {school: School}) => {
           </Table>
         </div>
       </CardBox>
-      <!-- Programmes -->
+      {/* Programmes */}
       <CardBox>
         <h5>General Information</h5>
         <div className="overflow-x-auto overflow-y-hidden">
           <Table className="">
             <TableBody className="border-0">
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">CCAs</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">CCAs</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
@@ -157,11 +156,11 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableHeadCell className="text-20 font-semibold  py-3 whitespace-nowrap">Special Programmes</TableHeadCell>
+                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Special Programmes</TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.moeProgrammes.join(", ")}</p>
+                      <p className="text-ld text-sm  font-medium">{school.programmes.join(", ")}</p>
                     </div>
                   </div>
                 </TableCell>

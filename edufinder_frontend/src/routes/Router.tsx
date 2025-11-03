@@ -30,7 +30,7 @@ const Router = [
       { path: '/', exact: true, element: <Dashboard/> },
       { path: '/savedschools', exact: true, element: <SavedSchools/> },
       { path: '/compareschools', exact: true, element: <CompareSchools/> },
-      { path: '/schools/:id', exact: true, element: <SchoolDetails/> },
+      { path: '/school/:id', exact: true, element: <SchoolDetails/> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

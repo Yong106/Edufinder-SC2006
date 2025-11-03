@@ -18,16 +18,47 @@ export const SchoolProvider = ({ children }: { children: ReactNode }) => {
   const [schoolMap, setSchoolMap] = useState<Map<number, School> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(CONSTANTS.backendEndpoint + '/schools/')
-    .then(res => res.json())
-    .then((data: School[]) => {
-      const map = new Map<number, School>();
-      data.forEach(school => {map.set(school.id, school);});
-      setSchoolMap(map);
+  console.log("SchoolProvider mounted");
+
+  const fetchers = async () => {
+    console.log("Fetching schools...");
+    const res = await fetch(CONSTANTS.backendEndpoint + '/schools', {
+      method: 'GET',
+    });
+
+    const data = await res.json(); // ✅ properly await JSON body
+    console.log("Data:", data);
+
+    const map = new Map<number, School>();
+    data.schools.forEach(school => {map.set(school.id, school);});
+    console.log("School Map: ", map);
+    setSchoolMap(map);
+    setIsLoading(false);
+
+    /*
+    await fetch(CONSTANTS.backendEndpoint + '/schools', {
+      method: 'GET',
     })
-    .catch(err => console.error("Failed to load schools: " + err))
-    .finally(() => setIsLoading(false));
+      .then(
+        res => {
+          console.log(res);
+          res.json();})
+
+      .then((data: School[]) => {
+        const map = new Map<number, School>();
+        data.forEach(school => {map.set(school.id, school);});
+        console.log("School Map: ", map);
+        setSchoolMap(map);
+      })
+      .catch(err => console.error("Failed to load schools: " + err))
+      .finally(() => setIsLoading(false));
+
+       */
+
+  }
+
+  useEffect(() => {
+    fetchers();
   }, []);
 
   return (
