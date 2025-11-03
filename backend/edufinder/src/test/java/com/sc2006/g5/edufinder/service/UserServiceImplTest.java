@@ -15,6 +15,8 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import com.sc2006.g5.edufinder.model.user.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -54,28 +56,18 @@ public class UserServiceImplTest {
     private static final Long EXISTED_USER_ID = 1L;
     private static final Long INVALID_USER_ID = 2L;
 
-    private static final Long SAVED_SCHOOL_ID_1 = 1L;
-    private static final Long SAVED_SCHOOL_ID_2 = 2L;
-    private static final Long NEW_SAVED_SCHOOL_ID = 3L;
-    private static final Long INVALID_SCHOOL_ID = 4L;
+    private static final Long SAVED_SCHOOL_ID_1 = 11L;
+    private static final Long SAVED_SCHOOL_ID_2 = 12L;
+    private static final Long NEW_SAVED_SCHOOL_ID = 13L;
+    private static final Long INVALID_SCHOOL_ID = 14L;
 
     @BeforeEach
     void setup(){
-        final User user = User.builder()
-            .id(EXISTED_USER_ID)
-            .build();
-
         lenient().when(userRepository.existsById(EXISTED_USER_ID))
             .thenReturn(true);
 
         lenient().when(userRepository.existsById(INVALID_USER_ID))
             .thenReturn(false);
-
-        lenient().when(userRepository.findById(EXISTED_USER_ID))
-            .thenReturn(Optional.of(user));
-
-        lenient().when(userRepository.findById(INVALID_USER_ID))
-            .thenReturn(Optional.empty());
 
         lenient().when(userSavedSchoolRepository.existsByUserIdAndSchoolId(anyLong(), anyLong()))
             .thenAnswer(invocation -> {
@@ -87,6 +79,50 @@ public class UserServiceImplTest {
                     schoolId.equals(SAVED_SCHOOL_ID_2)
                 );
             });
+    }
+
+    @Nested
+    @DisplayName("getUserByUsername()")
+    class GetUserByUsernameTest {
+
+        private static final String EXISTED_USERNAME = "user";
+        private static final String INVALID_USERNAME = "invalid";
+
+        private static final Role EXISTED_USER_ROLE = Role.USER;
+
+        @Test
+        @DisplayName("shouldReturnUserWhenUsernameExisted")
+        void shouldReturnUserWhenUsernameExisted() {
+            User user = User.builder()
+                .id(EXISTED_USER_ID)
+                .username(EXISTED_USERNAME)
+                .role(EXISTED_USER_ROLE)
+                .build();
+
+            when(userRepository.findOneByUsername(EXISTED_USERNAME))
+                .thenReturn(Optional.of(user));
+
+            UserResponse response = userServiceImpl.getUserByUsername(EXISTED_USERNAME);
+
+            assertEquals(EXISTED_USER_ID, response.getId());
+            assertEquals(EXISTED_USERNAME, response.getUsername());
+            assertEquals(EXISTED_USER_ROLE, response.getRole());
+
+            verify(userRepository, times(1)).findOneByUsername(any());
+        }
+
+        @Test
+        @DisplayName("should throw when username not existed")
+        void shouldThrowWhenUsernameNotExisted() {
+            when(userRepository.findOneByUsername(INVALID_USERNAME))
+                .thenReturn(Optional.empty());
+
+            assertThrowsExactly(UserNotFoundException.class, () ->
+                userServiceImpl.getUserByUsername(INVALID_USERNAME)
+            );
+
+            verify(userRepository, times(1)).findOneByUsername(any());
+        }
     }
 
     @Nested
@@ -126,6 +162,16 @@ public class UserServiceImplTest {
     @DisplayName("addSavedSchool()")
     class addSavedSchoolTest {
 
+        @BeforeEach
+        void setup(){
+            final User user = User.builder()
+                    .id(EXISTED_USER_ID)
+                    .build();
+
+            lenient().when(userRepository.findById(EXISTED_USER_ID))
+                    .thenReturn(Optional.of(user));
+        }
+
         @Test
         @DisplayName("should add saved school when request valid")
         void shouldSaveSchoolWhenIsSaving(){
@@ -156,6 +202,9 @@ public class UserServiceImplTest {
         @Test
         @DisplayName("should throw when user not found")
         void shouldThrowWhenUserNotFound(){
+            when(userRepository.findById(INVALID_USER_ID))
+                    .thenReturn(Optional.empty());
+
             SavedSchoolRequest request = SavedSchoolRequest.builder()
                 .schoolId(NEW_SAVED_SCHOOL_ID)
                 .build();

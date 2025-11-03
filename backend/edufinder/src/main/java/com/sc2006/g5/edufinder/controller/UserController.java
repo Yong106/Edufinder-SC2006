@@ -1,6 +1,6 @@
 package com.sc2006.g5.edufinder.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +18,9 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/users/saved-schools")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService){
-        this.userService = userService;
-    }
 
     @GetMapping
     public SavedSchoolResponse getSavedSchoolIds(Authentication auth){

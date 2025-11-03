@@ -2,7 +2,8 @@ package com.sc2006.g5.edufinder.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.sc2006.g5.edufinder.dto.request.SavedSchoolRequest;
@@ -22,17 +23,23 @@ import com.sc2006.g5.edufinder.repository.UserSavedSchoolRepository;
 import jakarta.transaction.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final DbSchoolRepository dbSchoolRepository; 
     private final UserSavedSchoolRepository userSavedSchoolRepository;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, DbSchoolRepository dbSchoolRepository, UserSavedSchoolRepository userSavedSchoolRepository){
-        this.userRepository = userRepository;
-        this.dbSchoolRepository = dbSchoolRepository;
-        this.userSavedSchoolRepository = userSavedSchoolRepository;
+    @Override
+    public UserResponse getUserByUsername(String username) {
+        User user = userRepository.findOneByUsername(username)
+            .orElseThrow(() -> new UserNotFoundException(username));
+
+        return UserResponse.builder()
+            .id(user.getId())
+            .username(user.getUsername())
+            .role(user.getRole())
+            .build();
     }
 
     @Override

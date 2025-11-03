@@ -47,70 +47,64 @@ public class AuthServiceImplTest {
     @InjectMocks
     private AuthServiceImpl authServiceImpl;
 
-    private final String newUsername = "user";
-    private final String existedUsername = "duplicateUser";
+    private static final String NEW_USERNAME = "user";
+    private static final String EXISTED_USERNAME = "duplicateUser";
 
-    private final Long newUserId = 2L;
-    private final Long existedUserId = 1L;
+    private static final Long NEW_USER_ID = 2L;
+    private static final Long EXISTED_USER_ID = 1L;
 
-    private final String validPassword = "Abcd1234@";
-    private final String encodedPassword = "encodedPassword";
+    private static final String VALID_PASSWORD = "Abcd1234@";
+    private static final String ENCODED_PASSWORD = "encoded_password";
 
-    private final String newUserToken = "newUserToken";
-    private final String existedUserToken = "existedUserToken";
+    private static final String NEW_USER_TOKEN = "new_user_token";
+    private static final String EXISTED_USER_TOKEN = "existed_user_token";
 
     @BeforeEach
     void setup(){
         User existedUser = User.builder()
-            .id(existedUserId)
-            .username(existedUsername)
-            .password(encodedPassword)
+            .id(EXISTED_USER_ID)
+            .username(EXISTED_USERNAME)
+            .password(ENCODED_PASSWORD)
             .createdAt(LocalDateTime.now())
             .build();
         
-        lenient().when(userRepository.findOneByUsername(newUsername))
+        lenient().when(userRepository.findOneByUsername(NEW_USERNAME))
             .thenReturn(Optional.empty());
 
-        lenient().when(userRepository.findOneByUsername(existedUsername))
+        lenient().when(userRepository.findOneByUsername(EXISTED_USERNAME))
             .thenReturn(Optional.of(existedUser));
-
-        lenient().when(passwordEncoder.matches(anyString(), anyString())).thenAnswer(invocation -> {
-            String rawPassword = invocation.getArgument(0);
-            String encodedRawPassword = invocation.getArgument(1);
-            return rawPassword.equals(validPassword) && encodedRawPassword.equals(encodedPassword);
-        });
     }
 
     @Nested
-    @DisplayName("register()")
+    @DisplayName("signup()")
     class SignupTests {
 
         @Test
         @DisplayName("should save new user and return auth token when request valid")
         void shouldReturnAuthTokenWhenRequestValid(){
             when(userRepository.save(argThat(user -> 
-                user.getUsername().equals(newUsername) &&
-                user.getPassword().equals(encodedPassword)
+                user.getUsername().equals(NEW_USERNAME) &&
+                user.getPassword().equals(ENCODED_PASSWORD)
             ))).thenAnswer(invocation -> {
                 User user = invocation.getArgument(0);
-                user.setId(newUserId);
+                user.setId(NEW_USER_ID);
                 return user;
             });
 
-            when(passwordEncoder.encode(validPassword))
-                .thenReturn(encodedPassword);
+            when(passwordEncoder.encode(VALID_PASSWORD))
+                .thenReturn(ENCODED_PASSWORD);
 
-            when(sessionProvider.generateToken(newUserId))
-                .thenReturn(newUserToken);
+            when(sessionProvider.generateToken(NEW_USER_ID))
+                .thenReturn(NEW_USER_TOKEN);
             
             SignupRequest request = SignupRequest.builder()
-                .username(newUsername)
-                .password(validPassword)
+                .username(NEW_USERNAME)
+                .password(VALID_PASSWORD)
                 .build();
             
             String token = authServiceImpl.signup(request);
 
-            assertEquals(token, newUserToken);
+            assertEquals(NEW_USER_TOKEN, token);
 
             verify(userRepository, times(1)).save(any());
             verify(passwordEncoder, times(1)).encode(any());
@@ -121,8 +115,8 @@ public class AuthServiceImplTest {
         @DisplayName("should throw when username existed")
         void shouldThrowWhenUsernameExisted(){
             SignupRequest request = SignupRequest.builder()
-                .username(existedUsername)
-                .password(validPassword)
+                .username(EXISTED_USERNAME)
+                .password(VALID_PASSWORD)
                 .build();
             
             assertThrowsExactly(DuplicateUsernameException.class, () -> authServiceImpl.signup(request));
@@ -136,8 +130,8 @@ public class AuthServiceImplTest {
         @DisplayName("should throw when password invalid")
         void shouldThrowWhenPasswordInvalid(){
             SignupRequest request = SignupRequest.builder()
-                .username(existedUsername)
-                .password(validPassword)
+                .username(EXISTED_USERNAME)
+                .password(VALID_PASSWORD)
                 .build();
 
             String noLowerCasePassword = "ABCD123@";
@@ -182,20 +176,29 @@ public class AuthServiceImplTest {
     @DisplayName("login()")
     class LoginTests {
 
+        @BeforeEach
+        void setup(){
+            lenient().when(passwordEncoder.matches(anyString(), anyString())).thenAnswer(invocation -> {
+                String rawPassword = invocation.getArgument(0);
+                String encodedRawPassword = invocation.getArgument(1);
+                return rawPassword.equals(VALID_PASSWORD) && encodedRawPassword.equals(ENCODED_PASSWORD);
+            });
+        }
+
         @Test
         @DisplayName("should return auth token when request valid")
         void shouldReturnAuthTokenWhenRequestValid(){
-            when(sessionProvider.generateToken(existedUserId))
-                .thenReturn(existedUserToken);
+            when(sessionProvider.generateToken(EXISTED_USER_ID))
+                .thenReturn(EXISTED_USER_TOKEN);
 
             LoginRequest request = LoginRequest.builder()
-                .username(existedUsername)
-                .password(validPassword)
+                .username(EXISTED_USERNAME)
+                .password(VALID_PASSWORD)
                 .build();
             
             String token = authServiceImpl.login(request);
 
-            assertEquals(token, existedUserToken);
+            assertEquals(EXISTED_USER_TOKEN, token);
             
             verify(passwordEncoder, times(1)).matches(any(), any());
             verify(sessionProvider, times(1)).generateToken(any());
@@ -205,8 +208,8 @@ public class AuthServiceImplTest {
         @DisplayName("should throw when user not found")
         void shouldThrowWhenUsernameExisted(){
             LoginRequest request = LoginRequest.builder()
-                .username(newUsername)
-                .password(validPassword)
+                .username(NEW_USERNAME)
+                .password(VALID_PASSWORD)
                 .build();
             
             assertThrowsExactly(InvalidCredentialsException.class, () -> authServiceImpl.login(request));
@@ -219,7 +222,7 @@ public class AuthServiceImplTest {
         @DisplayName("should throw when password not matched")
         void shouldThrowWhenPasswordNotMatched(){
             LoginRequest request = LoginRequest.builder()
-                .username(existedUsername)
+                .username(EXISTED_USERNAME)
                 .password("wrongPassword")
                 .build();
             
