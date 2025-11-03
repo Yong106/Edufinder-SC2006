@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                    .allowedOrigins("https://localhost:3000")
+                    .allowedOrigins("http://localhost:5173")
                     .allowedMethods("*")
                     .allowCredentials(true)
                     .exposedHeaders("Set-Cookie");
