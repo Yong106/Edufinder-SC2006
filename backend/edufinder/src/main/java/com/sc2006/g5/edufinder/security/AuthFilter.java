@@ -2,6 +2,8 @@ package com.sc2006.g5.edufinder.security;
 
 import java.io.IOException;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,15 +21,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
+@RequiredArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
 
     private final SessionProvider sessionProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public AuthFilter(SessionProvider sessionProvider, UserDetailsServiceImpl userDetailsService) {
-        this.sessionProvider = sessionProvider;
-        this.userDetailsService = userDetailsService;
-    }
+    @Value("${app.auth.cookie.name}")
+    private String cookieName;
 
     @Override
     protected void doFilterInternal(
@@ -36,21 +37,12 @@ public class AuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws IOException, ServletException{
 
-        String path = request.getServletPath();
-
-        if (path.startsWith("/api/auth") || 
-            path.startsWith("/api/schools"))
-        {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         Cookie[] cookies = request.getCookies();
         String token = null;
 
         if(cookies != null){
             for(Cookie cookie : cookies){
-                if(cookie.getName().equals("jwt")){
+                if(cookie.getName().equals(cookieName)){
                     token = cookie.getValue();
                     break;
                 }
@@ -58,15 +50,15 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         if (token == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing token.");
+            filterChain.doFilter(request, response);
             return;
         }
 
-        Long userId = null;
+        Long userId;
         try {
             userId = sessionProvider.validateAndGetUserId(token);
         } catch (InvalidAuthTokenException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -80,7 +72,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
-        
+
         filterChain.doFilter(request, response);
     }
 }
