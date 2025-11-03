@@ -15,8 +15,9 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
 import com.sc2006.g5.edufinder.dto.response.UserResponse;
-import com.sc2006.g5.edufinder.model.user.Role;
+import com.sc2006.g5.edufinder.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -49,6 +50,9 @@ public class UserServiceImplTest {
 
     @Mock
     UserSavedSchoolRepository userSavedSchoolRepository;
+
+    @Mock
+    UserMapper userMapper;
 
     @InjectMocks
     UserServiceImpl userServiceImpl;
@@ -88,27 +92,31 @@ public class UserServiceImplTest {
         private static final String EXISTED_USERNAME = "user";
         private static final String INVALID_USERNAME = "invalid";
 
-        private static final Role EXISTED_USER_ROLE = Role.USER;
-
         @Test
         @DisplayName("shouldReturnUserWhenUsernameExisted")
         void shouldReturnUserWhenUsernameExisted() {
             User user = User.builder()
                 .id(EXISTED_USER_ID)
                 .username(EXISTED_USERNAME)
-                .role(EXISTED_USER_ROLE)
+                .build();
+
+            UserResponse expectedResponse = UserResponse.builder()
+                .id(EXISTED_USER_ID)
+                .username(EXISTED_USERNAME)
                 .build();
 
             when(userRepository.findOneByUsername(EXISTED_USERNAME))
                 .thenReturn(Optional.of(user));
 
-            UserResponse response = userServiceImpl.getUserByUsername(EXISTED_USERNAME);
+            when(userMapper.toUserResponse(user))
+                .thenReturn(expectedResponse);
 
-            assertEquals(EXISTED_USER_ID, response.getId());
-            assertEquals(EXISTED_USERNAME, response.getUsername());
-            assertEquals(EXISTED_USER_ROLE, response.getRole());
+            UserResponse serviceResponse = userServiceImpl.getUserByUsername(EXISTED_USERNAME);
+
+            assertEquals(expectedResponse, serviceResponse);
 
             verify(userRepository, times(1)).findOneByUsername(any());
+            verify(userMapper, times(1)).toUserResponse(any());
         }
 
         @Test
@@ -122,6 +130,73 @@ public class UserServiceImplTest {
             );
 
             verify(userRepository, times(1)).findOneByUsername(any());
+            verify(userMapper, never()).toUserResponse(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("editUser()")
+    class EditUserTest {
+
+        String OLD_POSTAL_CODE = "old_postal_code";
+        String NEW_POSTAL_CODE = "new_postal_code";
+
+        @Test
+        @DisplayName("should edit and return user response when request valid")
+        void shouldEditAndReturnUserResponseWhenRequestValid() {
+            User user = User.builder()
+                .id(EXISTED_USER_ID)
+                .postalCode(OLD_POSTAL_CODE)
+                .build();
+
+            UserResponse expectedResponse = UserResponse.builder()
+                .id(EXISTED_USER_ID)
+                .build();
+
+            when(userRepository.findById(EXISTED_USER_ID))
+                .thenReturn(Optional.of(user));
+
+            when(userRepository.save(argThat(editedUser ->
+                editedUser.getId().equals(EXISTED_USER_ID) &&
+                editedUser.getPostalCode().equals(NEW_POSTAL_CODE)
+            ))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            when(userMapper.toUserResponse(argThat(editedUser ->
+                editedUser.getId().equals(EXISTED_USER_ID) &&
+                editedUser.getPostalCode().equals(NEW_POSTAL_CODE)
+            ))).thenReturn(expectedResponse);
+
+            EditUserRequest request = EditUserRequest.builder()
+                .postalCode(NEW_POSTAL_CODE)
+                .build();
+
+            UserResponse serviceResponse = userServiceImpl.editUser(EXISTED_USER_ID, request);
+
+            assertEquals(expectedResponse, serviceResponse);
+
+            verify(userRepository, times(1)).findById(any());
+            verify(userRepository, times(1)).save(any());
+            verify(userMapper, times(1)).toUserResponse(any());
+        }
+
+        @Test
+        @DisplayName("should throw when user not found")
+        void shouldThrowWhenUserNotFound() {
+            when(userRepository.findById(INVALID_USER_ID))
+                .thenReturn(Optional.empty());
+
+            EditUserRequest request = EditUserRequest.builder()
+                .postalCode(NEW_POSTAL_CODE)
+                .build();
+
+
+            assertThrowsExactly(UserNotFoundException.class, () ->
+                userServiceImpl.editUser(INVALID_USER_ID, request)
+            );
+
+            verify(userRepository, times(1)).findById(any());
+            verify(userRepository, never()).save(any());
+            verify(userMapper, never()).toUserResponse(any());
         }
     }
 
