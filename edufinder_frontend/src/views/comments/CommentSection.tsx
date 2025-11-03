@@ -3,6 +3,7 @@ import CONSTANTS from 'src/constants.ts';
 import CommentBox from 'src/views/comments/CommentBox.tsx';
 import { UserComment } from 'src/types/comment/userComment.ts';
 import AddCommentBox from 'src/views/comments/AddCommentBox.tsx';
+import toast from 'react-hot-toast';
 
 const CommentSection = ({schoolId}: {schoolId: string}) => {
 
@@ -27,7 +28,7 @@ const CommentSection = ({schoolId}: {schoolId: string}) => {
   }, []);
 
   const postNewComment = async(content: string) => {
-    await fetch(CONSTANTS.backendEndpoint + '/schools/' + schoolId + '/comments', {
+    const res = await fetch(CONSTANTS.backendEndpoint + '/schools/' + schoolId + '/comments', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -35,6 +36,10 @@ const CommentSection = ({schoolId}: {schoolId: string}) => {
       },
       body: JSON.stringify({ content }),
     });
+
+    if (!res.ok) toast.error("Failed to post comment");
+    else toast.success("Comment successfully created!");
+
     getComments();
   }
 
