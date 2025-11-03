@@ -26,7 +26,7 @@ export const SchoolProvider = ({ children }: { children: ReactNode }) => {
       method: 'GET',
     });
 
-    const data = await res.json(); // ✅ properly await JSON body
+    const data = await res.json();
     console.log("Data:", data);
 
     const map = new Map<number, School>();
