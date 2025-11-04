@@ -52,7 +52,7 @@ const CommentSection = ({schoolId}: {schoolId: string}) => {
           <div>Loading comments...</div>
         ) : (
           [...comments].reverse().map((comment: UserComment) => (
-            <CommentBox comment={comment} />
+            <CommentBox comment={comment} getComments={getComments} />
           ))
         )
       }

@@ -1,7 +1,36 @@
 import CardBox from 'src/components/shared/CardBox.tsx';
 import { UserComment, UserReply } from 'src/types/comment/userComment.ts';
+import { useState } from 'react';
+import AddReplyBox from 'src/views/comments/AddReplyBox.tsx';
+import CONSTANTS from 'src/constants.ts';
+import toast from 'react-hot-toast';
 
-const CommentBox = ({comment}: {comment: UserComment}) => {
+const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: () => void; }) => {
+
+  const [showReplyBox, setShowReplyBox] = useState(false);
+
+  const handleReplySubmit = async (content: string) => {
+    try {
+      const res = await fetch(CONSTANTS.backendEndpoint + '/comments/' + comment.id + '/replies', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: content }),
+      });
+
+      if (!res.ok) throw new Error('Failed to post reply');
+      toast.success('Reply successfully posted!');
+      setShowReplyBox(false);
+
+      getComments();
+
+    } catch (err) {
+      toast.error('Failed to post reply');
+      console.log(err);
+    }
+  }
 
   return (
     <div className="mt-2 mb-2">
@@ -20,6 +49,23 @@ const CommentBox = ({comment}: {comment: UserComment}) => {
             <p className="text-ld text-sm font-medium">{reply.content}</p>
           </CardBox>
         ))
+      }
+      {
+        !showReplyBox && (
+          <div className={`${comment.replies.length ? "ml-24" : "ml-0"} mt-2`}>
+            <button
+              onClick={() => setShowReplyBox(true)}
+              className="text-blue-600 text-sm underline hover:opacity-80"
+            >
+              Reply in thread
+            </button>
+          </div>
+        )
+      }
+      {
+        showReplyBox && (
+          <AddReplyBox onSubmit={handleReplySubmit} setShowReplyBox={setShowReplyBox} commentReplyLength={comment.replies.length} />
+        )
       }
     </div>
   )
