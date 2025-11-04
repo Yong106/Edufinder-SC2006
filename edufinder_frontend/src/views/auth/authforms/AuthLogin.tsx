@@ -1,15 +1,47 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { Link, useNavigate } from "react-router";
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
+import CONSTANTS from 'src/constants.ts';
+import toast from 'react-hot-toast';
 
 
 
 const AuthLogin = () => {
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
-  const handleSubmit = (event:FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(event);
-     navigate("/");
+
+    try {
+      const res = await fetch(CONSTANTS.backendEndpoint + '/auth/login', {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      })
+
+      if (!res.ok) {
+
+        if (res.status === 400) {
+          toast.error("Wrong username or password");
+        } else {
+          console.log(await res.json());
+          throw new Error('Login failed.');
+        }
+      } else {
+        toast.success("Login Successful");
+        navigate("/");
+      }
+    } catch (err) {
+      console.log("Login error: ", err);
+      toast.error("Login failed.");
+    }
+
   }
   return (
     <>
@@ -19,11 +51,13 @@ const AuthLogin = () => {
             <Label >Username</Label>
           </div>
           <TextInput
-            id="Username"
+            id="username"
+            name="username"
             type="text"
             sizing="md"
             required
             className="form-control "
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="mb-4">
@@ -31,11 +65,13 @@ const AuthLogin = () => {
              <Label >Password</Label>
           </div>
           <TextInput
-            id="userpwd"
+            id="password"
+            name="password"
             type="password"
             sizing="md"
             required
             className="form-control "
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div className="flex justify-between my-5">
