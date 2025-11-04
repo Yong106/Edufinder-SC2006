@@ -17,7 +17,7 @@ public class SchoolController {
     private final SchoolService schoolService;
 
     @GetMapping
-    public ResponseEntity<?> getAllSchools() {
+    public ResponseEntity<SchoolsResponse> getAllSchools() {
         SchoolsResponse schools = schoolService.getAllSchools();
         return ResponseEntity.ok(schools);
     }

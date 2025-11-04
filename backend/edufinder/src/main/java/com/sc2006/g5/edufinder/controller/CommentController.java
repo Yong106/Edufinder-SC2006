@@ -28,7 +28,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/schools/{schoolId}/comments")
-    public ResponseEntity<?> getCommentsBySchoolId(
+    public ResponseEntity<CommentsResponse> getCommentsBySchoolId(
         @AuthenticationPrincipal CustomUserDetails user,
         @PathVariable @NotNull Long schoolId
     ) {
@@ -39,7 +39,7 @@ public class CommentController {
     }
 
     @PostMapping("/schools/{schoolId}/comments")
-    public ResponseEntity<?>  createComment(
+    public ResponseEntity<CommentResponse> createComment(
         @AuthenticationPrincipal CustomUserDetails user,
         @PathVariable @NotNull Long schoolId,
         @Valid @RequestBody CreateCommentRequest request

@@ -31,7 +31,7 @@ public class AuthController {
     private Long cookieExpiration;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request) {
         String token = authService.login(request);
 
         ResponseCookie cookie = createCookie(token, cookieExpiration);
@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest request) {
+    public ResponseEntity<UserResponse> signup(@Valid @RequestBody SignupRequest request) {
         String token = authService.signup(request);
 
         ResponseCookie cookie = createCookie(token, cookieExpiration);
@@ -65,11 +65,11 @@ public class AuthController {
 
     private ResponseCookie createCookie(String token, long maxAge) {
          return ResponseCookie.from(cookieName, token)
-                .httpOnly(true)         // prevent JS access
-                .secure(true)           // only send over HTTPS
-                .path("/")              // send for all endpoints
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
                 .maxAge(maxAge)
-                .sameSite("Strict")     // avoid CSRF from other sites
+                .sameSite("Strict")
                 .build();
     }
 }

@@ -26,7 +26,7 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/comments/{commentId}/replies")
-    public ResponseEntity<?> createReply(
+    public ResponseEntity<ReplyResponse> createReply(
         @AuthenticationPrincipal CustomUserDetails user, 
         @NotNull @PathVariable Long commentId,
         @Valid @RequestBody CreateReplyRequest request
