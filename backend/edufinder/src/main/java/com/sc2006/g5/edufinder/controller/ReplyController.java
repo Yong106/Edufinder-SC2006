@@ -1,5 +1,6 @@
 package com.sc2006.g5.edufinder.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,18 +26,25 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/comments/{commentId}/replies")
-    public ReplyResponse createReply(
+    public ResponseEntity<?> createReply(
         @AuthenticationPrincipal CustomUserDetails user, 
         @NotNull @PathVariable Long commentId,
         @Valid @RequestBody CreateReplyRequest request
     ){
         Long userId = user.getId();
-        return replyService.createReply(userId, commentId, request);
+        ReplyResponse response = replyService.createReply(userId, commentId, request);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/replies/{replyId}")
-    public void deleteReply(@AuthenticationPrincipal CustomUserDetails user, @PathVariable @NotNull Long replyId){
+    public ResponseEntity<?> deleteReply(
+        @AuthenticationPrincipal CustomUserDetails user,
+        @PathVariable @NotNull Long replyId
+    ){
         Long userId = user.getId();
         replyService.deleteReply(userId, replyId);
+
+        return ResponseEntity.noContent().build();
     }
 }
