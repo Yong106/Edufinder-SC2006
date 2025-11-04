@@ -3,6 +3,7 @@ package com.sc2006.g5.edufinder.controller;
 import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
 import com.sc2006.g5.edufinder.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,39 +21,42 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping
-    public UserResponse editUser(
+    public ResponseEntity<UserResponse> editUser(
         @AuthenticationPrincipal CustomUserDetails user,
         @Valid @RequestBody EditUserRequest editUserRequest
     ){
         Long userId = user.getId();
-
-        return userService.editUser(userId, editUserRequest);
+        UserResponse userResponse = userService.editUser(userId, editUserRequest);
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/saved-schools")
-    public SavedSchoolResponse getSavedSchoolIds(@AuthenticationPrincipal CustomUserDetails user){
+    public ResponseEntity<SavedSchoolResponse> getSavedSchoolIds(
+        @AuthenticationPrincipal CustomUserDetails user
+    ){
         Long userId = user.getId();
 
-        return userService.getSavedSchoolIds(userId);
+        SavedSchoolResponse response = userService.getSavedSchoolIds(userId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/saved-schools")
-    public void addSavedSchool(
+    public ResponseEntity<?> addSavedSchool(
         @AuthenticationPrincipal CustomUserDetails user,
         @Valid @RequestBody SavedSchoolRequest savedSchoolRequest
     ){
         Long userId = user.getId();
-
         userService.addSavedSchool(userId, savedSchoolRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/saved-schools")
-    public void removeSavedSchool(
+    public ResponseEntity<?> removeSavedSchool(
         @AuthenticationPrincipal CustomUserDetails user,
         @Valid @RequestBody SavedSchoolRequest savedSchoolRequest
     ){
         Long userId = user.getId();
-
         userService.removeSavedSchool(userId, savedSchoolRequest);
+        return ResponseEntity.noContent().build();
     }
 }
