@@ -1,5 +1,6 @@
 package com.sc2006.g5.edufinder.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,14 +17,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/comments/{commentId}/votes")
 @RequiredArgsConstructor
 public class VoteController {
     
     private final VoteService voteService;
     
-    @PutMapping("/comments/{commentId}/votes")
-    public void setVote(
+    @PutMapping
+    public ResponseEntity<?> setVote(
         @AuthenticationPrincipal CustomUserDetails user,
         @NotNull @PathVariable Long commentId,
         @Valid @RequestBody SetVoteRequest setVoteRequest
@@ -31,5 +32,7 @@ public class VoteController {
 
         Long userId = user.getId();
         voteService.setVote(userId, commentId, setVoteRequest);
+
+        return ResponseEntity.noContent().build();
     }
 }
