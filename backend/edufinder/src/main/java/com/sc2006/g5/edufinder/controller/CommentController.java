@@ -1,5 +1,6 @@
 package com.sc2006.g5.edufinder.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,33 +28,37 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/schools/{schoolId}/comments")
-    public CommentsResponse getCommentsBySchoolId(
-            @AuthenticationPrincipal CustomUserDetails user,
-            @PathVariable @NotNull Long schoolId
+    public ResponseEntity<?> getCommentsBySchoolId(
+        @AuthenticationPrincipal CustomUserDetails user,
+        @PathVariable @NotNull Long schoolId
     ) {
 
         Long userId = (user != null) ? user.getId() : null;
-        return commentService.getCommentsBySchoolId(userId, schoolId);
+        CommentsResponse response = commentService.getCommentsBySchoolId(userId, schoolId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/schools/{schoolId}/comments")
-    public CommentResponse createComment(
-            @AuthenticationPrincipal CustomUserDetails user,
-            @PathVariable @NotNull Long schoolId,
-            @Valid @RequestBody CreateCommentRequest request    
-        ) {
+    public ResponseEntity<?>  createComment(
+        @AuthenticationPrincipal CustomUserDetails user,
+        @PathVariable @NotNull Long schoolId,
+        @Valid @RequestBody CreateCommentRequest request
+    ) {
 
         Long userId = user.getId();
-        return commentService.createComment(userId, schoolId, request);
+        CommentResponse response = commentService.createComment(userId, schoolId, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public void deleteComment(
-            @AuthenticationPrincipal CustomUserDetails user,
-            @PathVariable @NotNull Long commentId
+    public ResponseEntity<?> deleteComment(
+        @AuthenticationPrincipal CustomUserDetails user,
+        @PathVariable @NotNull Long commentId
     ) {
 
         Long userId = user.getId();
         commentService.deleteComment(userId, commentId);
+
+        return ResponseEntity.noContent().build();
     }
 }
