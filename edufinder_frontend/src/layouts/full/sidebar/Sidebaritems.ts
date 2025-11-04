@@ -23,7 +23,7 @@ export interface MenuItem {
 
 import { uniqueId } from 'lodash';
 
-const SidebarContent: MenuItem[] = [
+const SidebarContent = (isLoggedIn: boolean): MenuItem[] => [
   {
     children: [
       {
@@ -51,7 +51,22 @@ const SidebarContent: MenuItem[] = [
   },
   {
     heading: 'Auth',
-    children: [
+    children: isLoggedIn ? [
+      {
+        name: 'User',
+        icon: 'solar:user-circle-outline',
+        id: uniqueId(),
+        url: '/profile',
+        isPro: false,
+      },
+      {
+        name: 'Logout',
+        icon: 'solar:logout-2-outline',
+        id: uniqueId(),
+        url: '/auth/logout',
+        isPro: false,
+      },
+    ] : [
       {
         name: 'Login',
         icon: 'solar:login-2-linear',
@@ -66,7 +81,7 @@ const SidebarContent: MenuItem[] = [
         url: '/auth/register',
         isPro: false,
       }
-    ],
+    ]
   },
 ];
 

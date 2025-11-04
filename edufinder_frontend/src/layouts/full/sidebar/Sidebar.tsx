@@ -6,8 +6,13 @@ import SimpleBar from "simplebar-react";
 import React from "react";
 import NavCollapse from "./NavCollapse";
 import Logo from 'src/layouts/full/shared/logo/Logo.tsx';
+import { useAuth } from 'src/context/AuthProvider.tsx';
 
 const SidebarLayout = () => {
+
+  const { isLoggedIn } = useAuth();
+  const sidebarContentItems = SidebarContent(isLoggedIn);
+
   return (
     <>
       <div className="xl:block hidden">
@@ -23,15 +28,15 @@ const SidebarLayout = () => {
             <SidebarItems className=" mt-2">
               <SidebarItemGroup
                className="sidebar-nav hide-menu">
-                {SidebarContent &&
-                  SidebarContent?.map((item, index) => (
-                    <div className="caption" key={item.heading}>
-                      <React.Fragment key={index}>
-                        <h5 className="text-dark/60 uppercase font-medium leading-6 text-xs pb-2 ps-6">
-                          {item.heading}
-                        </h5>
-                        {item.children?.map((child, index) => (
-                        <React.Fragment key={child.id && index}>
+                {sidebarContentItems &&
+                  sidebarContentItems.map((item, index) => (
+                  <div className="caption" key={item.heading ?? index}>
+                    <React.Fragment>
+                      <h5 className="text-dark/60 uppercase font-medium leading-6 text-xs pb-2 ps-6">
+                        {item.heading}
+                      </h5>
+                      {item.children?.map((child, index) => (
+                        <React.Fragment key={child.id ?? index}>
                           {child.children ? (
                             <div className="collpase-items">
                               <NavCollapse item={child} />
@@ -41,9 +46,9 @@ const SidebarLayout = () => {
                           )}
                         </React.Fragment>
                       ))}
-                      </React.Fragment>
-                    </div>
-                  ))}
+                    </React.Fragment>
+                  </div>
+                ))}
               </SidebarItemGroup>
             </SidebarItems>
           </SimpleBar>

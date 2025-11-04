@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { FormEvent, useState } from 'react';
 import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
+import { useAuth } from 'src/context/AuthProvider.tsx';
 
 
 
@@ -10,6 +11,8 @@ const AuthLogin = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const { login } = useAuth();
 
   const navigate = useNavigate();
   const handleSubmit = async (event:FormEvent<HTMLFormElement>) => {
@@ -35,6 +38,16 @@ const AuthLogin = () => {
         }
       } else {
         toast.success("Login Successful");
+
+        const data = await res.json();
+        console.log(data);
+
+        login({
+          id: data.id,
+          username: data.username,
+          postcode: data.postalCode ? data.postalCode : "",
+        });
+
         navigate("/");
       }
     } catch (err) {
@@ -43,6 +56,7 @@ const AuthLogin = () => {
     }
 
   }
+
   return (
     <>
       <form onSubmit={handleSubmit} >
