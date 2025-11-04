@@ -1,11 +1,11 @@
 
-import LogoIcon from '/src/assets/images/logos/logo-icon.svg'
+import EdufinderLogo from '/src/assets/images/edufinder/EdufinderLogo.png'
 import { Link } from 'react-router';
 
 const Logo = () => {
   return (
    <Link to={'/'}>
-      <img src={LogoIcon} alt="logo" />
+      <img src={EdufinderLogo} alt="logo" />
     </Link>
   )
 }

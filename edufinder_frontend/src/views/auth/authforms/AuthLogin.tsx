@@ -1,11 +1,12 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { Link, useNavigate } from "react-router";
+import { FormEvent } from 'react';
 
 
 
 const AuthLogin = () => {
   const navigate = useNavigate();
-  const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(event);
      navigate("/");
@@ -44,7 +45,7 @@ const AuthLogin = () => {
               htmlFor="accept"
               className="opacity-90 font-normal cursor-pointer"
             >
-              Remeber this Device
+              Remember this Device
             </Label>
           </div>
           <Link to={"/"} className="text-primary text-sm font-medium">

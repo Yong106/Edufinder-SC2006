@@ -1,11 +1,11 @@
 
 
-import Logo from "/src/assets/images/logos/dark-logo.svg";
+import EdufinderFullLogo from "/src/assets/images/edufinder/EdufinderFullLogo.png";
 import { Link } from "react-router";
 const FullLogo = () => {
   return (
     <Link to={"/"}>
-      <img src={Logo} alt="logo" className="block" />
+      <img src={EdufinderFullLogo} alt="logo" className="block" />
     </Link>
   );
 };

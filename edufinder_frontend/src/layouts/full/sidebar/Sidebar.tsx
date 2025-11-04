@@ -5,6 +5,7 @@ import NavItems from "./NavItems";
 import SimpleBar from "simplebar-react";
 import React from "react";
 import NavCollapse from "./NavCollapse";
+import Logo from 'src/layouts/full/shared/logo/Logo.tsx';
 
 const SidebarLayout = () => {
   return (
@@ -15,7 +16,8 @@ const SidebarLayout = () => {
           aria-label="Sidebar with multi-level dropdown example"
         >
           <div className="px-5 py-4 flex items-center sidebarlogo">
-            <h1 className="font-semibold text-4xl">Edufinder</h1>
+            <Logo />
+            <h1 className="font-semibold text-4xl ml-2">Edufinder</h1>
           </div>
           <SimpleBar className="h-300">
             <SidebarItems className=" mt-2">
