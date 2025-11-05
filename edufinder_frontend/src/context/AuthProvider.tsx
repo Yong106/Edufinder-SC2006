@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const logout = async () => {
-    setUser(user);
+    setUser(null);
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
     localStorage.removeItem('postalCode');
