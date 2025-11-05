@@ -5,7 +5,6 @@ import com.sc2006.g5.edufinder.config.SecurityConfig;
 import com.sc2006.g5.edufinder.dto.response.UserResponse;
 import com.sc2006.g5.edufinder.exception.auth.DuplicateUsernameException;
 import com.sc2006.g5.edufinder.exception.auth.InvalidCredentialsException;
-import com.sc2006.g5.edufinder.exception.auth.InvalidPasswordException;
 import com.sc2006.g5.edufinder.security.AuthFilter;
 import com.sc2006.g5.edufinder.service.AuthService;
 import com.sc2006.g5.edufinder.service.UserService;
@@ -53,9 +52,8 @@ public class AuthControllerTest {
     private final String EXISTED_USERNAME = "valid_username";
     private final String NEW_USERNAME = "new_username";
 
-    private final String CORRECT_PASSWORD = "user_password";
+    private final String CORRECT_PASSWORD = "AbCd1234@";
     private final String WRONG_PASSWORD = "wrong_password";
-    private final String INVALID_PASSWORD = "invalid_password";
 
     private final String TOKEN = "token";
 
@@ -69,16 +67,16 @@ public class AuthControllerTest {
     @DisplayName("POST /api/auth/login")
     class LoginTest {
 
-        private MockHttpServletRequestBuilder mockLoginRequest(String content) {
+        private MockHttpServletRequestBuilder mockRawRequest(String content) {
             return post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         }
 
-        private MockHttpServletRequestBuilder mockLoginRequest(String username, String password) {
-            return mockLoginRequest("""
-                    {"username": "%s", "password": "%s"}
-                """.formatted(username, password));
+        private MockHttpServletRequestBuilder mockRequest(String username, String password) {
+            return mockRawRequest("""
+                {"username": "%s", "password": "%s"}
+            """.formatted(username, password));
         }
 
         @Test
@@ -96,7 +94,7 @@ public class AuthControllerTest {
             when(userService.getUserByUsername(EXISTED_USERNAME))
                 .thenReturn(userResponse);
 
-            mockMvc.perform(mockLoginRequest(EXISTED_USERNAME, CORRECT_PASSWORD))
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, CORRECT_PASSWORD))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.SET_COOKIE, containsString("%s=%s".formatted(cookieName, TOKEN))))
                 .andExpect(header().string(HttpHeaders.SET_COOKIE, containsString("Max-Age=%d".formatted(cookieExpiration))))
@@ -109,14 +107,14 @@ public class AuthControllerTest {
         @Test
         @DisplayName("should return 400 when request malformed")
         void shouldReturn400WhenRequestMalformed() throws Exception {
-            mockMvc.perform(mockLoginRequest("{)"))
+            mockMvc.perform(mockRawRequest("{)"))
                 .andExpect(status().isBadRequest());
 
-            mockMvc.perform(mockLoginRequest("""
+            mockMvc.perform(mockRawRequest("""
                 {"username": "1"}
             """)).andExpect(status().isBadRequest());
 
-            mockMvc.perform(mockLoginRequest("""
+            mockMvc.perform(mockRawRequest("""
                 {"password": "1"}
             """)).andExpect(status().isBadRequest());
 
@@ -134,7 +132,7 @@ public class AuthControllerTest {
                 throw new InvalidCredentialsException();
             });
 
-            mockMvc.perform(mockLoginRequest(EXISTED_USERNAME, WRONG_PASSWORD))
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, WRONG_PASSWORD))
                 .andExpect(status().isUnauthorized());
 
             verify(authService, times(1)).login(any());
@@ -146,14 +144,14 @@ public class AuthControllerTest {
     @DisplayName("POST /api/auth/signup")
     class SignupTest {
 
-        private MockHttpServletRequestBuilder mockSignupRequest(String content) {
+        private MockHttpServletRequestBuilder mockRawRequest(String content) {
             return post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         }
 
-        private MockHttpServletRequestBuilder mockSignupRequest(String username, String password) {
-            return mockSignupRequest("""
+        private MockHttpServletRequestBuilder mockRequest(String username, String password) {
+            return mockRawRequest("""
                 {"username": "%s", "password": "%s"}
             """.formatted(username, password));
         }
@@ -173,7 +171,7 @@ public class AuthControllerTest {
             when(userService.getUserByUsername(NEW_USERNAME))
                 .thenReturn(userResponse);
 
-            mockMvc.perform(mockSignupRequest(NEW_USERNAME, CORRECT_PASSWORD))
+            mockMvc.perform(mockRequest(NEW_USERNAME, CORRECT_PASSWORD))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.SET_COOKIE, containsString("%s=%s".formatted(cookieName, TOKEN))))
                 .andExpect(header().string(HttpHeaders.SET_COOKIE, containsString("Max-Age=%d".formatted(cookieExpiration))))
@@ -186,19 +184,46 @@ public class AuthControllerTest {
         @Test
         @DisplayName("should return 400 when request malformed")
         void shouldReturn400WhenRequestMalformed() throws Exception {
-            mockMvc.perform(mockSignupRequest("{)"))
+            mockMvc.perform(mockRawRequest("{)"))
                 .andExpect(status().isBadRequest());
 
-            mockMvc.perform(mockSignupRequest("""
+            mockMvc.perform(mockRawRequest("""
                 {"username": "1"}
             """)).andExpect(status().isBadRequest());
 
-            mockMvc.perform(mockSignupRequest("""
+            mockMvc.perform(mockRawRequest("""
                 {"password": "1"}
             """)).andExpect(status().isBadRequest());
 
             verify(authService, never()).signup(any());
             verify(userService, never()).getUserByUsername(any());
+        }
+
+        @Test
+        @DisplayName("should return 400 when invalid password")
+        void shouldReturn400WhenInvalidPassword() throws Exception {
+            String noLowerCasePassword = "ABCD123@";
+            String noUpperCasePassword = "abcd123@";
+            String noDigitPassword = "Abcdefg@";
+            String noSpecialCharacterPassword = "Abcd1234";
+            String shortPassword = "Abab12@";
+
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, noLowerCasePassword))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, noUpperCasePassword))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, noDigitPassword))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, noSpecialCharacterPassword))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, shortPassword))
+                .andExpect(status().isBadRequest());
+
+            verify(authService, never()).signup(any());
         }
 
         @Test
@@ -211,25 +236,8 @@ public class AuthControllerTest {
                 throw new DuplicateUsernameException();
             });
 
-            mockMvc.perform(mockSignupRequest(EXISTED_USERNAME, CORRECT_PASSWORD))
+            mockMvc.perform(mockRequest(EXISTED_USERNAME, CORRECT_PASSWORD))
                 .andExpect(status().isConflict());
-
-            verify(authService, times(1)).signup(any());
-            verify(userService, never()).getUserByUsername(any());
-        }
-
-        @Test
-        @DisplayName("should return 400 when invalid password")
-        void shouldReturn400WhenInvalidPassword() throws Exception {
-            when(authService.signup(argThat(request ->
-                request.getUsername().equals(NEW_USERNAME) &&
-                request.getPassword().equals(INVALID_PASSWORD)
-            ))).thenAnswer((invocation) -> {
-                throw new InvalidPasswordException();
-            });
-
-            mockMvc.perform(mockSignupRequest(NEW_USERNAME, INVALID_PASSWORD))
-                .andExpect(status().isBadRequest());
 
             verify(authService, times(1)).signup(any());
             verify(userService, never()).getUserByUsername(any());

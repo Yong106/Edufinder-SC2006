@@ -113,57 +113,13 @@ public class AuthServiceImplTest {
 
         @Test
         @DisplayName("should throw when username existed")
-        void shouldThrowWhenUsernameExisted(){
+        void shouldThrowWhenUsernameExisted() {
             SignupRequest request = SignupRequest.builder()
-                .username(EXISTED_USERNAME)
-                .password(VALID_PASSWORD)
-                .build();
-            
+                    .username(EXISTED_USERNAME)
+                    .password(VALID_PASSWORD)
+                    .build();
+
             assertThrowsExactly(DuplicateUsernameException.class, () -> authServiceImpl.signup(request));
-            
-            verify(userRepository, never()).save(any());
-            verify(passwordEncoder, never()).encode(any());
-            verify(sessionProvider, never()).generateToken(any());
-        }
-
-        @Test
-        @DisplayName("should throw when password invalid")
-        void shouldThrowWhenPasswordInvalid(){
-            SignupRequest request = SignupRequest.builder()
-                .username(EXISTED_USERNAME)
-                .password(VALID_PASSWORD)
-                .build();
-
-            String noLowerCasePassword = "ABCD123@";
-            String noUpperCasePassword = "abcd123@";
-            String noDigitPassword = "Abcdefg@";
-            String noSpecialCharacterPassword = "Abcd1234";
-            String shortPassword = "Abab12@";
-            
-            assertThrowsExactly(DuplicateUsernameException.class, () -> {
-                request.setPassword(noLowerCasePassword);
-                authServiceImpl.signup(request);
-            });
-
-            assertThrowsExactly(DuplicateUsernameException.class, () -> {
-                request.setPassword(noUpperCasePassword);
-                authServiceImpl.signup(request);
-            });
-
-            assertThrowsExactly(DuplicateUsernameException.class, () -> {
-                request.setPassword(noDigitPassword);
-                authServiceImpl.signup(request);
-            });
-
-            assertThrowsExactly(DuplicateUsernameException.class, () -> {
-                request.setPassword(noSpecialCharacterPassword);
-                authServiceImpl.signup(request);
-            });
-
-            assertThrowsExactly(DuplicateUsernameException.class, () -> {
-                request.setPassword(shortPassword);
-                authServiceImpl.signup(request);
-            });
 
             verify(userRepository, never()).save(any());
             verify(passwordEncoder, never()).encode(any());

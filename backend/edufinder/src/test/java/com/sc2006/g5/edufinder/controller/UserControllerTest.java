@@ -56,7 +56,7 @@ public class UserControllerTest {
     private static final long SCHOOL_ID_2 = 12L;
     private static final long INVALID_SCHOOL_ID = 13L;
 
-    private static final String POSTAL_CODE = "postal_code";
+    private static final String POSTAL_CODE = "123456";
 
     @Nested
     @DisplayName("PUT /api/users")
@@ -106,6 +106,32 @@ public class UserControllerTest {
             mockMvc.perform(mockRawRequest("""
                 {"pos": "pos"}
             """)).andExpect(status().isBadRequest());
+
+            verify(userService, never()).editUser(any(), any());
+        }
+
+        @Test
+        @WithMockCustomUser(id = EXISTED_USER_ID)
+        @DisplayName("should return 400 when invalid postal code")
+        void shouldReturn400WhenInvalidPostalCode() throws Exception {
+            String shortPostalCode = "12345";
+            String longPostalCode = "1234567";
+            String letterPostalCode = "a12345";
+            String symbolPostalCode = "@12345";
+
+            mockMvc.perform(mockRequest(shortPostalCode))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(longPostalCode))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(letterPostalCode))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(symbolPostalCode))
+                .andExpect(status().isBadRequest());
+
+            verify(userService, never()).editUser(any(), any());
         }
 
         @Test
