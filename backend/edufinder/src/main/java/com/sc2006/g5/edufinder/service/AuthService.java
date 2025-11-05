@@ -5,7 +5,7 @@ import com.sc2006.g5.edufinder.dto.request.SignupRequest;
 
 public interface AuthService {
     
-    public String login(LoginRequest loginRequest);
-    public String signup(SignupRequest signupRequest);
+    String login(LoginRequest loginRequest);
+    String signup(SignupRequest signupRequest);
 
 } 

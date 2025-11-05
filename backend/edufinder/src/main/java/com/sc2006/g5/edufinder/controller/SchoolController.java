@@ -2,6 +2,7 @@ package com.sc2006.g5.edufinder.controller;
 
 import com.sc2006.g5.edufinder.dto.response.SchoolsResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,8 @@ public class SchoolController {
     private final SchoolService schoolService;
 
     @GetMapping
-    public SchoolsResponse getAllSchools() {
-        return schoolService.getAllSchools();
+    public ResponseEntity<SchoolsResponse> getAllSchools() {
+        SchoolsResponse schools = schoolService.getAllSchools();
+        return ResponseEntity.ok(schools);
     }
 }

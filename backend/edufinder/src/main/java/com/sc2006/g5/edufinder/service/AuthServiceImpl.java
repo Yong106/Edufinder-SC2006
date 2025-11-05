@@ -8,7 +8,6 @@ import com.sc2006.g5.edufinder.dto.request.LoginRequest;
 import com.sc2006.g5.edufinder.dto.request.SignupRequest;
 import com.sc2006.g5.edufinder.exception.auth.DuplicateUsernameException;
 import com.sc2006.g5.edufinder.exception.auth.InvalidCredentialsException;
-import com.sc2006.g5.edufinder.exception.auth.InvalidPasswordException;
 import com.sc2006.g5.edufinder.model.user.User;
 import com.sc2006.g5.edufinder.repository.UserRepository;
 import com.sc2006.g5.edufinder.security.SessionProvider;
@@ -52,9 +51,6 @@ public class AuthServiceImpl implements AuthService {
             throw new DuplicateUsernameException();
         }
 
-        if(!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")){
-            throw new InvalidPasswordException();
-        }
         password = passwordEncoder.encode(password);
 
         user = User.builder()
