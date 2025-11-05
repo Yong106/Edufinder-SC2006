@@ -45,7 +45,7 @@ const AuthLogin = () => {
         login({
           id: data.id,
           username: data.username,
-          postcode: data.postalCode ? data.postalCode : "",
+          postalCode: data.postalCode ? data.postalCode : "",
         });
 
         navigate("/");
