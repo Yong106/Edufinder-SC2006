@@ -267,7 +267,7 @@ Authentication cookie with be removed.
 ## User
 
 ### EditUser
-- **Path**: `GET /api/users`
+- **Path**: `PUT /api/users`
 - **Auth Required**: Yes
 - **Success Code**: `200 OK`
 - **Details**: Edit user profile.
@@ -288,5 +288,247 @@ Authentication cookie with be removed.
   "postalCode": "908765"
 }
 ```
+- `Role`: User role, either `USER` or `ADMIN`.
+
+**Error Code**:
+- `400 BAD REQUEST`
+    - Postal code doesn't consist of 6 digits
+
+### GetSavedSchoolIds
+- **Path**: `GET /api/users/saved-schools`
+- **Auth Required**: Yes
+- **Success Code**: `200 OK`
+- **Details**: Get list of id of user saved schools.
+
+**Request Format**: Not Required
+
+**Response Format**:
+```json
+{
+    "savedSchoolIds": [
+        1,
+        2
+    ]
+}
+```
+
+### AddSavedSchool
+- **Path**: `POST /api/users/saved-schools`
+- **Auth Required**: Yes
+- **Success Code**: `204 NO CONTENT`
+- **Details**: Add a school to user's saved school
+
+**Request Format**: 
+```json
+{
+    "schoolId": 2
+}
+```
+
+**Response Format**: Not Returned
+
+**Error Code**:
+- `404 NOT FOUND`
+  - School not found.
+- `409 CONFLICT`
+  - User already save this specific school.
+  
+
+### RemoveSavedSchool
+- **Path**: `DELETE /api/users/saved-schools`
+- **Auth Required**: Yes
+- **Success Code**: `204 NO CONTENT`
+- **Details**: Remove a school from user's saved school
+
+**Request Format**:
+```json
+{
+    "schoolId": 2
+}
+```
+
+**Response Format**: Not Returned
+
+**Error Code**:
+- `409 CONFLICT`
+    - School is not in user's saved school.
+
+## Comment
+
+### GetCommentsBySchoolId
+- **Path**: `GET /api/schools/{schoolId}/comments`
+- **Auth Required**: No
+- **Success Code**: `200 OK`
+- **Details**: Get all comments, include relevant replies and vote summary of a school.
+
+**Request Format**: Not Required
+
+**Response Format**:
+```json
+{
+  "comments": [
+    {
+      "id": 3,
+      "username": "user1",
+      "content": "new comment",
+      "createdAt": "2025-10-29T12:04:15",
+      "replies": [
+        {
+          "id": 2,
+          "username": "user1",
+          "content": "new reply",
+          "createdAt": "2025-10-31T22:39:01"
+        },
+        {
+          "id": 3,
+          "username": "user1",
+          "content": "new reply",
+          "createdAt": "2025-11-01T19:10:53"
+        }
+      ],
+      "voteSummary": {
+        "userVoteType": "DOWNVOTE",
+        "upvoteCount": 0,
+        "downvoteCount": 1
+      }
+    },
+    {
+      "id": 4,
+      "username": "user1",
+      "content": "new comment",
+      "createdAt": "2025-10-29T12:33:40",
+      "replies": [],
+      "voteSummary": {
+        "userVoteType": "NOVOTE",
+        "upvoteCount": 0,
+        "downvoteCount": 0
+      }
+    }
+  ]
+}
+```
+- `userVoteType`: `NOVOTE`, `UPVOTE` or `DOWNVOTE` indicating logged-in user vote type. It is always `NOVOTE` if user is anonymous.
+
+**Error Code**:
+- `404 NOT FOUND`
+    - School not found.
+
+### CreateComment
+- **Path**: `POST /api/schools/{schoolId}/comments`
+- **Auth Required**: Yes
+- **Success Code**: `200 OK`
+- **Details**: Create comment for a school.
+
+**Request Format**: 
+```json
+{
+  "content": "new comment"
+}
+```
+
+**Response Format**:
+```json
+{
+    "id": 13,
+    "username": "user1",
+    "content": "new comment",
+    "createdAt": "2025-11-05T16:59:59.405814",
+    "replies": [],
+    "voteSummary": {
+        "userVoteType": "NOVOTE",
+        "upvoteCount": 0,
+        "downvoteCount": 0
+    }
+}
+```
+- `userVoteType`: `NOVOTE`, `UPVOTE` or `DOWNVOTE` indicating logged-in user vote type.
+
+**Error Code**:
+- `404 NOT FOUND`
+    - School not found.
+
+### DeleteComment
+- **Path**: `DELETE /api/comments/{commentId}`
+- **Auth Required**: Yes
+- **Success Code**: `204 NO CONTENT`
+- **Details**: Delete a comment.
+
+**Request Format**: Not Required
+
+**Response Format**: Not Returned
+
+**Error Code**:
+- `404 NOT FOUND`
+    - Comment not found
+    - Requested user is not owner of comment
 
 
+**Reply**
+
+### CreateComment
+- **Path**: `POST /api/comments/{commentId}/replies`
+- **Auth Required**: Yes
+- **Success Code**: `200 OK`
+- **Details**: Create reply for a comment.
+
+**Request Format**:
+```json
+{
+  "content": "new reply"
+}
+```
+
+**Response Format**:
+```json
+{
+  "id": 6,
+  "username": "user1",
+  "content": "new reply",
+  "createdAt": "2025-11-05T17:07:01.639182"
+}
+```
+
+**Error Code**:
+- `404 NOT FOUND`
+    - Comment not found.
+
+
+### DeleteReply
+- **Path**: `DELETE /api/replies/{replyId}`
+- **Auth Required**: Yes
+- **Success Code**: `204 NO CONTENT`
+- **Details**: Delete a reply.
+
+**Request Format**: Not Required
+
+**Response Format**: Not Returned
+
+**Error Code**:
+- `404 NOT FOUND`
+    - Reply not found.
+    - Requested user is not owner of reply.
+
+
+## Vote
+
+### SetVote
+- **Path**: `PUT /api/comments/{commentId}/votes`
+- **Auth Required**: Yes
+- **Success Code**: `200 NO CONTENT`
+- **Details**: Create or edit vote of user for a comment.
+
+**Request Format**:
+```json
+{
+  "voteType": "DOWNVOTE"
+}
+```
+- `voteType`: `NOVOTE`, `UPVOTE` or `DOWNVOTE`
+
+**Response Format**: Not Returned
+
+**Error Code**:
+- `400 BAD REQUEST`
+  - `voteType` is not `NOVOTE`, `UPVOTE` or `DOWNVOTE`.
+- `404 NOT FOUND`
+  - Comment not found.
