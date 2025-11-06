@@ -142,14 +142,43 @@ class SignupIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/signup non password -> 400")
-    void signup_emptyPassword() throws Exception {
-        String username = "EmptyPasswordUser";
-        // empty password
-        String non = "";
+    @DisplayName("POST /api/auth/signup blank password -> 400")
+    void signup_blankPassword() throws Exception {
+        String username = "BlankPasswordUser";
+        // blank password
+        String blank = "";
         mockMvc.perform(post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json(username, non)))
+                .content(json(username, blank)))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/signup null username -> 400")
+    void signup_nullUsername() throws Exception {
+        String body = "{\"username\":null,\"password\":\"Abcd@1234\"}";
+        mockMvc.perform(post("/api/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/signup null password -> 400")
+    void signup_nullPassword() throws Exception {
+        String body = "{\"username\":\"NullPasswordUser\",\"password\":null}";
+        mockMvc.perform(post("/api/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/signup empty body -> 400")
+    void signup_emptyBody() throws Exception {
+        mockMvc.perform(post("/api/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
             .andExpect(status().isBadRequest());
     }
 }
