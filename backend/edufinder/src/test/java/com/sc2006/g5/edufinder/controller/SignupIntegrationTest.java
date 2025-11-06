@@ -31,8 +31,8 @@ class SignupIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private String json(String u, String p) {
-        return "{\"username\":\"" + u + "\",\"password\":\"" + p + "\"}";
+    private String json(String username, String password) {
+        return "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
     }
 
     @Test
@@ -82,7 +82,7 @@ class SignupIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/signup weak password -> 400")
+    @DisplayName("POST /api/auth/signup password without uppercase -> 400")
     void signup_weakPassword1() throws Exception {
         String username = "weakPasswordUser";
         // weak: no uppercase 
@@ -94,7 +94,7 @@ class SignupIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/signup weak password -> 400")
+    @DisplayName("POST /api/auth/signup password without lowercase -> 400")
     void signup_weakPassword2() throws Exception {
         String username = "weakPasswordUser2";
         // weak: no lowercase 
@@ -106,7 +106,7 @@ class SignupIntegrationTest {
     }
     
     @Test
-    @DisplayName("POST /api/auth/signup weak password -> 400")
+    @DisplayName("POST /api/auth/signup password without number -> 400")
     void signup_weakPassword3() throws Exception {
         String username = "weakPasswordUser3";
         // weak: no number
@@ -118,7 +118,7 @@ class SignupIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/signup weak password -> 400")
+    @DisplayName("POST /api/auth/signup password without special character -> 400")
     void signup_weakPassword4() throws Exception {
         String username = "weakPasswordUser4";
         // weak: no special character
@@ -130,7 +130,7 @@ class SignupIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/signup weak password -> 400")
+    @DisplayName("POST /api/auth/signup password too short -> 400")
     void signup_shortPassword() throws Exception {
         String username = "ShortPasswordUser";
         // short password

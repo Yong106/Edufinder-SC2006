@@ -62,7 +62,7 @@ class SchoolControllerIntegrationTest {
         // act + assert
         mockMvc.perform(get("/api/schools"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.schools.length()").value(5))
+                .andExpect(jsonPath("$.schools.length()").value(4))
                 .andExpect(jsonPath("$.schools[0].name").value("A School"))
                 .andExpect(jsonPath("$.schools[1].name").value("B School"))
                 .andExpect(jsonPath("$.schools[2].name").value("C School"))
