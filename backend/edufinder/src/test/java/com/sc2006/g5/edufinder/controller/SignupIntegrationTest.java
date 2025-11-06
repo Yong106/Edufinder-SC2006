@@ -142,14 +142,14 @@ class SignupIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/signup weak password -> 400")
+    @DisplayName("POST /api/auth/signup non password -> 400")
     void signup_emptyPassword() throws Exception {
         String username = "EmptyPasswordUser";
         // empty password
-        String weak = "";
+        String non = "";
         mockMvc.perform(post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json(username, weak)))
+                .content(json(username, non)))
             .andExpect(status().isBadRequest());
     }
 }
