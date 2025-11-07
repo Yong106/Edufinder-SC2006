@@ -3,6 +3,8 @@
 import  { lazy } from 'react';
 import { Navigate, createBrowserRouter } from "react-router";
 import Loadable from 'src/layouts/full/shared/loadable/Loadable';
+import SchoolDetails from 'src/views/dashboards/SchoolDetails.tsx';
+import Logout from 'src/views/auth/logout/Logout.tsx';
 
 
 
@@ -29,6 +31,7 @@ const Router = [
       { path: '/', exact: true, element: <Dashboard/> },
       { path: '/savedschools', exact: true, element: <SavedSchools/> },
       { path: '/compareschools', exact: true, element: <CompareSchools/> },
+      { path: '/school/:id', exact: true, element: <SchoolDetails/> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
@@ -38,6 +41,7 @@ const Router = [
     children: [
       { path: '/auth/login', element: <Login /> },
       { path: '/auth/register', element: <Register /> },
+      { path: '/auth/logout', element: <Logout /> },
       { path: '404', element: <Error /> },
       { path: '/auth/404', element: <Error /> },
       { path: '*', element: <Navigate to="/auth/404" /> },

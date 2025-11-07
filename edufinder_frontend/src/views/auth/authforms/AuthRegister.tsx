@@ -1,20 +1,61 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import { useNavigate } from "react-router";
+import { FormEvent, useState } from 'react';
+import CONSTANTS from 'src/constants.ts';
+import toast from 'react-hot-toast';
+import { useAuth } from 'src/context/AuthProvider.tsx';
 
 
 const AuthRegister = () => {
   const navigate = useNavigate();
-  const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+  const { login } = useAuth();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(event);
-     navigate("/");
+
+    try {
+      const res = await fetch(CONSTANTS.backendEndpoint + '/auth/signup', {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      })
+
+      if (!res.ok) {
+        console.log(await res.json());
+        throw new Error('Registration failed.');
+      } else {
+        toast.success("Registration Successful");
+
+        const data = await res.json();
+        console.log(data);
+
+        login({
+          id: data.id,
+          username: data.username,
+          postalCode: data.postalCode ? data.postalCode : "",
+        });
+
+        navigate("/");
+      }
+    } catch (err) {
+      console.log("Registration error: ", err);
+      toast.error("Registration failed.");
+    }
+
   }
+
   return (
     <>
       <form onSubmit={handleSubmit} >
         <div className="mb-4">
           <div className="mb-2 block">
-            <Label>Name</Label>
+            <Label>Username</Label>
           </div>
           <TextInput
             id="name"
@@ -22,18 +63,7 @@ const AuthRegister = () => {
             sizing="md"
             required
             className="form-control form-rounded-xl"
-          />
-        </div>
-        <div className="mb-4">
-          <div className="mb-2 block">
-            <Label>Email Address</Label>
-          </div>
-          <TextInput
-            id="emadd"
-            type="email"
-            sizing="md"
-            required
-            className="form-control form-rounded-xl"
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="mb-6">
@@ -46,6 +76,7 @@ const AuthRegister = () => {
             sizing="md"
             required
             className="form-control form-rounded-xl"
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div> 
         <Button color={'primary'} type="submit" className="w-full">Sign Up</Button> 

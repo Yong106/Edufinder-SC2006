@@ -1,11 +1,19 @@
 import TopSchools from 'src/components/dashboard/TopSchools.tsx';
 import Header from 'src/layouts/full/header/Header';
-import schoolData from '../../test.json';
-import { School } from 'src/types/school/school.ts';
+import { useSchoolContext } from 'src/context/SchoolProvider.tsx';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
 
-  const schools: School[] = schoolData;
+  const { schoolMap, isLoading } = useSchoolContext();
+
+  if (isLoading) return <div>Loading...</div>;
+
+  useEffect(() => {
+    console.log("School Map loaded");
+  }, [schoolMap])
+
+  const schools = Array.from(schoolMap.values());
 
   return (
     <>

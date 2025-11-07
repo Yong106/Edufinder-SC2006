@@ -21,6 +21,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                     .allowedOrigins(allowedOrigin)
                     .allowedMethods("*")
+                    .allowedHeaders("*")
                     .allowCredentials(true)
                     .exposedHeaders("Set-Cookie");
             }
