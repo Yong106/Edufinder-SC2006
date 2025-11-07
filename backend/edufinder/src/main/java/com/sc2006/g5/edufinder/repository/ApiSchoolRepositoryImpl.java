@@ -6,7 +6,10 @@ import com.sc2006.g5.edufinder.dto.api.*;
 import com.sc2006.g5.edufinder.mapper.SchoolMapper;
 import com.sc2006.g5.edufinder.model.school.Cca;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +21,8 @@ import com.sc2006.g5.edufinder.util.ApiResponseParser;
 @RequiredArgsConstructor
 public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 
-	private List<ApiSchool> apiSchools;
+	@Getter
+    private List<ApiSchool> apiSchools;
 
 	private final ApiClientService apiClientService;
 	private final ApiResponseParser apiResponseParser;
@@ -32,30 +36,35 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 	public static final String CCAS_DATASET_ID = "d_9aba12b5527843afb0b2e8e4ed6ac6bd";
     public static final String MOE_PROGRAMMES_DATASET_ID = "d_b0697d22a7837a4eddf72efb66a36fc2";
 
-//    @PostConstruct
-//    public void init() {
-//        refreshApiSchools();
-//    }
+    private static final Logger logger = LoggerFactory.getLogger(ApiSchoolRepositoryImpl.class);
 
-    @Scheduled(fixedRate = 7 * 24 * 60 * 60 * 1000)
+    @PostConstruct
+    public void init() {
+        refreshApiSchools();
+    }
+
+    @Scheduled(fixedRateString = "${app.school.refresh-time}")
     public void refreshApiSchools() {
+        logger.info("Refreshing API schools");
+
+        logger.info("Fetching school general information data");
         List<SchoolRecord> schoolRecords = getSchoolGeneralInformation();
+
+        logger.info("Fetching school subject data");
         Map<String, List<String>> subjectMap = getSchoolSubjects();
+
+        logger.info("Fetching school cca data");
         Map<String, List<Cca>> ccaMap = getSchoolCcas();
+
+        logger.info("Fetching school programme data");
         Map<String, List<String>> programmeMap = getSchoolProgrammes();
 
         apiSchools = schoolMapper.toApiSchools(schoolRecords, subjectMap, ccaMap, programmeMap);
+
+        logger.info("API schools refreshed");
     }
 
-	public List<ApiSchool> getApiSchools() {
-		if(apiSchools == null) {
-            refreshApiSchools();
-        }
-
-		return apiSchools;
-	}
-
-	private <R extends ApiRecord> List<R> getAllApiRecords(String firstApiEndpoint, Class<R> apiRecordClass){
+    private <R extends ApiRecord> List<R> getAllApiRecords(String firstApiEndpoint, Class<R> apiRecordClass){
 		List<R> records = new ArrayList<>();
 		String nextApiEndpoint = firstApiEndpoint;
 		int total = 1; 
