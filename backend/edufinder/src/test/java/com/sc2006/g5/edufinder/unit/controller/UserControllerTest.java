@@ -1,14 +1,15 @@
 package com.sc2006.g5.edufinder.unit.controller;
 
 import com.sc2006.g5.edufinder.config.GlobalExceptionHandler;
-import com.sc2006.g5.edufinder.config.SecurityConfig;
 import com.sc2006.g5.edufinder.controller.UserController;
 import com.sc2006.g5.edufinder.dto.response.SavedSchoolResponse;
 import com.sc2006.g5.edufinder.dto.response.UserResponse;
 import com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException;
+import com.sc2006.g5.edufinder.exception.user.LastAdminException;
 import com.sc2006.g5.edufinder.exception.user.UserAlreadySaveSchoolException;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.exception.user.UserNotSaveSchoolException;
+import com.sc2006.g5.edufinder.model.user.Role;
 import com.sc2006.g5.edufinder.security.AuthFilter;
 import com.sc2006.g5.edufinder.service.UserService;
 import com.sc2006.g5.edufinder.unit.setup.WithMockCustomUser;
@@ -18,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -34,18 +33,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = UserController.class, excludeFilters = {
-    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        AuthFilter.class,
-        SecurityConfig.class
-    })
-})
+@WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @Import(GlobalExceptionHandler.class)
 public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private AuthFilter authFilter;
 
     @MockitoBean
     private UserService userService;
@@ -150,6 +147,103 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound());
 
             verify(userService, times(1)).editUser(any(), any());
+        }
+    }
+
+    @Nested
+    @DisplayName("PUT /api/users/{userId}")
+    class EditUserRoleTest {
+
+        private static final long ADMIN_ID = 3L;
+
+        private MockHttpServletRequestBuilder mockRawRequest(Long userId, String content) {
+        return put("/api/users/%d".formatted(userId))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(content);
+        }
+
+        private MockHttpServletRequestBuilder mockRequest(Long userId, Role role) {
+            return mockRawRequest(userId, """
+                {"role": "%s"}
+            """.formatted(role));
+        }
+
+        @Test
+        @WithMockCustomUser(id = ADMIN_ID, role = Role.ADMIN)
+        @DisplayName("should return 200 with user response when request valid")
+        void shouldReturn200WithUserResponseWhenRequestValid() throws Exception {
+            Role newRole = Role.ADMIN;
+
+            UserResponse response = UserResponse.builder()
+                .id(EXISTED_USER_ID)
+                .role(newRole)
+                .build();
+
+            when(userService.editUserRole(
+                eq(EXISTED_USER_ID),
+                argThat(request -> request.getRole().equals(newRole))
+            )).thenReturn(response);
+
+            mockMvc.perform(mockRequest(EXISTED_USER_ID, newRole))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(EXISTED_USER_ID))
+                .andExpect(jsonPath("$.role").value(newRole.toString()));
+
+            verify(userService, times(1)).editUserRole(any(), any());
+        }
+
+        @Test
+        @WithMockCustomUser(id = ADMIN_ID, role = Role.ADMIN)
+        @DisplayName("should return 400 when request malformed")
+        void shouldReturn400WhenRequestMalformed() throws Exception {
+            mockMvc.perform(mockRawRequest(EXISTED_USER_ID, "{)"))
+                .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRawRequest(EXISTED_USER_ID, """
+                {"rol": "role"}
+            """)).andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRawRequest(EXISTED_USER_ID, """
+                {"role": "user_admin"}
+            """)).andExpect(status().isBadRequest());
+
+            verify(userService, never()).editUserRole(any(), any());
+        }
+
+        @Test
+        @WithMockCustomUser(id = ADMIN_ID, role = Role.ADMIN)
+        @DisplayName("should return 404 when user not found")
+        void shouldReturn404WhenUserNotFound() throws Exception {
+            Role newRole = Role.ADMIN;
+
+            when(userService.editUserRole(
+                eq(INVALID_USER_ID),
+                argThat(request -> request.getRole().equals(newRole))
+            )).thenAnswer(invocation -> {
+                throw new UserNotFoundException(INVALID_USER_ID);
+            });
+
+            mockMvc.perform(mockRequest(INVALID_USER_ID, newRole))
+                .andExpect(status().isNotFound());
+
+            verify(userService, times(1)).editUserRole(any(), any());
+        }
+
+        @Test
+        @WithMockCustomUser(id = ADMIN_ID, role = Role.ADMIN)
+        @DisplayName("should return 409 when user is last admin")
+        void shouldReturn409WhenUserIsLastAdmin() throws Exception {
+            when(userService.editUserRole(
+                eq(ADMIN_ID),
+                argThat(request -> request.getRole().equals(Role.USER))
+            )).thenAnswer(invocation -> {
+                throw new LastAdminException(ADMIN_ID);
+            });
+
+            mockMvc.perform(mockRequest(ADMIN_ID, Role.USER))
+                    .andExpect(status().isConflict());
+
+            verify(userService, times(1)).editUserRole(any(), any());
         }
     }
 

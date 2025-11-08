@@ -1,9 +1,12 @@
 package com.sc2006.g5.edufinder.controller;
 
 import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
+import com.sc2006.g5.edufinder.dto.request.EditUserRoleRequest;
 import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,16 @@ public class UserController {
     ){
         Long userId = user.getId();
         UserResponse userResponse = userService.editUser(userId, editUserRequest);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponse> editUserRole(
+            @NotNull @PathVariable Long userId,
+            @Valid @RequestBody EditUserRoleRequest editUserRoleRequest
+    ){
+        UserResponse userResponse = userService.editUserRole(userId, editUserRoleRequest);
         return ResponseEntity.ok(userResponse);
     }
 

@@ -1,16 +1,19 @@
 package com.sc2006.g5.edufinder.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.sc2006.g5.edufinder.dto.request.EditSchoolCutOffPointRequest;
+import com.sc2006.g5.edufinder.exception.school.CutOffPointException;
+import com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException;
 import com.sc2006.g5.edufinder.service.SchoolServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -114,6 +117,83 @@ public class SchoolServiceImplTest {
             verify(dbSchoolRepository, times(2)).findOneByName(any());
             verify(dbSchoolRepository, times(1)).save(any());
             verify(schoolMapper, times(2)).toSchoolResponse(any(), any());
+        }
+    }
+
+    @Nested
+    @DisplayName("editSchoolCutOffPoint()")
+    class EditSchoolCutOffPointTest{
+
+        private static final long INVALID_SCHOOL_ID = 3L;
+
+        private static final int MIN_CUT_OFF_POINT = 4;
+        private static final int MAX_CUT_OFF_POINT = 32;
+
+        @BeforeEach
+        void setup(){
+            DbSchool school = DbSchool.builder()
+                .id(SCHOOL_ID_1)
+                .minCutOffPoint(null)
+                .maxCutOffPoint(null)
+                .build();
+
+            lenient().when(dbSchoolRepository.findById(SCHOOL_ID_1))
+                .thenReturn(Optional.of(school));
+        }
+
+        @Test
+        @DisplayName("should edit school cut off point if request valid")
+        void shouldEditSchoolCutOffPointWhenRequestValid(){
+            when(dbSchoolRepository.save(argThat(dbSchool ->
+                dbSchool.getId().equals(SCHOOL_ID_1) &&
+                dbSchool.getMinCutOffPoint().equals(MIN_CUT_OFF_POINT) &&
+                dbSchool.getMaxCutOffPoint().equals(MAX_CUT_OFF_POINT)
+            ))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            EditSchoolCutOffPointRequest request = EditSchoolCutOffPointRequest.builder()
+                .minCutOffPoint(MIN_CUT_OFF_POINT)
+                .maxCutOffPoint(MAX_CUT_OFF_POINT)
+                .build();
+
+            schoolServiceImpl.editSchoolCutOffPoint(SCHOOL_ID_1, request);
+
+            verify(dbSchoolRepository, times(1)).findById(any());
+            verify(dbSchoolRepository, times(1)).save(any());
+        }
+
+        @Test
+        @DisplayName("should throw when school not found")
+        void shouldThrowWhenSchoolNotFound(){
+            when(dbSchoolRepository.findById(INVALID_SCHOOL_ID))
+                .thenReturn(Optional.empty());
+
+            EditSchoolCutOffPointRequest request = EditSchoolCutOffPointRequest.builder()
+                .minCutOffPoint(MIN_CUT_OFF_POINT)
+                .maxCutOffPoint(MAX_CUT_OFF_POINT)
+                .build();
+
+            assertThrowsExactly(SchoolNotFoundException.class, () ->
+                schoolServiceImpl.editSchoolCutOffPoint(INVALID_SCHOOL_ID, request)
+            );
+
+            verify(dbSchoolRepository, times(1)).findById(any());
+            verify(dbSchoolRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("should throw when min is larger than max")
+        void shouldThrowWhenMinIsLargerThanMax(){
+            EditSchoolCutOffPointRequest request = EditSchoolCutOffPointRequest.builder()
+                .minCutOffPoint(MAX_CUT_OFF_POINT)
+                .maxCutOffPoint(MIN_CUT_OFF_POINT)
+                .build();
+
+            assertThrowsExactly(CutOffPointException.class, () ->
+                schoolServiceImpl.editSchoolCutOffPoint(SCHOOL_ID_1, request)
+            );
+
+            verify(dbSchoolRepository, times(1)).findById(any());
+            verify(dbSchoolRepository, never()).save(any());
         }
     }
 }

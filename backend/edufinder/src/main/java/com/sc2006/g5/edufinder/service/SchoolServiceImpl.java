@@ -3,7 +3,10 @@ package com.sc2006.g5.edufinder.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sc2006.g5.edufinder.dto.request.EditSchoolCutOffPointRequest;
 import com.sc2006.g5.edufinder.dto.response.SchoolsResponse;
+import com.sc2006.g5.edufinder.exception.school.CutOffPointException;
+import com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException;
 import com.sc2006.g5.edufinder.mapper.SchoolMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,21 @@ public class SchoolServiceImpl implements SchoolService {
         return SchoolsResponse.builder()
                 .schools(schools)
                 .build();
+    }
+
+    @Override
+    public void editSchoolCutOffPoint(Long schoolId, EditSchoolCutOffPointRequest request){
+        DbSchool dbSchool = dbSchoolRepository.findById(schoolId)
+            .orElseThrow(() -> new SchoolNotFoundException(schoolId));
+
+        if(request.getMaxCutOffPoint() < request.getMinCutOffPoint()){
+            throw new CutOffPointException(request.getMinCutOffPoint(), request.getMaxCutOffPoint());
+        }
+
+        dbSchool.setMinCutOffPoint(request.getMinCutOffPoint());
+        dbSchool.setMaxCutOffPoint(request.getMaxCutOffPoint());
+
+        dbSchoolRepository.save(dbSchool);
     }
     
 }
