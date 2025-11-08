@@ -56,7 +56,7 @@ const SidebarContent = (isLoggedIn: boolean): MenuItem[] => [
         name: 'User',
         icon: 'solar:user-circle-outline',
         id: uniqueId(),
-        url: '/profile',
+        url: '/userinfo',
         isPro: false,
       },
       {

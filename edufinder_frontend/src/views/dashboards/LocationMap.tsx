@@ -1,34 +1,23 @@
 import { MapCameraChangedEvent, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { useEffect, useState } from 'react';
+import { geocodePostalCode } from 'src/utils/geocode.ts';
+import toast from 'react-hot-toast';
 
 const LocationMap = ({postalCode}: {postalCode: number} ) => {
 
   const [coords, setCoords] = useState<{lat: number, lng: number} | null>(null);
 
-  useEffect(() => {
-    const geocode = async () => {
-      const geocoder = new google.maps.Geocoder();
-
-      const results = await geocoder.geocode(
-        {
-          address: postalCode.toString(),
-          componentRestrictions: {country: 'SG'},
-        },
-      );
-
-      if (!results.results[0]) {
-        console.log("Geocoding failed: Location not found based on postal code");
-      }
-
-      const location = results.results[0].geometry.location;
-      setCoords({
-        lat: location.lat(),
-        lng: location.lng(),
-      })
-
+  const handleGeocode = async () => {
+    const geocodeResults = await geocodePostalCode(postalCode.toString());
+    if (geocodeResults) setCoords((geocodeResults));
+    else {
+      toast.error("Invalid postal code");
+      return;
     }
+  }
 
-    geocode();
+  useEffect(() => {
+    handleGeocode();
   }, [postalCode]);
 
   return (
@@ -43,9 +32,14 @@ const LocationMap = ({postalCode}: {postalCode: number} ) => {
               console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
             }
           >
-            <AdvancedMarker position={coords}>
-              <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
-            </AdvancedMarker>
+            {
+              coords && (
+                <AdvancedMarker position={coords}>
+                  <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
+                </AdvancedMarker>
+              )
+            }
+
           </Map>
         ) : (
           <p>Geocoding...</p>

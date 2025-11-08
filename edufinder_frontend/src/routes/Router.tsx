@@ -23,6 +23,9 @@ const Login = Loadable(lazy(() => import('../views/auth/login/Login')));
 const Register = Loadable(lazy(() => import('../views/auth/register/Register')));
 const Error = Loadable(lazy(() => import('../views/auth/error/Error')));
 
+// user
+const UserInfo = Loadable(lazy(() => import('../views/userinfo/UserInfo')));
+
 const Router = [
   {
     path: '/',
@@ -32,6 +35,7 @@ const Router = [
       { path: '/savedschools', exact: true, element: <SavedSchools/> },
       { path: '/compareschools', exact: true, element: <CompareSchools/> },
       { path: '/school/:id', exact: true, element: <SchoolDetails/> },
+      { path: '/userinfo', exact: true, element: <UserInfo/> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
