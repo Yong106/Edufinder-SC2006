@@ -220,6 +220,7 @@ public class ApiSchoolRepositoryImplTest {
                 argThat(programmeMap -> programmeMap.equals(expectedProgrammeMap))
             )).thenReturn(List.of(apiSchool1, apiSchool2));
 
+            apiSchoolRepositoryImpl.refreshApiSchools();
             List<ApiSchool> schools = apiSchoolRepositoryImpl.getApiSchools();
             assertEquals(List.of(apiSchool1, apiSchool2), schools);
 
