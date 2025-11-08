@@ -1,7 +1,6 @@
 package com.sc2006.g5.edufinder.unit.controller;
 
 import com.sc2006.g5.edufinder.config.GlobalExceptionHandler;
-import com.sc2006.g5.edufinder.config.SecurityConfig;
 import com.sc2006.g5.edufinder.controller.VoteController;
 import com.sc2006.g5.edufinder.exception.user.UserNotFoundException;
 import com.sc2006.g5.edufinder.model.comment.VoteType;
@@ -14,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -27,18 +24,16 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = VoteController.class, excludeFilters = {
-    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        AuthFilter.class,
-        SecurityConfig.class
-    })
-})
+@WebMvcTest(controllers = VoteController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @Import(GlobalExceptionHandler.class)
 public class VoteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private AuthFilter authFilter;
 
     @MockitoBean
     private VoteService voteService;

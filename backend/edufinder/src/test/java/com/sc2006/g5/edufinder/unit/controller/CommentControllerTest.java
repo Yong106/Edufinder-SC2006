@@ -1,7 +1,6 @@
 package com.sc2006.g5.edufinder.unit.controller;
 
 import com.sc2006.g5.edufinder.config.GlobalExceptionHandler;
-import com.sc2006.g5.edufinder.config.SecurityConfig;
 import com.sc2006.g5.edufinder.controller.CommentController;
 import com.sc2006.g5.edufinder.dto.response.CommentResponse;
 import com.sc2006.g5.edufinder.dto.response.CommentsResponse;
@@ -17,8 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -32,18 +29,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CommentController.class, excludeFilters = {
-    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        AuthFilter.class,
-        SecurityConfig.class
-    })
-})
+@WebMvcTest(controllers = CommentController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @Import(GlobalExceptionHandler.class)
 public class CommentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private AuthFilter authFilter;
 
     @MockitoBean
     private CommentService commentService;
