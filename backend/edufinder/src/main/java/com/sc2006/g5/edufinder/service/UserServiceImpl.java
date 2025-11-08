@@ -3,8 +3,11 @@ package com.sc2006.g5.edufinder.service;
 import java.util.List;
 
 import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
+import com.sc2006.g5.edufinder.dto.request.EditUserRoleRequest;
 import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import com.sc2006.g5.edufinder.exception.user.LastAdminException;
 import com.sc2006.g5.edufinder.mapper.UserMapper;
+import com.sc2006.g5.edufinder.model.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +56,20 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @Override
+    public UserResponse editUserRole(Long userId, EditUserRoleRequest request){
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
+
+        boolean isDemoting = user.getRole().equals(Role.ADMIN) && !request.getRole().equals(Role.ADMIN);
+        if(isDemoting && userRepository.countByRole(Role.ADMIN) <= 1) {
+            throw new LastAdminException(userId);
+        }
+
+        user.setRole(request.getRole());
+        userRepository.save(user);
+        return userMapper.toUserResponse(user);
+    }
 
     @Override
     public SavedSchoolResponse getSavedSchoolIds(Long userId) {

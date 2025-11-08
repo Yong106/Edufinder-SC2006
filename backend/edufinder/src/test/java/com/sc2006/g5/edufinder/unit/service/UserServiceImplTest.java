@@ -16,8 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.sc2006.g5.edufinder.dto.request.EditUserRequest;
+import com.sc2006.g5.edufinder.dto.request.EditUserRoleRequest;
 import com.sc2006.g5.edufinder.dto.response.UserResponse;
+import com.sc2006.g5.edufinder.exception.user.LastAdminException;
 import com.sc2006.g5.edufinder.mapper.UserMapper;
+import com.sc2006.g5.edufinder.model.user.Role;
 import com.sc2006.g5.edufinder.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -199,6 +202,103 @@ public class UserServiceImplTest {
             verify(userRepository, never()).save(any());
             verify(userMapper, never()).toUserResponse(any());
         }
+    }
+
+    @Nested
+    @DisplayName("editUserRole")
+    class EditUserRoleTest {
+
+        @Test
+        @DisplayName("should edit user role and return user response when request valid")
+        void shouldEditUserRoleAndReturnUserResponseWhenRequestValid() {
+            Role oldRole = Role.USER;
+            Role newRole = Role.ADMIN;
+
+            User user = User.builder()
+                .id(EXISTED_USER_ID)
+                .role(oldRole)
+                .build();
+
+            UserResponse expectedResponse = UserResponse.builder()
+                .id(EXISTED_USER_ID)
+                .role(newRole)
+                .build();
+
+            when(userRepository.findById(EXISTED_USER_ID))
+                .thenReturn(Optional.of(user));
+
+            when(userRepository.save(argThat(editedUser ->
+                editedUser.getId().equals(EXISTED_USER_ID) &&
+                editedUser.getRole().equals(newRole)
+            ))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            when(userMapper.toUserResponse(argThat(editedUser ->
+                editedUser.getId().equals(EXISTED_USER_ID) &&
+                editedUser.getRole().equals(newRole)
+            ))).thenReturn(expectedResponse);
+
+            EditUserRoleRequest request = EditUserRoleRequest.builder()
+                .role(newRole)
+                .build();
+
+            UserResponse response = userServiceImpl.editUserRole(EXISTED_USER_ID, request);
+
+            assertEquals(expectedResponse, response);
+            verify(userRepository, times(1)).findById(any());
+            verify(userRepository, times(1)).save(any());
+            verify(userMapper, times(1)).toUserResponse(any());
+        }
+
+        @Test
+        @DisplayName("should throw when user not found")
+        void shouldThrowWhenUserNotFound() {
+            when(userRepository.findById(INVALID_USER_ID))
+                .thenReturn(Optional.empty());
+
+            EditUserRoleRequest request = EditUserRoleRequest.builder()
+                .role(Role.USER)
+                .build();
+
+            assertThrowsExactly(UserNotFoundException.class, () ->
+                    userServiceImpl.editUserRole(INVALID_USER_ID, request)
+            );
+
+            verify(userRepository, times(1)).findById(any());
+            verify(userRepository, never()).save(any());
+            verify(userMapper, never()).toUserResponse(any());
+        }
+
+        @Test
+        @DisplayName("should throw when last admin demoted")
+        void shouldThrowWhenLastAdminDemoted() {
+            Role oldRole = Role.ADMIN;
+            Role newRole = Role.USER;
+
+            User user = User.builder()
+                .id(EXISTED_USER_ID)
+                .role(oldRole)
+                .build();
+
+            when(userRepository.findById(EXISTED_USER_ID))
+                .thenReturn(Optional.of(user));
+
+            when(userRepository.countByRole(Role.ADMIN))
+                .thenReturn(1L);
+
+            EditUserRoleRequest request = EditUserRoleRequest.builder()
+                .role(newRole)
+                .build();
+
+            assertThrowsExactly(LastAdminException.class, () ->
+                userServiceImpl.editUserRole(EXISTED_USER_ID, request)
+            );
+
+            verify(userRepository, times(1)).findById(any());
+            verify(userRepository, times(1)).countByRole(any());
+            verify(userRepository, never()).save(any());
+            verify(userMapper, never()).toUserResponse(any());
+        }
+
     }
 
     @Nested

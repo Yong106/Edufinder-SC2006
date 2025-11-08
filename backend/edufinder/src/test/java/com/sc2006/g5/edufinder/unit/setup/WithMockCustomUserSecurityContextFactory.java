@@ -17,6 +17,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         User user = User.builder()
             .id(annotation.id())
             .username(annotation.username())
+            .role(annotation.role())
             .build();
 
         CustomUserDetails principal = new CustomUserDetails(user);
