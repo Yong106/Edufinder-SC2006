@@ -11,10 +11,56 @@ import CardBox from 'src/components/shared/CardBox';
 import { Icon } from '@iconify/react';
 import { School } from 'src/types/school/school.ts';
 import { Link } from 'react-router';
+import { useEffect, useState } from 'react';
+import fetchSavedSchoolIds from 'src/utils/fetchSavedSchoolIds.ts';
+import CONSTANTS from 'src/constants.ts';
+import toast from 'react-hot-toast';
 
 
 
 const TopSchools = ({schools}: {schools: School[]}) => {
+
+  const [savedSchoolIds, setSavedSchoolIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchSavedSchools = async () => {
+      try {
+        const res = await fetchSavedSchoolIds();
+        setSavedSchoolIds(res);
+      } catch (err) {
+        console.error('Error fetching saved schools', err);
+        toast.error('Failed to load saved schools');
+      }
+    };
+
+    fetchSavedSchools();
+  }, []);
+
+  const handleToggleSave = async (schoolId: number) => {
+    const isSaved = savedSchoolIds.includes(schoolId);
+
+    try {
+      const res = await fetch(CONSTANTS.backendEndpoint + '/users/saved-schools', {
+        method: isSaved ? 'DELETE' : 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ schoolId }),
+      })
+
+      if (!res.ok) throw new Error('Failed to toggle save');
+
+      setSavedSchoolIds((prev) =>
+        isSaved ? prev.filter((id) => id !== schoolId) : [...prev, schoolId]
+      );
+
+      toast.success(
+        isSaved ? 'Saved removed from saved list' : 'School saved!',
+      );
+    } catch (err) {
+      console.error('Error saving school', err);
+      toast.error("Failed to toggle school save status.");
+    }
+  }
 
   return (
     <>
@@ -67,7 +113,7 @@ const TopSchools = ({schools}: {schools: School[]}) => {
                     <Button
                       size="sm"
                       color="light"
-                      //onClick={() => handleSave(item.id)}
+                      onClick={() => handleToggleSave(item.id)}
                       aria-label={`Save ${item.name}`}
                       className="!p-1 !h-auto !w-auto !border-0 !bg-transparent shadow-none"
                     > 

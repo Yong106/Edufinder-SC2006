@@ -3,6 +3,7 @@ import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
 import TopSchools from 'src/components/dashboard/TopSchools.tsx';
 import { useSchoolContext} from 'src/context/SchoolProvider.tsx';
+import fetchSavedSchoolIds from 'src/utils/fetchSavedSchoolIds.ts';
 
 const SavedSchools = () => {
 
@@ -13,16 +14,8 @@ const SavedSchools = () => {
   useEffect(() => {
     const fetchSavedSchools = async () => {
       try {
-        const res = await fetch(CONSTANTS.backendEndpoint + '/users/saved-schools', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!res.ok) throw new Error('Failed to fetch saved schools');
-
-        const data = await res.json();
-        console.log("Saved schools: ", data);
-        setSavedSchoolIds(data.savedSchoolIds);
+        const res = await fetchSavedSchoolIds();
+        setSavedSchoolIds(res);
       } catch (err) {
         console.error('Error fetching saved schools', err);
         toast.error('Failed to load saved schools');
