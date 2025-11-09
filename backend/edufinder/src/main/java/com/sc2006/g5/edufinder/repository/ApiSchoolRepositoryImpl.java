@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,7 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 	private final ApiClientService apiClientService;
 	private final ApiResponseParser apiResponseParser;
     private final SchoolMapper schoolMapper;
+    private final Environment env;
 
 	public static final String API_DOMAIN = "https://data.gov.sg/";
 	public static final String API_ENDPOINT = "api/action/datastore_search?resource_id=";
@@ -40,6 +42,7 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 
     @PostConstruct
     public void init() {
+        if(Arrays.asList(env.getActiveProfiles()).contains("test")) return;
         refreshApiSchools();
     }
 

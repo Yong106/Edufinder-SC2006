@@ -6,4 +6,5 @@ import com.sc2006.g5.edufinder.model.school.ApiSchool;
 
 public interface ApiSchoolRepository {
     List<ApiSchool> getApiSchools();
+    void refreshApiSchools();
 }

@@ -1,5 +1,6 @@
 package com.sc2006.g5.edufinder.integration.school;
 
+import com.sc2006.g5.edufinder.repository.ApiSchoolRepository;
 import com.sc2006.g5.edufinder.repository.DbSchoolRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +33,9 @@ class GetAllSchoolsIntegrationTest {
 
     @Autowired
     private DbSchoolRepository dbSchoolRepository;
+
+    @Autowired
+    private ApiSchoolRepository apiSchoolRepository;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -331,6 +335,7 @@ class GetAllSchoolsIntegrationTest {
         mockServer.expect(requestTo(NEXT_PROGRAMME_URL))
             .andRespond(withSuccess(NEXT_PROGRAMME_JSON, MediaType.APPLICATION_JSON));
 
+        apiSchoolRepository.refreshApiSchools();
         mockMvc.perform(get("/api/schools"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.schools.length()").value(2))
