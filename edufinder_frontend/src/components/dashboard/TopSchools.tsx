@@ -15,12 +15,16 @@ import { useEffect, useState } from 'react';
 import fetchSavedSchoolIds from 'src/utils/fetchSavedSchoolIds.ts';
 import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
+import { useSchoolContext } from 'src/context/SchoolProvider.tsx';
 
 
 
 const TopSchools = ({schools}: {schools: School[]}) => {
 
+  const { schoolMap } = useSchoolContext();
+
   const [savedSchoolIds, setSavedSchoolIds] = useState<number[]>([]);
+  const [allSchools, setAllSchools] = useState<School[]>([]);
 
   useEffect(() => {
     const fetchSavedSchools = async () => {
@@ -34,6 +38,7 @@ const TopSchools = ({schools}: {schools: School[]}) => {
     };
 
     fetchSavedSchools();
+    setAllSchools(schools);
   }, []);
 
   const handleToggleSave = async (schoolId: number) => {
@@ -54,6 +59,10 @@ const TopSchools = ({schools}: {schools: School[]}) => {
       setSavedSchoolIds((prev) =>
         isSaved ? prev.filter((id) => id !== schoolId) : [...prev, schoolId]
       );
+
+      setAllSchools((prev) =>
+        isSaved ? prev.filter((school) => school.id !== schoolId) : [...prev, schoolMap.get(schoolId)]
+      )
 
       toast.success(
         isSaved ? 'Saved removed from saved list' : 'School saved!',
@@ -83,7 +92,7 @@ const TopSchools = ({schools}: {schools: School[]}) => {
               </TableHeadCell>
             </TableHead>
             <TableBody className="">
-              {schools.map((item, index) => (
+              {allSchools.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell className="whitespace-nowrap">
                     <Link to={`/school/${item.id}`}>

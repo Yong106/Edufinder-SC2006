@@ -40,7 +40,7 @@ const SavedSchools = () => {
             savedSchoolLoading || isLoading  ? (
               <p>Loading...</p>
             ) : (
-              <TopSchools schools={savedSchoolIds.map(id => schoolMap[id]).filter(Boolean)} />
+              <TopSchools schools={savedSchoolIds.map(id => schoolMap.get(id)).filter(Boolean)} />
             )
           )
         }
