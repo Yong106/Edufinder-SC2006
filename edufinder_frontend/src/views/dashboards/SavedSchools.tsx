@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
 import TopSchools from 'src/components/dashboard/TopSchools.tsx';
 import { useSchoolContext} from 'src/context/SchoolProvider.tsx';
 import fetchSavedSchoolIds from 'src/utils/fetchSavedSchoolIds.ts';
+import { useAuth } from 'src/context/AuthProvider.tsx';
 
 const SavedSchools = () => {
 
   const { schoolMap, isLoading } = useSchoolContext();
+  const { isLoggedIn } = useAuth();
   const [savedSchoolIds, setSavedSchoolIds] = useState<number[]>([]);
   const [savedSchoolLoading, setSavedSchoolLoading] = useState(true);
 
@@ -24,7 +25,7 @@ const SavedSchools = () => {
       }
     };
 
-    fetchSavedSchools();
+    if (isLoggedIn) fetchSavedSchools();
   }, []);
 
   return (
@@ -33,10 +34,14 @@ const SavedSchools = () => {
       <div className="lg:col-span-8 col-span-12 pt-8">
 
         {
-          savedSchoolLoading || isLoading  ? (
-            <p>Loading...</p>
-          ) : (
-            <TopSchools schools={savedSchoolIds.map(id => schoolMap[id]).filter(Boolean)} />
+          !isLoggedIn ? (
+            <p>Log in to use this functionality.</p>
+            ) : (
+            savedSchoolLoading || isLoading  ? (
+              <p>Loading...</p>
+            ) : (
+              <TopSchools schools={savedSchoolIds.map(id => schoolMap[id]).filter(Boolean)} />
+            )
           )
         }
       </div>

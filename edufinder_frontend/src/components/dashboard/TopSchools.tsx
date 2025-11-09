@@ -29,7 +29,7 @@ const TopSchools = ({schools}: {schools: School[]}) => {
         setSavedSchoolIds(res);
       } catch (err) {
         console.error('Error fetching saved schools', err);
-        toast.error('Failed to load saved schools');
+        // toast.error('Failed to load saved schools');
       }
     };
 

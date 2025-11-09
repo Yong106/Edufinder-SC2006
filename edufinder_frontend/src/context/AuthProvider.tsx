@@ -1,5 +1,7 @@
 import User from 'src/types/user/user.ts';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import CONSTANTS from 'src/constants.ts';
 
 interface AuthContextType {
   user: User | null;
@@ -23,10 +25,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const logout = async () => {
-    setUser(null);
-    localStorage.removeItem('userId');
-    localStorage.removeItem('username');
-    localStorage.removeItem('postalCode');
+    try {
+      const res = await fetch(CONSTANTS.backendEndpoint + '/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+
+      if (!res.ok) throw new Error("Logout failed");
+
+      setUser(null);
+      localStorage.removeItem('userId');
+      localStorage.removeItem('username');
+      localStorage.removeItem('postalCode');
+
+      toast.success('Logout successful');
+
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to logout");
+    }
+
   }
 
   useEffect(() => {
