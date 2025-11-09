@@ -14,9 +14,6 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
       const res = await fetch(CONSTANTS.backendEndpoint + '/comments/' + comment.id + '/replies', {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ content: content }),
       });
 

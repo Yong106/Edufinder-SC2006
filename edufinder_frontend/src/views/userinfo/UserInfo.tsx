@@ -20,8 +20,7 @@ const UserInfo = () => {
     try {
       const res = await fetch (CONSTANTS.backendEndpoint + '/users', {
         method: 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        
         body: JSON.stringify({ postalCode })
       });
 
