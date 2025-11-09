@@ -1,13 +1,17 @@
 import CardBox from 'src/components/shared/CardBox.tsx';
-import { UserComment, UserReply } from 'src/types/comment/userComment.ts';
+import { UserComment, UserReply, VoteType } from 'src/types/comment/userComment.ts';
 import { useState } from 'react';
 import AddReplyBox from 'src/views/comments/AddReplyBox.tsx';
 import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
+import { Icon } from '@iconify/react';
 
 const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: () => void; }) => {
 
   const [showReplyBox, setShowReplyBox] = useState(false);
+  const [userVoteType, setUserVoteType] = useState<VoteType>(comment.voteSummary.userVoteType);
+  const [upvotes, setUpvotes] = useState<number>(comment.voteSummary.upvoteCount);
+  const [downvotes, setDownvotes] = useState<number>(comment.voteSummary.downvoteCount);
 
   const handleReplySubmit = async (content: string) => {
     try {
@@ -30,6 +34,41 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
     }
   }
 
+  const handleVote = async (voteType: VoteType) => {
+
+    if (voteType === 'UPVOTE' && userVoteType === 'UPVOTE') voteType = 'NOVOTE';
+    if (voteType === 'DOWNVOTE' && userVoteType === 'DOWNVOTE') voteType = 'NOVOTE';
+
+    try {
+
+      const res = await fetch(CONSTANTS.backendEndpoint + '/comments/' + comment.id + '/votes', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ voteType: voteType }),
+      });
+
+      if (!res.ok) throw new Error('Failed to change vote type');
+
+      if (voteType === 'UPVOTE') {
+        setUpvotes((prev) => userVoteType === 'UPVOTE' ? prev : prev + 1);
+        setDownvotes((prev) => userVoteType === 'DOWNVOTE' ? prev - 1 : prev);
+      } else if (voteType === 'DOWNVOTE') {
+        setDownvotes((prev) => userVoteType === 'DOWNVOTE' ? prev : prev + 1);
+        setUpvotes((prev) => userVoteType === 'UPVOTE' ? prev - 1 : prev);
+      } else {
+        if (userVoteType === 'UPVOTE') setUpvotes((prev) => prev - 1);
+        if (userVoteType === 'DOWNVOTE') setDownvotes((prev) => prev - 1);
+      }
+
+      setUserVoteType(voteType);
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to vote');
+    }
+
+  }
+
   return (
     <div className="mt-2 mb-2">
       <CardBox key={comment.id} className="mt-2 mb-2">
@@ -37,6 +76,21 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
           <div className="w-full md:pe-0 pe-10">
             <p className="text-ld text-xs font-thin text-gray-400">Posted by {comment.username} at {comment.createdAt.toLocaleString()}</p>
             <p className="text-ld text-sm font-medium">{comment.content}</p>
+            <div className="flex flex-row items-center px-2">
+              <button
+                onClick={() => handleVote('UPVOTE')}
+                className={`hover:text-blue-600 ${userVoteType === 'UPVOTE' ? 'text-blue-600' : 'text-gray-500'}`}
+              >
+                <Icon icon="mdi:arrow-up-bold" width={18} />
+              </button>
+              <span className="text-sm">{upvotes} - {downvotes}</span>
+              <button
+                onClick={() => handleVote('DOWNVOTE')}
+                className={`hover:text-red-600 ${userVoteType === 'DOWNVOTE' ? 'text-red-600' : 'text-gray-500'}`}
+              >
+                <Icon icon="mdi:arrow-down-bold" width={18} />
+              </button>
+            </div>
           </div>
         </div>
       </CardBox>
