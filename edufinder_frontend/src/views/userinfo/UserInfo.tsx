@@ -20,7 +20,8 @@ const UserInfo = () => {
     try {
       const res = await fetch (CONSTANTS.backendEndpoint + '/users', {
         method: 'PUT',
-        
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ postalCode })
       });
 
@@ -28,6 +29,7 @@ const UserInfo = () => {
 
       const updatedUser = await res.json();
       setUser(updatedUser);
+      setIsEditingPostalCode(false);
       toast.success('Postal code updated successfully.');
     } catch (err) {
       toast.error("Failed to update postal code");

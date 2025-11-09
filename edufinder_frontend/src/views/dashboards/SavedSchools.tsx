@@ -27,10 +27,6 @@ const SavedSchools = () => {
     fetchSavedSchools();
   }, []);
 
-  const savedSchools = savedSchoolIds
-    .map(id => schoolMap[id])
-    .filter(Boolean);
-
   return (
     <>
       <h1 className="font-semibold text-4xl pb-5 text-primary">Saved Schools</h1>
@@ -40,7 +36,7 @@ const SavedSchools = () => {
           savedSchoolLoading || isLoading  ? (
             <p>Loading...</p>
           ) : (
-            <TopSchools schools={savedSchools} />
+            <TopSchools schools={savedSchoolIds.map(id => schoolMap[id]).filter(Boolean)} />
           )
         }
       </div>

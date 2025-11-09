@@ -17,9 +17,11 @@ const CommentSection = ({schoolId}: {schoolId: string}) => {
       method: 'GET',
     });
 
+    console.log(res);
+
     const commentData = await res.json();
     setComments(commentData.comments);
-    console.log("Comments:", comments);
+    console.log("Comments:", commentData.comments);
     setIsCommentsLoading(false);
   }
 

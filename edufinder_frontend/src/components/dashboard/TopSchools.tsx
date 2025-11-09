@@ -47,6 +47,8 @@ const TopSchools = ({schools}: {schools: School[]}) => {
         body: JSON.stringify({ schoolId }),
       })
 
+      console.log(res);
+
       if (!res.ok) throw new Error('Failed to toggle save');
 
       setSavedSchoolIds((prev) =>
@@ -117,7 +119,7 @@ const TopSchools = ({schools}: {schools: School[]}) => {
                       aria-label={`Save ${item.name}`}
                       className="!p-1 !h-auto !w-auto !border-0 !bg-transparent shadow-none"
                     > 
-                      <Icon icon="solar:bookmark-bold" width={16} height={16} />
+                      <Icon icon={ savedSchoolIds.includes(item.id) ? "solar:bookmark-outline" : "solar:bookmark-bold" } width={16} height={16} />
                     </Button>
                   </TableCell>
                 </TableRow>
