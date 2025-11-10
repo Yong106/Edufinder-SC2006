@@ -4,10 +4,10 @@ import { TransportationModes } from 'src/types/direction/transportationModes.ts'
 import { Button } from 'flowbite-react';
 import {
   DirectionsRenderer,
-  DirectionsService,
   GoogleMap,
   Marker
 } from '@react-google-maps/api';
+import { useAuth } from 'src/context/AuthProvider.tsx';
 
 const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
   const [schoolCoords, setSchoolCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -22,6 +22,7 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
   const [directionsResult, setDirectionsResult] = useState<google.maps.DirectionsResult | null>(null);
+  const { isLoggedIn } = useAuth();
 
   const handleSchoolGeocode = async () => {
     const geocodeResults = await geocodePostalCode(postalCode.toString());
@@ -143,10 +144,11 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
           </GoogleMap>
 
           <div className="flex gap-2 mt-3">
-            <Button onClick={() => handleTransportationModeChange(google.maps.TravelMode.DRIVING)}>Drive: {travelTimes.DRIVING}</Button>
-            <Button onClick={() => handleTransportationModeChange(google.maps.TravelMode.BICYCLING)}>Cycle: {travelTimes.BICYCLING}</Button>
-            <Button onClick={() => handleTransportationModeChange(google.maps.TravelMode.TRANSIT)}>Public Transport: {travelTimes.TRANSIT}</Button>
-            <Button onClick={() => handleTransportationModeChange(google.maps.TravelMode.WALKING)}>Walk: {travelTimes.WALKING}</Button>
+            { !isLoggedIn && <p>Login and update your postal code to calculate travel times.</p> }
+            <Button className={ isLoggedIn ? "bg-blue-700" : "bg-gray-400 hover:bg-gray-400 cursor-not-allowed"} onClick={() => handleTransportationModeChange(google.maps.TravelMode.DRIVING)}>Drive: {travelTimes.DRIVING}</Button>
+            <Button className={ isLoggedIn ? "bg-blue-700" : "bg-gray-400 hover:bg-gray-400 cursor-not-allowed"} onClick={() => handleTransportationModeChange(google.maps.TravelMode.BICYCLING)}>Cycle: {travelTimes.BICYCLING}</Button>
+            <Button className={ isLoggedIn ? "bg-blue-700" : "bg-gray-400 hover:bg-gray-400 cursor-not-allowed"} onClick={() => handleTransportationModeChange(google.maps.TravelMode.TRANSIT)}>Public Transport: {travelTimes.TRANSIT}</Button>
+            <Button className={ isLoggedIn ? "bg-blue-700" : "bg-gray-400 hover:bg-gray-400 cursor-not-allowed"} onClick={() => handleTransportationModeChange(google.maps.TravelMode.WALKING)}>Walk: {travelTimes.WALKING}</Button>
           </div>
           {routes.length > 1 && (
             <div className="flex gap-2 mt-3">
