@@ -58,58 +58,6 @@ interface SearchProps {
   schools: School[];
 }
 
-export const filterSchools = (
-  schools: School[],
-  searchValue: string,
-  selectedLocations: string[],
-  selectedCCAs: string[],
-  selectedSubjects: string[],
-  selectedNatureCodes: string[],
-  selectedSchoolTypes: string[],
-  selectedSessionCodes: string[],
-  minCOP: number,
-  maxCOP: number
-): School[] => {
-  return schools.filter((school) => {
-    if (!school) return false;
-
-    const name = school.name ?? '';
-    const location = school.location ?? '';
-    const ccas = school.ccas ?? [];
-    const subjects = school.subjects ?? [];
-    const natureCode = school.natureCode ?? '';
-    const schoolType = school.type ?? '';
-    const sessionCode = school.sessionCode ?? '';
-    const min = school.minCutOffPoint ?? 0;
-    const max = school.maxCutOffPoint ?? 0;
-    const search = searchValue ?? '';
-
-    const nameMatch = name.toLowerCase().includes(search.toLowerCase());
-    const locMatch =
-      selectedLocations.length === 0 || selectedLocations.includes(location);
-    const ccaMatch =
-      selectedCCAs.length === 0 ||
-      selectedCCAs.some((cca) =>
-        ccas.map((c: any) => (typeof c === 'string' ? c : c.name)).includes(cca)
-      );
-    const subjectMatch =
-      selectedSubjects.length === 0 ||
-      selectedSubjects.some((sub) =>
-        subjects.map((s: any) => (typeof s === 'string' ? s : s.name)).includes(sub)
-      );
-    const natureMatch =
-      selectedNatureCodes.length === 0 || selectedNatureCodes.includes(natureCode);
-    const typeMatch =
-      selectedSchoolTypes.length === 0 || selectedSchoolTypes.includes(schoolType);
-    const sessionMatch =
-      selectedSessionCodes.length === 0 || selectedSessionCodes.includes(sessionCode);
-    const copMatch =
-      !min || !max || (min >= minCOP && max <= maxCOP);
-
-    return nameMatch && locMatch && ccaMatch && subjectMatch && natureMatch && typeMatch && sessionMatch && copMatch;
-  });
-};
-
 const Header = ({
   searchValue,
   setSearchValue,
@@ -240,37 +188,6 @@ const Header = ({
   }, []);
 
   const allSchools = Array.from(schoolMap.values());
-
-  useEffect(() => {
-    const min = parseInt(minCOP, 10) || 4;
-    const max = parseInt(maxCOP, 10) || 32;
-
-    const result = filterSchools(
-      allSchools,
-      searchValue,
-      selectedLocations,
-      selectedCCAs,
-      selectedSubjects,
-      selectedNatureCodes,
-      selectedSchoolTypes,
-      selectedSessionCodes,
-      min,
-      max
-    );
-
-    setFilteredSchools(result);
-  }, [
-    searchValue,
-    selectedLocations,
-    selectedCCAs,
-    selectedSubjects,
-    selectedNatureCodes,
-    selectedSchoolTypes,
-    selectedSessionCodes,
-    minCOP,
-    maxCOP,
-    schoolMap
-  ]);
 
   return (
     <>

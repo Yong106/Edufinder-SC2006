@@ -1,8 +1,35 @@
 import TopSchools from 'src/components/dashboard/TopSchools.tsx';
 import Header from 'src/layouts/full/header/Header';
 import { useSchoolContext } from 'src/context/SchoolProvider.tsx';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { School } from 'src/types/school/school.ts';
+
+const filterSchools = (
+  schools: School[],
+  searchValue: string,
+  selectedLocations: string[],
+  selectedCCAs: string[],
+  selectedSubjects: string[],
+  selectedNatureCodes: string[],
+  selectedSchoolTypes: string[],
+  selectedSessionCodes: string[],
+  minCOP: number,
+  maxCOP: number
+): School[] => {
+  return schools.filter((school) => {
+    const nameMatch = school.name?.toLowerCase().includes(searchValue.toLowerCase());
+    const locMatch = selectedLocations.length === 0 || selectedLocations.includes(school.location); // ✅ use school.location
+    const ccaMatch = selectedCCAs.length === 0 || selectedCCAs.some(cca => school.ccas?.includes(cca));
+    const subjectMatch = selectedSubjects.length === 0 || selectedSubjects.some(sub => school.subjects?.includes(sub));
+    const natureMatch = selectedNatureCodes.length === 0 || selectedNatureCodes.includes(school.natureCode);
+    const typeMatch = selectedSchoolTypes.length === 0 || selectedSchoolTypes.includes(school.schoolType);
+    const sessionMatch = selectedSessionCodes.length === 0 || selectedSessionCodes.includes(school.sessionCode);
+    const copMatch = !school.minCutOffPoint || !school.maxCutOffPoint ||
+      (school.minCutOffPoint >= minCOP && school.maxCutOffPoint <= maxCOP);
+
+    return nameMatch && locMatch && ccaMatch && subjectMatch && natureMatch && typeMatch && sessionMatch && copMatch;
+  });
+};
 
 const Dashboard = () => {
 
@@ -33,32 +60,40 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading...</div>;
 
   useEffect(() => {
-    console.log("School Map loaded");
     if (schoolMap.size > 0) {
-      setSchools(Array.from(schoolMap.values()));
-    }
-  }, [schoolMap]);
+      const allSchools = Array.from(schoolMap.values());
+      setSchools(allSchools);
 
-  useEffect(() => {
-    for (const school of schools) {
-      if (!school) {
-        console.error('Null school:', school);
-      } else if (school.name == null) {
-        console.error('School with null name:', school);
-      }
-    }
-    console.log("Search value:", searchValue);
-    if (schools.length > 0 ) {
-      console.log("xyz", schools);
-      setFilteredSchools(
-        schools.filter((school) => {
-          const name = school?.name ?? '';
-          const search = searchValue ?? '';
-          return name.toLowerCase().includes(search.toLowerCase());
-        })
+      const min = parseInt(minCOP, 10) || 4;
+      const max = parseInt(maxCOP, 10) || 32;
+
+      const filtered = filterSchools(
+        allSchools,
+        searchValue,
+        selectedLocations,
+        selectedCCAs,
+        selectedSubjects,
+        selectedNatureCodes,
+        selectedSchoolTypes,
+        selectedSessionCodes,
+        min,
+        max
       );
+
+      setFilteredSchools(filtered);
     }
-  }, [searchValue, schools]);
+  }, [
+    schoolMap,
+    searchValue,
+    selectedLocations,
+    selectedCCAs,
+    selectedSubjects,
+    selectedNatureCodes,
+    selectedSchoolTypes,
+    selectedSessionCodes,
+    minCOP,
+    maxCOP
+  ]);
 
   return (
     <>
