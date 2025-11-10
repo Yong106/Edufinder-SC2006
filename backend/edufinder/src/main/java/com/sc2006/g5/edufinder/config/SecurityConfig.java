@@ -29,8 +29,8 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers("/error").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS).permitAll() // Permit preflight request
+                .requestMatchers("/error").permitAll()         // Permit error path to show correct authentication error
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/schools/**").permitAll()
                 .anyRequest().authenticated())

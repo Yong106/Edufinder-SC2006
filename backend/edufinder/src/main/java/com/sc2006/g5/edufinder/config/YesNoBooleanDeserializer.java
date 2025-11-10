@@ -6,6 +6,11 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 
+/**
+ * Custom {@link JsonDeserializer} to parse "Yes/No" into {@code Boolean}.
+ * <p>
+ * If the text is "Yes", return {@code true}, otherwise, return {@code false}
+ */
 public class YesNoBooleanDeserializer extends JsonDeserializer<Boolean> {
     @Override
     public Boolean deserialize(JsonParser parser, DeserializationContext ctx) throws IOException {
