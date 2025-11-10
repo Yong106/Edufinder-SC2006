@@ -6,7 +6,6 @@ import {
   DirectionsRenderer,
   DirectionsService,
   GoogleMap,
-  LoadScript,
   Marker
 } from '@react-google-maps/api';
 
@@ -14,13 +13,15 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
   const [schoolCoords, setSchoolCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [transportationMode, setTransportationMode] = useState<TransportationModes | null>(null);
-  const [directionsResult, setDirectionsResult] = useState<google.maps.DirectionsResult | null>(null);
   const [travelTimes, setTravelTimes] = useState<Record<google.maps.TravelMode, string>>({
     DRIVING: '',
     WALKING: '',
     TRANSIT: '',
     BICYCLING: '',
   });
+  const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
+  const [directionsResult, setDirectionsResult] = useState<google.maps.DirectionsResult | null>(null);
 
   const handleSchoolGeocode = async () => {
     const geocodeResults = await geocodePostalCode(postalCode.toString());
@@ -39,14 +40,19 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
 
   const handleTransportationModeChange = (mode: google.maps.TravelMode) => {
     setTransportationMode(mode);
+    setSelectedRouteIndex(0);
   };
 
   const handleDirectionsCallback = (
     res: google.maps.DirectionsResult | null,
     status: google.maps.DirectionsStatus
   ) => {
-    if (status === 'OK' && res) {
+    if (status === 'OK' && res?.routes.length) {
+      setRoutes(res.routes);
       setDirectionsResult(res);
+      setSelectedRouteIndex((prevIndex) =>
+        prevIndex < res.routes.length ? prevIndex : 0
+      );
     } else {
       console.error('Directions request failed:', res);
     }
@@ -104,12 +110,21 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
                   origin: userCoords,
                   destination: schoolCoords,
                   travelMode: transportationMode,
+                  provideRouteAlternatives: true,
                 }}
                 callback={handleDirectionsCallback}
               />
             )}
 
-            {directionsResult && <DirectionsRenderer directions={directionsResult} options={{ preserveViewport: true }} />}
+            {directionsResult && (
+              <DirectionsRenderer
+                directions={{
+                  ...directionsResult,
+                  routes: [routes[selectedRouteIndex]],
+                }}
+                options={{ preserveViewport: true }}
+              />
+            )}
 
             {schoolCoords && <Marker position={schoolCoords} />}
             {userCoords && <Marker position={userCoords} />}
@@ -121,6 +136,22 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
             <Button onClick={() => handleTransportationModeChange(google.maps.TravelMode.TRANSIT)}>Public Transport: {travelTimes.TRANSIT}</Button>
             <Button onClick={() => handleTransportationModeChange(google.maps.TravelMode.WALKING)}>Walk: {travelTimes.WALKING}</Button>
           </div>
+          {routes.length > 1 && (
+            <div className="flex gap-2 mt-3">
+              {routes.map((route, idx) => {
+                const duration = route.legs[0]?.duration?.text ?? 'N/A';
+                return (
+                  <Button
+                    key={idx}
+                    color={selectedRouteIndex === idx ? 'blue' : 'gray'}
+                    onClick={() => setSelectedRouteIndex(idx)}
+                  >
+                    Route {idx + 1}: {duration}
+                  </Button>
+                );
+              })}
+            </div>
+          )}
         </div>
       ) : (
         <p>Invalid school postal code.</p>
