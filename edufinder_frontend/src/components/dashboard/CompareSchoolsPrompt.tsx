@@ -3,6 +3,11 @@ import { Navbar, Textarea, Button, Modal, TextInput } from 'flowbite-react';
 import { Icon } from '@iconify/react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import ReactMarkdown from 'react-markdown';
+import fetchSavedSchoolIds from 'src/utils/fetchSavedSchoolIds.ts';
+import toast from 'react-hot-toast';
+import { useSchoolContext } from 'src/context/SchoolProvider.tsx';
+import { Cca, School } from 'src/types/school/school.ts';
+import { useAuth } from 'src/context/AuthProvider.tsx';
 
 
 const CompareSchoolsPrompt = () => {
@@ -10,24 +15,37 @@ const CompareSchoolsPrompt = () => {
   const [isSchoolOpen, setSchoolOpen] = useState(false);
   const [schoolQuery, setSchoolQuery] = useState('');
   const [selectedSchools, setSelectedSchools] = useState<string[]>([]);
-  const [addedSchools, setAddedSchools] = useState<Array<{name:string; location:string; cutoff?:string; ccas?:string; subjects?:string}>>([]);
+  const [addedSchools, setAddedSchools] = useState<School[]>([]);
   const schoolRef = useRef<HTMLDivElement | null>(null);
   const justOpened = useRef(false);
   const [compareResult, setCompareResult] = useState<JSX.Element | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [userPrompt, setUserPrompt] = useState("");
+  const { schoolMap } = useSchoolContext();
+  const [savedSchools, setSavedSchools] = useState<School[]>([]);
+  const { isLoggedIn } = useAuth();
 
-  const schools = [
-    { name: 'Jurong Sec', location: 'Jurong', cutoff: '18', ccas: 'Basketball, Robotics', subjects: 'Math, Science, English' },
-    { name: 'Serangoon Sec', location: 'Serangoon', cutoff: '20', ccas: 'Choir, Soccer', subjects: 'Math, Literature, History' },
-    { name: 'Pasir Panjang Sec', location: 'Pasir Panjang', cutoff: '22', ccas: 'Swimming, Debate', subjects: 'Physics, Chemistry, Math' },
-  ];
+
+  useEffect(() => {
+    const fetchSavedSchools = async () => {
+      try {
+        const res = await fetchSavedSchoolIds();
+        const savedSchools = res.map(id => schoolMap.get(id)).filter(Boolean)
+        setSavedSchools(savedSchools);
+      } catch (err) {
+        console.error('Error fetching saved schools', err);
+        toast.error('Failed to load saved schools');
+      }
+    };
+
+    if (isLoggedIn) fetchSavedSchools();
+  }, []);
   
-  const filteredSchools = schools.filter((s) =>
+  const filteredSchools = savedSchools.filter((s) =>
     s.name.toLowerCase().includes(schoolQuery.trim().toLowerCase())
   );
   const orderedFilteredSchools = [
-    ...schools.filter((s) => selectedSchools.includes(s.name)),
+    ...savedSchools.filter((s) => selectedSchools.includes(s.name)),
     ...filteredSchools.filter((s) => !selectedSchools.includes(s.name)),
   ];
   
@@ -148,15 +166,78 @@ const CompareSchoolsPrompt = () => {
                         <tbody className="bg-white text-sm">
                           {[
                             { key: 'location', label: 'Location' },
-                            { key: 'cutoff', label: 'Cut-off Point' },
-                            { key: 'ccas', label: 'CCAs' },
-                            { key: 'subjects', label: 'Subjects Offered' },
+                            { key: 'address', label: 'Address' },
+                            { key: 'postalCode', label: 'Postal Code' },
+                            { key: 'nearbyMrtStation', label: 'Nearest MRT' },
+                            { key: 'nearbyBusStation', label: 'Nearest Bus' },
+                            { key: 'type', label: 'School Type' },
+                            { key: 'natureCode', label: 'Gender' },
+                            { key: 'level', label: 'Level' },
+                            { key: 'sessionCode', label: 'Session' },
+                            { key: 'sapInd', label: 'SAP School' },
+                            { key: 'autonomousInd', label: 'Autonomous' },
+                            { key: 'giftedInd', label: 'Gifted Education' },
+                            { key: 'ipInd', label: 'Integrated Programme' },
+                            { key: 'minCutOffPoint', label: 'Min Cut-off' },
+                            { key: 'maxCutOffPoint', label: 'Max Cut-off' },
+                            {
+                              key: 'ccas',
+                              label: 'CCAs',
+                              transform: (ccas: Cca[]) =>
+                                ccas.map((c) => c.name).join(', ') || '-',
+                            },
+                            {
+                              key: 'subjects',
+                              label: 'Subjects',
+                              transform: (subs: string[]) =>
+                                subs.join(', ') || '-',
+                            },
+                            {
+                              key: 'programmes',
+                              label: 'Programmes',
+                              transform: (progs: string[]) =>
+                                progs.join(', ') || '-',
+                            },
+                            { key: 'website', label: 'Website' },
+                            { key: 'email', label: 'Email' },
+                            { key: 'phoneNumber', label: 'Phone' },
+                            { key: 'faxNumber', label: 'Fax' },
+                            {
+                              key: 'motherTongue1',
+                              label: 'Mother Tongue 1',
+                            },
+                            {
+                              key: 'motherTongue2',
+                              label: 'Mother Tongue 2',
+                            },
+                            {
+                              key: 'motherTongue3',
+                              label: 'Mother Tongue 3',
+                            },
                           ].map((row) => (
                             <tr key={row.key} className="border-b border-dotted border-gray-200">
-                              <td className="px-4 py-2 font-medium text-primary text-center">{row.label}</td>
-                              {addedSchools.map((s) => (
-                                <td key={`${s.name}-${row.key}`} className="px-4 py-2 border-l border-gray-200 text-center">{(s as any)[row.key] ?? '-'}</td>
-                              ))}
+                              <td className="px-4 py-2 font-medium text-primary text-center">
+                                {row.label}
+                              </td>
+                              {addedSchools.map((s) => {
+                                const value = (s as any)[row.key];
+                                const display =
+                                  row.transform?.(value) ??
+                                  (typeof value === 'boolean'
+                                    ? value
+                                      ? 'Yes'
+                                      : 'No'
+                                    : value ?? '-');
+
+                                return (
+                                  <td
+                                    key={`${s.name}-${row.key}`}
+                                    className="px-4 py-2 border-l border-gray-200 text-center"
+                                  >
+                                    {display}
+                                  </td>
+                                );
+                              })}
                             </tr>
                           ))}
                         </tbody>
@@ -237,20 +318,24 @@ const CompareSchoolsPrompt = () => {
                     </div>
                   </div>
                   <div className="flex justify-end gap-3">
-                    <Button onClick={() => {
-                      setAddedSchools((prev) => {
-                        const toAdd = selectedSchools.filter((name) => !prev.some((p) => p.name === name));
-                        const entries = toAdd.map((name) => {
-                          const found = schools.find((x) => x.name === name);
-                          return found
-                            ? { name: found.name, location: found.location, cutoff: found.cutoff, ccas: found.ccas, subjects: found.subjects }
-                            : { name, location: '-', cutoff: '-', ccas: '-', subjects: '-' };
+                    <Button
+                      onClick={() => {
+                        setAddedSchools((prev) => {
+                          const toAdd = selectedSchools
+                            .filter((name) => !prev.some((s) => s.name === name))
+                            .map((name) => savedSchools.find((s) => s.name === name))
+                            .filter((s): s is School => !!s);
+
+                          return [...prev, ...toAdd];
                         });
-                        return [...prev, ...entries];
-                      });
-                      setSelectedSchools([]);
-                      setShowAddSchoolModal(false);
-                    }} color="primary">Add Schools</Button>
+
+                        setSelectedSchools([]);
+                        setShowAddSchoolModal(false);
+                      }}
+                      color="primary"
+                    >
+                      Add Schools
+                    </Button>
                   </div>
                 </div>
               </Modal>
