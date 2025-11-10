@@ -1,31 +1,170 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button, Navbar, Label, TextInput, Modal } from 'flowbite-react';
 import { Icon } from '@iconify/react';
+import { useSchoolContext } from 'src/context/SchoolProvider.tsx';
+import { School } from 'src/types/school/school.ts';
+import useSchoolFilterOptions from 'src/hooks/useSchoolFilterOptions.ts';
 
 interface SearchProps {
   searchValue: string;
   setSearchValue: (value: string) => void;
+
+  selectedLocations: string[];
+  setSelectedLocations: (locations: string[]) => void;
+  locQuery: string;
+  setLocQuery: (query: string) => void;
+  isLocOpen: boolean;
+  setLocOpen: (open: boolean) => void;
+
+  selectedCCAs: string[];
+  setSelectedCCAs: (ccas: string[]) => void;
+  ccaQuery: string;
+  setCCAQuery: (query: string) => void;
+  isCCAOpen: boolean;
+  setCCAOpen: (open: boolean) => void;
+
+  selectedSubjects: string[];
+  setSelectedSubjects: (subjects: string[]) => void;
+  subjectQuery: string;
+  setSubjectQuery: (query: string) => void;
+  isSubjectOpen: boolean;
+  setSubjectOpen: (open: boolean) => void;
+
+  selectedNatureCodes: string[];
+  setSelectedNatureCodes: (codes: string[]) => void;
+  isNatureCodeOpen: boolean;
+  setNatureCodeOpen: (open: boolean) => void;
+
+  selectedSchoolTypes: string[];
+  setSelectedSchoolTypes: (types: string[]) => void;
+  isSchoolTypeOpen: boolean;
+  setSchoolTypeOpen: (open: boolean) => void;
+
+  selectedSessionCodes: string[];
+  setSelectedSessionCodes: (codes: string[]) => void;
+  isSessionCodeOpen: boolean;
+  setSessionCodeOpen: (open: boolean) => void;
+
+  minCOP: string;
+  setMinCOP: (value: string) => void;
+  maxCOP: string;
+  setMaxCOP: (value: string) => void;
+
+  isFilterOpen: boolean;
+  setFilterOpen: (open: boolean) => void;
+
+  filteredSchools: School[];
+  setFilteredSchools: (schools: School[]) => void;
+  schools: School[];
 }
 
-const Header = ({searchValue, setSearchValue}: SearchProps) => {
-  const [isFilterOpen, setFilterOpen] = useState(false);
-  const [isLocOpen, setLocOpen] = useState(false);
-  const [locQuery, setLocQuery] = useState('');
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [isCCAOpen, setCCAOpen] = useState(false);
-  const [ccaQuery, setCCAQuery] = useState('');
-  const [selectedCCAs, setSelectedCCAs] = useState<string[]>([]);
-  const [isSubjectOpen, setSubjectOpen] = useState(false);
-  const [subjectQuery, setSubjectQuery] = useState('');
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  const [isNatureCodeOpen, setNatureCodeOpen] = useState(false);
-  const [selectedNatureCodes, setSelectedNatureCodes] = useState<string[]>([]);
-  const [isSchoolTypeOpen, setSchoolTypeOpen] = useState(false);
-  const [selectedSchoolTypes, setSelectedSchoolTypes] = useState<string[]>([]);
-  const [isSessionCodeOpen, setSessionCodeOpen] = useState(false);
-  const [selectedSessionCodes, setSelectedSessionCodes] = useState<string[]>([]);
-  const [minCOP, setMinCOP] = useState('4');
-  const [maxCOP, setMaxCOP] = useState('32');
+export const filterSchools = (
+  schools: School[],
+  searchValue: string,
+  selectedLocations: string[],
+  selectedCCAs: string[],
+  selectedSubjects: string[],
+  selectedNatureCodes: string[],
+  selectedSchoolTypes: string[],
+  selectedSessionCodes: string[],
+  minCOP: number,
+  maxCOP: number
+): School[] => {
+  return schools.filter((school) => {
+    if (!school) return false;
+
+    const name = school.name ?? '';
+    const location = school.location ?? '';
+    const ccas = school.ccas ?? [];
+    const subjects = school.subjects ?? [];
+    const natureCode = school.natureCode ?? '';
+    const schoolType = school.type ?? '';
+    const sessionCode = school.sessionCode ?? '';
+    const min = school.minCutOffPoint ?? 0;
+    const max = school.maxCutOffPoint ?? 0;
+    const search = searchValue ?? '';
+
+    const nameMatch = name.toLowerCase().includes(search.toLowerCase());
+    const locMatch =
+      selectedLocations.length === 0 || selectedLocations.includes(location);
+    const ccaMatch =
+      selectedCCAs.length === 0 ||
+      selectedCCAs.some((cca) =>
+        ccas.map((c: any) => (typeof c === 'string' ? c : c.name)).includes(cca)
+      );
+    const subjectMatch =
+      selectedSubjects.length === 0 ||
+      selectedSubjects.some((sub) =>
+        subjects.map((s: any) => (typeof s === 'string' ? s : s.name)).includes(sub)
+      );
+    const natureMatch =
+      selectedNatureCodes.length === 0 || selectedNatureCodes.includes(natureCode);
+    const typeMatch =
+      selectedSchoolTypes.length === 0 || selectedSchoolTypes.includes(schoolType);
+    const sessionMatch =
+      selectedSessionCodes.length === 0 || selectedSessionCodes.includes(sessionCode);
+    const copMatch =
+      !min || !max || (min >= minCOP && max <= maxCOP);
+
+    return nameMatch && locMatch && ccaMatch && subjectMatch && natureMatch && typeMatch && sessionMatch && copMatch;
+  });
+};
+
+const Header = ({
+  searchValue,
+  setSearchValue,
+
+  selectedLocations,
+  setSelectedLocations,
+  locQuery,
+  setLocQuery,
+  isLocOpen,
+  setLocOpen,
+
+  selectedCCAs,
+  setSelectedCCAs,
+  ccaQuery,
+  setCCAQuery,
+  isCCAOpen,
+  setCCAOpen,
+
+  selectedSubjects,
+  setSelectedSubjects,
+  subjectQuery,
+  setSubjectQuery,
+  isSubjectOpen,
+  setSubjectOpen,
+
+  selectedNatureCodes,
+  setSelectedNatureCodes,
+  isNatureCodeOpen,
+  setNatureCodeOpen,
+
+  selectedSchoolTypes,
+  setSelectedSchoolTypes,
+  isSchoolTypeOpen,
+  setSchoolTypeOpen,
+
+  selectedSessionCodes,
+  setSelectedSessionCodes,
+  isSessionCodeOpen,
+  setSessionCodeOpen,
+
+  minCOP,
+  setMinCOP,
+  maxCOP,
+  setMaxCOP,
+  isFilterOpen,
+  setFilterOpen,
+
+  filteredSchools,
+  setFilteredSchools,
+  schools
+
+}: SearchProps) => {
+
+  console.log('🚨 schools passed to Header:', schools.length, schools[0]);
+
   const locRef = useRef<HTMLDivElement | null>(null);
   const ccaRef = useRef<HTMLDivElement | null>(null);
   const subjectRef = useRef<HTMLDivElement | null>(null);
@@ -34,121 +173,104 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
   const sessionCodeRef = useRef<HTMLDivElement | null>(null);
   const justOpened = useRef(false);
 
-  var locations = ['Jurong', 'Serangoon', 'Pasir Panjang']
-  var CCAs = ['Basketball', 'Arts & Crafts', 'Bowling']
-  var Subjects = ['A Math', 'E Math', 'Chinese']
-  var NatureCodes = ['Co-ed', 'Male', 'Female']
-  var SchoolTypes = ['Independent','Government School','Goverment-Aided','Special Assistance Plan (SAP)']
-  var SessionCodes = ['AM','PM']
+  const { schoolMap } = useSchoolContext();
 
-  const filteredLocations = locations.filter((l) =>
-    l.toLowerCase().includes(locQuery.trim().toLowerCase())
-  );
-  const filteredCCAs = CCAs.filter((l) =>
-    l.toLowerCase().includes(ccaQuery.trim().toLowerCase())
-  );
-  const filteredSubjects = Subjects.filter((l) =>
-    l.toLowerCase().includes(subjectQuery.trim().toLowerCase())
-  );
-  const orderedFilteredLocations = [
-    ...locations.filter((l) => selectedLocations.includes(l)),
-    ...filteredLocations.filter((l) => !selectedLocations.includes(l)),
-  ];
-  const orderedFilteredCCAs = [
-    ...CCAs.filter((c) => selectedCCAs.includes(c)),
-    ...filteredCCAs.filter((c) => !selectedCCAs.includes(c)),
-  ];
-  const orderedFilteredSubjects = [
-    ...Subjects.filter((s) => selectedSubjects.includes(s)),
-    ...filteredSubjects.filter((s) => !selectedSubjects.includes(s)),
-  ];
-  const orderedNatureCodes = [
-    ...NatureCodes.filter((c) => selectedNatureCodes.includes(c)),
-    ...NatureCodes.filter((c) => !selectedNatureCodes.includes(c)),
-  ];
-  const orderedSchoolTypes = [
-    ...SchoolTypes.filter((t) => selectedSchoolTypes.includes(t)),
-    ...SchoolTypes.filter((t) => !selectedSchoolTypes.includes(t)),
-  ];
-  const orderedSessionCodes = [
-    ...SessionCodes.filter((t) => selectedSessionCodes.includes(t)),
-    ...SessionCodes.filter((t) => !selectedSessionCodes.includes(t)),
-  ];
+  const getOrderedFilterList = (
+    allItems: (string | null | undefined)[],
+    selected: string[],
+    query = ''
+  ): string[] => {
+    const filtered = allItems
+      .filter((item): item is string => typeof item === 'string')
+      .filter((item) =>
+        item.toLowerCase().includes(query.trim().toLowerCase())
+      );
 
-  const toggleLocSelection = (loc: string) => {
-    setSelectedLocations((s) =>
-      s.includes(loc) ? s.filter((x) => x !== loc) : [...s, loc]
-    );
-  };
-  const toggleCCASelection = (cca: string) => {
-    setSelectedCCAs((s) =>
-      s.includes(cca) ? s.filter((x) => x !== cca) : [...s, cca]
-    );
-  };
-  const toggleSubjectSelection = (subject: string) => {
-    setSelectedSubjects((s) =>
-      s.includes(subject) ? s.filter((x) => x !== subject) : [...s, subject]
-    );
-  };
-  const toggleNatureCodeSelection = (code: string) => {
-    setSelectedNatureCodes((s) =>
-      s.includes(code) ? s.filter((x) => x !== code) : [...s, code]
-    );
-  };
-  const toggleSchoolTypeSelection = (type: string) => {
-    setSelectedSchoolTypes((s) =>
-      s.includes(type) ? s.filter((x) => x !== type) : [...s, type]
-    );
-  };
-  const toggleSessionCodeSelection = (code: string) => {
-    setSelectedSessionCodes((s) =>
-      s.includes(code) ? s.filter((x) => x !== code) : [...s, code]
-    );
+    return [
+      ...selected,
+      ...filtered.filter((item) => !selected.includes(item)),
+    ];
   };
 
-  const handleFilter = () => {
-    setFilterOpen(!isFilterOpen)
-  }
+  const {
+    locations,
+    CCAs,
+    Subjects,
+    NatureCodes,
+    SchoolTypes,
+    SessionCodes
+  } = useSchoolFilterOptions(schools);
 
-  useEffect(() => {
-    if (isFilterOpen) {
-      justOpened.current = true;
-      const t = setTimeout(() => (justOpened.current = false), 10);
-      return () => clearTimeout(t);
+  const orderedFilteredLocations = getOrderedFilterList(locations, selectedLocations, locQuery);
+  const orderedFilteredCCAs = getOrderedFilterList(CCAs, selectedCCAs, ccaQuery);
+  const orderedFilteredSubjects = getOrderedFilterList(Subjects, selectedSubjects, subjectQuery);
+  const orderedNatureCodes = getOrderedFilterList(NatureCodes, selectedNatureCodes);
+  const orderedSchoolTypes = getOrderedFilterList(SchoolTypes, selectedSchoolTypes);
+  const orderedSessionCodes = getOrderedFilterList(SessionCodes, selectedSessionCodes);
+
+  const toggleSelection = (value: string, selected: string[], setter: (val: string[]) => void) => {
+    if (selected.includes(value)) {
+      setter(selected.filter((x) => x !== value));
+    } else {
+      setter([...selected, value]);
     }
-  }, [isFilterOpen]);
+  };
 
   useEffect(() => {
-    function onDoc(e: MouseEvent) {
+    function handleClickOutside(e: MouseEvent) {
       const target = e.target as Node;
-      const insideLoc = locRef.current?.contains(target);
-      const insideCca = ccaRef.current?.contains(target);
-      const insideSubject = subjectRef.current?.contains(target);
-      const insideNatureCode = natureCodeRef.current?.contains(target);
-      const insideSchoolType = schoolTypeRef.current?.contains(target);
-      const insideSessionCode = sessionCodeRef.current?.contains(target);
-      if (!insideLoc) {
-        setLocOpen(false);
-      }
-      if (!insideCca) {
-        setCCAOpen(false);
-      }
-      if (!insideSubject) {
-        setSubjectOpen(false);
-      }
-      if (!insideNatureCode) {
-        setNatureCodeOpen(false);
-      }
-      if (!insideSchoolType) {
-        setSchoolTypeOpen(false);
-      }
-      if (!insideSessionCode) {
-        setSessionCodeOpen(false);
-      }
+      const refs = [
+        { ref: locRef, setter: setLocOpen },
+        { ref: ccaRef, setter: setCCAOpen },
+        { ref: subjectRef, setter: setSubjectOpen },
+        { ref: natureCodeRef, setter: setNatureCodeOpen },
+        { ref: schoolTypeRef, setter: setSchoolTypeOpen },
+        { ref: sessionCodeRef, setter: setSessionCodeOpen }
+      ];
+
+      refs.forEach(({ ref, setter }) => {
+        if (ref.current && !ref.current.contains(target)) {
+          setter(false);
+        }
+      });
     }
-    document.addEventListener('mousedown', onDoc);
-    return () => document.removeEventListener('mousedown', onDoc);
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const allSchools = Array.from(schoolMap.values());
+
+  useEffect(() => {
+    const min = parseInt(minCOP, 10) || 4;
+    const max = parseInt(maxCOP, 10) || 32;
+
+    const result = filterSchools(
+      allSchools,
+      searchValue,
+      selectedLocations,
+      selectedCCAs,
+      selectedSubjects,
+      selectedNatureCodes,
+      selectedSchoolTypes,
+      selectedSessionCodes,
+      min,
+      max
+    );
+
+    setFilteredSchools(result);
+  }, [
+    searchValue,
+    selectedLocations,
+    selectedCCAs,
+    selectedSubjects,
+    selectedNatureCodes,
+    selectedSchoolTypes,
+    selectedSessionCodes,
+    minCOP,
+    maxCOP,
+    schoolMap
+  ]);
 
   return (
     <>
@@ -172,7 +294,7 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
               <Button
                 type="button"
                 className="text-white bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                onClick={() => handleFilter()}
+                onClick={() => setFilterOpen(!isFilterOpen)}
               >
                 Filter
                 <Icon className="ml-2" icon="solar:filter-linear" width={16} height={16} />
@@ -340,7 +462,7 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
                               <input
                                 type="checkbox"
                                 checked={selectedLocations.includes(location)}
-                                onChange={() => toggleLocSelection(location)}
+                                onChange={() => toggleSelection(location, selectedLocations, setSelectedLocations)}
                                 className="form-checkbox"
                               />
                               <span className="ml-2">{location}</span>
@@ -382,7 +504,7 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
                               <input
                                 type="checkbox"
                                 checked={selectedCCAs.includes(CCA)}
-                                onChange={() => toggleCCASelection(CCA)}
+                                onChange={() => toggleSelection(CCA, selectedCCAs, setSelectedCCAs)}
                                 className="form-checkbox"
                               />
                               <span className="ml-2">{CCA}</span>
@@ -424,7 +546,7 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
                               <input
                                 type="checkbox"
                                 checked={selectedSubjects.includes(subject)}
-                                onChange={() => toggleSubjectSelection(subject)}
+                                onChange={() => toggleSelection(subject, selectedSubjects, setSelectedSubjects)}
                                 className="form-checkbox"
                               />
                               <span className="ml-2">{subject}</span>
@@ -511,7 +633,7 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
                               <input
                                 type="checkbox"
                                 checked={selectedNatureCodes.includes(code)}
-                                onChange={() => toggleNatureCodeSelection(code)}
+                                onChange={() => toggleSelection(code, selectedNatureCodes, setSelectedNatureCodes)}
                                 className="form-checkbox"
                               />
                               <span className="ml-2">{code}</span>
@@ -548,7 +670,7 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
                               <input
                                 type="checkbox"
                                 checked={selectedSchoolTypes.includes(type)}
-                                onChange={() => toggleSchoolTypeSelection(type)}
+                                onChange={() => toggleSelection(type, selectedSchoolTypes, setSelectedSchoolTypes)}
                                 className="form-checkbox"
                               />
                               <span className="ml-2">{type}</span>
@@ -585,7 +707,7 @@ const Header = ({searchValue, setSearchValue}: SearchProps) => {
                               <input
                                 type="checkbox"
                                 checked={selectedSessionCodes.includes(type)}
-                                onChange={() => toggleSessionCodeSelection(type)}
+                                onChange={() => toggleSelection(type, selectedSessionCodes, setSelectedSessionCodes)}
                                 className="form-checkbox"
                               />
                               <span className="ml-2">{type}</span>
