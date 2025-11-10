@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.sc2006.g5.edufinder.service.SchoolService;
 
+/**
+ * Handle school-related endpoints.
+ */
 @RestController
 @RequestMapping("api/schools")
 @RequiredArgsConstructor
