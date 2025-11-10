@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(user);
     localStorage.setItem('userId', user.id);
     localStorage.setItem('username', user.username);
-    localStorage.setItem('postalCode', user.postalCode);
+    localStorage.setItem('postalCode', user.postalCode ? user.postalCode : '');
   }
 
   const logout = async () => {
