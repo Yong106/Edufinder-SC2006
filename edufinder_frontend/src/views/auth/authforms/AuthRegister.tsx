@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
 import { useAuth } from 'src/context/AuthProvider.tsx';
+import PasswordRequirementsPopup from 'src/views/auth/register/PasswordRequirementsPopup.tsx';
 
 
 const AuthRegister = () => {
@@ -17,6 +18,12 @@ const AuthRegister = () => {
     event.preventDefault();
 
     try {
+
+      if (username.length < 6 || username.length > 14) {
+        toast.error("Username must be between 6 and 14 characters long.")
+        return;
+      }
+
       const res = await fetch(CONSTANTS.backendEndpoint + '/auth/signup', {
         method: 'POST',
         credentials: "include",
@@ -68,7 +75,10 @@ const AuthRegister = () => {
         </div>
         <div className="mb-6">
           <div className="mb-2 block">
-            <Label>Password</Label>
+            <Label>
+              Password
+              <PasswordRequirementsPopup />
+            </Label>
           </div>
           <TextInput
             id="userpwd"

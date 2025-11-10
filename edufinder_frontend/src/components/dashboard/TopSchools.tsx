@@ -106,15 +106,6 @@ const TopSchools = ({schools}: {schools: School[]}) => {
                   <TableCell className="whitespace-nowrap ">
                     <p className="text-sm text-ld font-medium flex items-center gap-2">
                       {item.address}
-                      <Button
-                        size="sm"
-                        color="light"
-                        //onClick={() => handleSave(item.id)}
-                        aria-label={`Save ${item.name}`}
-                        className="!p-1 !h-auto !w-auto !border-0 !bg-transparent shadow-none"
-                      >
-                        <Icon icon="solar:map-point-wave-bold" width={16} height={16} />
-                      </Button>
                     </p>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
