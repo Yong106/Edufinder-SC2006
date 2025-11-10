@@ -4,6 +4,10 @@ export const geocodePostalCode = async (postalCode: string): Promise<{ lat: numb
 
 
     return new Promise((resolve) => {
+      if (typeof window === 'undefined' || !window.google || !window.google.maps) {
+        console.error('Google Maps API not loaded');
+        return null;
+      }
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode(
         {

@@ -13,6 +13,7 @@
   "dependencies": {
     "@google/genai": "^1.27.0",
     "@google/generative-ai": "^0.24.1",
+    "@react-google-maps/api": "^2.20.7",
     "@svgr/rollup": "8.1.0",
     "@tabler/icons-react": "^2.39.0",
     "@vis.gl/react-google-maps": "^1.7.0",

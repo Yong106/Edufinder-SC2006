@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableRow } from 'flowbite-react';
 import { Cca, CcaType, School } from 'src/types/school/school.ts';
 import LocationMap from 'src/views/dashboards/LocationMap.tsx';
 import CommentSection from 'src/views/comments/CommentSection.tsx';
+import LocationMapWithDirections from 'src/views/dashboards/LocationMapWithDirections.tsx';
 
 const SchoolInfoCards = ({school}: {school: School}) => {
 
@@ -171,7 +172,7 @@ const SchoolInfoCards = ({school}: {school: School}) => {
           </Table>
         </div>
       </CardBox>
-      <LocationMap postalCode = {Number(school.postalCode)}/>
+      <LocationMapWithDirections postalCode = {Number(school.postalCode)}/>
       <CommentSection schoolId={school.id.toString()} />
     </div>
   )
