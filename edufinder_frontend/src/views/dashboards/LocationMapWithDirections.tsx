@@ -95,6 +95,29 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
     }
   }, [userCoords, schoolCoords]);
 
+  useEffect(() => {
+    if (!userCoords || !schoolCoords || !transportationMode) return;
+
+    const service = new google.maps.DirectionsService();
+    service.route(
+      {
+        origin: userCoords,
+        destination: schoolCoords,
+        travelMode: transportationMode,
+        provideRouteAlternatives: true,
+      },
+      (result, status) => {
+        if (status === 'OK' && result.routes.length > 0) {
+          setRoutes(result.routes);
+          setSelectedRouteIndex(0);
+          setDirectionsResult(result); // only if needed
+        } else {
+          console.error('Directions request failed:', status, result);
+        }
+      }
+    );
+  }, [userCoords, schoolCoords, transportationMode]);
+
   return (
     <div style={{ height: '600px', width: '100%' }}>
       {schoolCoords ? (
@@ -104,19 +127,8 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
             center={schoolCoords}
             zoom={12}
           >
-            {userCoords && transportationMode && (
-              <DirectionsService
-                options={{
-                  origin: userCoords,
-                  destination: schoolCoords,
-                  travelMode: transportationMode,
-                  provideRouteAlternatives: true,
-                }}
-                callback={handleDirectionsCallback}
-              />
-            )}
 
-            {directionsResult && (
+            {routes.length > 0 && (
               <DirectionsRenderer
                 directions={{
                   ...directionsResult,
