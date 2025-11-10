@@ -30,6 +30,7 @@ const UserInfo = () => {
       const updatedUser = await res.json();
       setUser(updatedUser);
       setIsEditingPostalCode(false);
+      localStorage.setItem('postalCode', updatedUser.postalCode);
       toast.success('Postal code updated successfully.');
     } catch (err) {
       toast.error("Failed to update postal code");
