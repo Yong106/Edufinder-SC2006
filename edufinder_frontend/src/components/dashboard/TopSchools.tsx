@@ -26,6 +26,8 @@ const TopSchools = ({schools}: {schools: School[]}) => {
   const [savedSchoolIds, setSavedSchoolIds] = useState<number[]>([]);
   const [allSchools, setAllSchools] = useState<School[]>([]);
 
+  console.log(schools);
+
   useEffect(() => {
     const fetchSavedSchools = async () => {
       try {
@@ -73,6 +75,10 @@ const TopSchools = ({schools}: {schools: School[]}) => {
     }
   }
 
+  useEffect(() => {
+    setAllSchools(schools);
+  }, [schools]);
+
   return (
     <>
       <CardBox>
@@ -92,38 +98,48 @@ const TopSchools = ({schools}: {schools: School[]}) => {
               </TableHeadCell>
             </TableHead>
             <TableBody className="">
-              {allSchools.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell className="whitespace-nowrap">
-                    <Link to={`/school/${item.id}`}>
-                      <div className="flex gap-4 items-center">
-                        <div className="w-full md:pe-0 pe-10">
-                          <p className="text-ld text-sm  font-medium">{item.name}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap ">
-                    <p className="text-sm text-ld font-medium flex items-center gap-2">
-                      {item.address}
-                    </p>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <p className="text-ld text-sm  font-medium">{item.minCutOffPoint} - {item.maxCutOffPoint}</p>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap ">
-                    <Button
-                      size="sm"
-                      color="light"
-                      onClick={() => handleToggleSave(item.id)}
-                      aria-label={`Save ${item.name}`}
-                      className="!p-1 !h-auto !w-auto !border-0 !bg-transparent shadow-none"
-                    > 
-                      <Icon icon={ savedSchoolIds.includes(item.id) ? "solar:bookmark-outline" : "solar:bookmark-bold" } width={16} height={16} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {
+                allSchools.length > 0 ? (
+                  allSchools.map((item, index) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="whitespace-nowrap">
+                        <Link to={`/school/${item.id}`}>
+                          <div className="flex gap-4 items-center">
+                            <div className="w-full md:pe-0 pe-10">
+                              <p className="text-ld text-sm  font-medium">{item.name}</p>
+                            </div>
+                          </div>
+                        </Link>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap ">
+                        <p className="text-sm text-ld font-medium flex items-center gap-2">
+                          {item.address}
+                        </p>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <p className="text-ld text-sm  font-medium">{item.minCutOffPoint} - {item.maxCutOffPoint}</p>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap ">
+                        <Button
+                          size="sm"
+                          color="light"
+                          onClick={() => handleToggleSave(item.id)}
+                          aria-label={`Save ${item.name}`}
+                          className="!p-1 !h-auto !w-auto !border-0 !bg-transparent shadow-none"
+                        >
+                          <Icon icon={ savedSchoolIds.includes(item.id) ? "solar:bookmark-outline" : "solar:bookmark-bold" } width={16} height={16} />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center py-4 text-gray-500">
+                      No schools found.
+                    </TableCell>
+                  </TableRow>
+                )
+              }
             </TableBody>
           </Table>
         </div>

@@ -1,6 +1,6 @@
 import CardBox from 'src/components/shared/CardBox.tsx';
 import { UserComment, UserReply, VoteType } from 'src/types/comment/userComment.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddReplyBox from 'src/views/comments/AddReplyBox.tsx';
 import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
@@ -12,6 +12,13 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
   const [userVoteType, setUserVoteType] = useState<VoteType>(comment.voteSummary.userVoteType);
   const [upvotes, setUpvotes] = useState<number>(comment.voteSummary.upvoteCount);
   const [downvotes, setDownvotes] = useState<number>(comment.voteSummary.downvoteCount);
+
+  useEffect(() => {
+    if (comment.voteSummary.userVoteType) {
+      setUserVoteType(comment.voteSummary.userVoteType);
+    }
+    console.log(comment.voteSummary)
+  }, [comment.voteSummary.userVoteType]);
 
   const handleReplySubmit = async (content: string) => {
     try {
@@ -47,6 +54,8 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ voteType: voteType }),
       });
+
+      console.log("Vote: ", res);
 
       if (!res.ok) throw new Error('Failed to change vote type');
 

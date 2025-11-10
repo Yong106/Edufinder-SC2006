@@ -2,7 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { Button, Navbar, Label, TextInput, Modal } from 'flowbite-react';
 import { Icon } from '@iconify/react';
 
-const Header = () => {
+interface SearchProps {
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+}
+
+const Header = ({searchValue, setSearchValue}: SearchProps) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
   const [isLocOpen, setLocOpen] = useState(false);
   const [locQuery, setLocQuery] = useState('');
@@ -158,6 +163,7 @@ const Header = () => {
                 id="name"
                 type="text"
                 placeholder="School Name"
+                onChange={(e) => setSearchValue(e.target.value)}
                 required
                 className="w-full form-control form-rounded-xl"
               />
