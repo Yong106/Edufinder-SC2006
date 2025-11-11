@@ -4,12 +4,14 @@ import TopSchools from 'src/components/dashboard/TopSchools.tsx';
 import { useSchoolContext} from 'src/context/SchoolProvider.tsx';
 import fetchSavedSchoolIds from 'src/utils/fetchSavedSchoolIds.ts';
 import { useAuth } from 'src/context/AuthProvider.tsx';
+import { School } from 'src/types/school/school.ts';
 
 const SavedSchools = () => {
 
   const { schoolMap, isLoading } = useSchoolContext();
   const { isLoggedIn } = useAuth();
   const [savedSchoolIds, setSavedSchoolIds] = useState<number[]>([]);
+  const [savedSchools, setSavedSchools] = useState<School[]>([]);
   const [savedSchoolLoading, setSavedSchoolLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +19,10 @@ const SavedSchools = () => {
       try {
         const res = await fetchSavedSchoolIds();
         setSavedSchoolIds(res);
+        const schools = res
+          .map((id) => schoolMap.get(id))
+          .filter((s): s is School => Boolean(s));
+        setSavedSchools(schools);
       } catch (err) {
         console.error('Error fetching saved schools', err);
         toast.error('Failed to load saved schools');
@@ -26,7 +32,7 @@ const SavedSchools = () => {
     };
 
     if (isLoggedIn) fetchSavedSchools();
-  }, []);
+  }, [isLoggedIn, schoolMap]);
 
   return (
     <>
@@ -40,7 +46,19 @@ const SavedSchools = () => {
             savedSchoolLoading || isLoading  ? (
               <p>Loading...</p>
             ) : (
-              <TopSchools schools={savedSchoolIds.map(id => schoolMap.get(id)).filter(Boolean)} />
+              <TopSchools
+                schools={savedSchools}
+                onToggleSave={(schoolId, nowSaved) => {
+                  if (!nowSaved) {
+                    setSavedSchools((prev) =>
+                      prev.filter((s) => s.id !== schoolId)
+                    );
+                    setSavedSchoolIds((prev) =>
+                      prev.filter((id) => id !== schoolId)
+                    );
+                  }
+                }}
+              />
             )
           )
         }

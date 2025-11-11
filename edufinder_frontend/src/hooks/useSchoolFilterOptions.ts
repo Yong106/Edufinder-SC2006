@@ -29,6 +29,10 @@ const useSchoolFilterOptions = (schools: School[]) => {
       new Set(schools.map(s => String(s.sessionCode ?? '')).filter(Boolean))
     ).sort();
 
+    const Levels = Array.from(
+      new Set(schools.map(s => String(s.level ?? '')).filter(Boolean))
+    ).sort();
+
     console.log('Schools length:', schools.length);
     console.log('Sample school:', schools[0]);
 
@@ -41,7 +45,7 @@ const useSchoolFilterOptions = (schools: School[]) => {
     console.log('Raw sessionCodes:', schools.map(s => s.sessionCode));
     console.log('Processed SessionCodes:', SessionCodes);
 
-    return { locations, CCAs, Subjects, NatureCodes, SchoolTypes, SessionCodes };
+    return { locations, CCAs, Subjects, NatureCodes, SchoolTypes, SessionCodes, Levels };
   }, [schools]);
 };
 

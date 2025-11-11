@@ -54,6 +54,8 @@ const Dashboard = () => {
   const [selectedSchoolTypes, setSelectedSchoolTypes] = useState<string[]>([]);
   const [isSessionCodeOpen, setSessionCodeOpen] = useState(false);
   const [selectedSessionCodes, setSelectedSessionCodes] = useState<string[]>([]);
+  const [isLevelOpen, setLevelOpen] = useState(false);
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [minCOP, setMinCOP] = useState('4');
   const [maxCOP, setMaxCOP] = useState('32');
 
@@ -136,6 +138,11 @@ const Dashboard = () => {
         setSelectedSessionCodes={setSelectedSessionCodes}
         isSessionCodeOpen={isSessionCodeOpen}
         setSessionCodeOpen={setSessionCodeOpen}
+
+        selectedLevels={selectedLevels}
+        setSelectedLevels={setSelectedLevels}
+        isLevelOpen={isLevelOpen}
+        setLevelOpen={setLevelOpen}
 
         minCOP={minCOP}
         setMinCOP={setMinCOP}

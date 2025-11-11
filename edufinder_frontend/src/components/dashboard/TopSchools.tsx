@@ -15,16 +15,18 @@ import { useEffect, useState } from 'react';
 import fetchSavedSchoolIds from 'src/utils/fetchSavedSchoolIds.ts';
 import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
-import { useSchoolContext } from 'src/context/SchoolProvider.tsx';
 
 
 
-const TopSchools = ({schools}: {schools: School[]}) => {
-
-  const { schoolMap } = useSchoolContext();
+const TopSchools = ({
+    schools,
+    onToggleSave
+  }: {
+  schools: School[];
+  onToggleSave?: (schoolId: number, isSaved: boolean) => void;
+}) => {
 
   const [savedSchoolIds, setSavedSchoolIds] = useState<number[]>([]);
-  const [allSchools, setAllSchools] = useState<School[]>([]);
 
   console.log(schools);
 
@@ -40,7 +42,6 @@ const TopSchools = ({schools}: {schools: School[]}) => {
     };
 
     fetchSavedSchools();
-    setAllSchools(schools);
   }, []);
 
   const handleToggleSave = async (schoolId: number) => {
@@ -62,13 +63,9 @@ const TopSchools = ({schools}: {schools: School[]}) => {
         isSaved ? prev.filter((id) => id !== schoolId) : [...prev, schoolId]
       );
 
-      setAllSchools((prev) => {
-        const existing = prev.some(s => s?.id === schoolId);
-        if (existing) return prev;
-        const s = schoolMap.get(schoolId);
-        if (!s) return prev;
-        return [...prev, s];
-      });
+      if (onToggleSave) {
+        onToggleSave(schoolId, !isSaved);
+      }
 
       toast.success(
         isSaved ? 'Saved removed from saved list' : 'School saved!',
@@ -78,10 +75,6 @@ const TopSchools = ({schools}: {schools: School[]}) => {
       toast.error("Failed to toggle school save status.");
     }
   }
-
-  useEffect(() => {
-    setAllSchools(schools);
-  }, [schools]);
 
   return (
     <>
@@ -103,8 +96,8 @@ const TopSchools = ({schools}: {schools: School[]}) => {
             </TableHead>
             <TableBody className="">
               {
-                allSchools.length > 0 ? (
-                  allSchools.map((item, index) => (
+                schools.length > 0 ? (
+                  schools.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell className="whitespace-nowrap">
                         <Link to={`/school/${item.id}`}>

@@ -45,6 +45,11 @@ interface SearchProps {
   isSessionCodeOpen: boolean;
   setSessionCodeOpen: (open: boolean) => void;
 
+  selectedLevels: string[];
+  setSelectedLevels: (levels: string[]) => void;
+  isLevelOpen: boolean;
+  setLevelOpen: (open: boolean) => void;
+
   minCOP: string;
   setMinCOP: (value: string) => void;
   maxCOP: string;
@@ -98,6 +103,11 @@ const Header = ({
   isSessionCodeOpen,
   setSessionCodeOpen,
 
+  selectedLevels,
+  setSelectedLevels,
+  isLevelOpen,
+  setLevelOpen,
+
   minCOP,
   setMinCOP,
   maxCOP,
@@ -119,6 +129,7 @@ const Header = ({
   const natureCodeRef = useRef<HTMLDivElement | null>(null);
   const schoolTypeRef = useRef<HTMLDivElement | null>(null);
   const sessionCodeRef = useRef<HTMLDivElement | null>(null);
+  const levelRef = useRef<HTMLDivElement | null>(null);
   const justOpened = useRef(false);
 
   const { schoolMap } = useSchoolContext();
@@ -128,6 +139,7 @@ const Header = ({
     selected: string[],
     query = ''
   ): string[] => {
+    console.log("selected: " + selected);
     const filtered = allItems
       .filter((item): item is string => typeof item === 'string')
       .filter((item) =>
@@ -146,7 +158,8 @@ const Header = ({
     Subjects,
     NatureCodes,
     SchoolTypes,
-    SessionCodes
+    SessionCodes,
+    Levels
   } = useSchoolFilterOptions(schools);
 
   const orderedFilteredLocations = getOrderedFilterList(locations, selectedLocations, locQuery);
@@ -155,6 +168,7 @@ const Header = ({
   const orderedNatureCodes = getOrderedFilterList(NatureCodes, selectedNatureCodes);
   const orderedSchoolTypes = getOrderedFilterList(SchoolTypes, selectedSchoolTypes);
   const orderedSessionCodes = getOrderedFilterList(SessionCodes, selectedSessionCodes);
+  const orderedLevels = getOrderedFilterList(Levels, selectedLevels);
 
   const toggleSelection = (value: string, selected: string[], setter: (val: string[]) => void) => {
     if (selected.includes(value)) {
@@ -173,7 +187,8 @@ const Header = ({
         { ref: subjectRef, setter: setSubjectOpen },
         { ref: natureCodeRef, setter: setNatureCodeOpen },
         { ref: schoolTypeRef, setter: setSchoolTypeOpen },
-        { ref: sessionCodeRef, setter: setSessionCodeOpen }
+        { ref: sessionCodeRef, setter: setSessionCodeOpen },
+        { ref: levelRef, setter: setLevelOpen }
       ];
 
       refs.forEach(({ ref, setter }) => {
@@ -476,6 +491,43 @@ const Header = ({
                     </ul>
                   </div>
                 </div>
+                <div className="relative inline-block w-full" ref={natureCodeRef}>
+                  <div className="mb-2 block">
+                    <Label>Nature Code</Label>
+                  </div>
+                  <TextInput
+                    id="location-search"
+                    onFocus={() => { if (!justOpened.current) setNatureCodeOpen(true); }}
+                    placeholder={selectedNatureCodes.length==0?"Select Nature Code":selectedNatureCodes.join(', ')}
+                    className="w-full"
+                  />
+                  <div
+                    id="locations-menu"
+                    className={`${isNatureCodeOpen ? 'block' : 'hidden'} absolute left-0 mt-2 z-40 w-full max-w-xs bg-white rounded-lg shadow`}
+                    role="menu"
+                    aria-labelledby="location-search"
+                  >
+                    <ul className="h-30 px-3 pb-3 overflow-y-auto text-sm text-gray-700">
+                      {orderedNatureCodes.length > 0 ? (
+                        orderedNatureCodes.map((code) => (
+                          <li key={code}>
+                            <label className="flex items-center p-2 rounded hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                checked={selectedNatureCodes.includes(code)}
+                                onChange={() => toggleSelection(code, selectedNatureCodes, setSelectedNatureCodes)}
+                                className="form-checkbox"
+                              />
+                              <span className="ml-2">{code}</span>
+                            </label>
+                          </li>
+                        ))
+                      ) : (
+                        <li className="p-2 text-gray-500">No results</li>
+                      )}
+                    </ul>
+                  </div>
+                </div>
                 <div>
                   <div className="mb-2 block">
                     <Label>Cut-Off Point Range</Label>
@@ -526,31 +578,31 @@ const Header = ({
             </div>
             <div className="lg:col-span-6 col-span-12">
               <div className="flex  flex-col gap-4">
-                <div className="relative inline-block w-full" ref={natureCodeRef}>
+                <div className="relative inline-block w-full" ref={levelRef}>
                   <div className="mb-2 block">
-                    <Label>Nature Code</Label>
+                    <Label>Level</Label>
                   </div>
                   <TextInput
                     id="location-search"
-                    onFocus={() => { if (!justOpened.current) setNatureCodeOpen(true); }}
-                    placeholder={selectedNatureCodes.length==0?"Select Nature Code":selectedNatureCodes.join(', ')}
+                    onFocus={() => { if (!justOpened.current) setLevelOpen(true); }}
+                    placeholder={selectedLevels.length==0?"Select Nature Code":selectedLevels.join(', ')}
                     className="w-full"
                   />
                   <div
                     id="locations-menu"
-                    className={`${isNatureCodeOpen ? 'block' : 'hidden'} absolute left-0 mt-2 z-40 w-full max-w-xs bg-white rounded-lg shadow`}
+                    className={`${isLevelOpen ? 'block' : 'hidden'} absolute left-0 mt-2 z-40 w-full max-w-xs bg-white rounded-lg shadow`}
                     role="menu"
                     aria-labelledby="location-search"
                   >
                     <ul className="h-30 px-3 pb-3 overflow-y-auto text-sm text-gray-700">
-                      {orderedNatureCodes.length > 0 ? (
-                        orderedNatureCodes.map((code) => (
+                      {orderedLevels.length > 0 ? (
+                        orderedLevels.map((code) => (
                           <li key={code}>
                             <label className="flex items-center p-2 rounded hover:bg-gray-100">
                               <input
                                 type="checkbox"
-                                checked={selectedNatureCodes.includes(code)}
-                                onChange={() => toggleSelection(code, selectedNatureCodes, setSelectedNatureCodes)}
+                                checked={selectedLevels.includes(code)}
+                                onChange={() => toggleSelection(code, selectedLevels, setSelectedLevels)}
                                 className="form-checkbox"
                               />
                               <span className="ml-2">{code}</span>
