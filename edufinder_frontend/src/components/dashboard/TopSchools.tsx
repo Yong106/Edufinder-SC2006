@@ -62,9 +62,13 @@ const TopSchools = ({schools}: {schools: School[]}) => {
         isSaved ? prev.filter((id) => id !== schoolId) : [...prev, schoolId]
       );
 
-      setAllSchools((prev) =>
-        isSaved ? prev.filter((school) => school.id !== schoolId) : [...prev, schoolMap.get(schoolId)]
-      )
+      setAllSchools((prev) => {
+        const existing = prev.some(s => s?.id === schoolId);
+        if (existing) return prev;
+        const s = schoolMap.get(schoolId);
+        if (!s) return prev;
+        return [...prev, s];
+      });
 
       toast.success(
         isSaved ? 'Saved removed from saved list' : 'School saved!',
