@@ -33,7 +33,11 @@ const AuthRegister = () => {
         body: JSON.stringify({ username, password }),
       })
 
-      if (!res.ok) {
+      if (res.status === 400) {
+        toast.error("Password does not meet complexity requirements.");
+      } else if (res.status === 409) {
+        toast.error("Username already exists.")
+      } else if (!res.ok) {
         console.log(await res.json());
         throw new Error('Registration failed.');
       } else {
