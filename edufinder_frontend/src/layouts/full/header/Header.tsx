@@ -600,7 +600,7 @@ const Header = ({
                   <TextInput
                     id="location-search"
                     onFocus={() => { if (!justOpened.current) setLevelOpen(true); }}
-                    placeholder={selectedLevels.length==0?"Select Nature Code":selectedLevels.join(', ')}
+                    placeholder={selectedLevels.length==0?"Select Level":selectedLevels.join(', ')}
                     className="w-full"
                   />
                   <div

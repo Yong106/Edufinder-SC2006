@@ -20,7 +20,7 @@ const filterSchools = (
   return schools.filter((school) => {
     const nameMatch = school.name?.toLowerCase().includes(searchValue.toLowerCase());
     const locMatch = selectedLocations.length === 0 || selectedLocations.includes(school.location); // ✅ use school.location
-    const ccaMatch = selectedCCAs.length === 0 || selectedCCAs.some(cca => school.ccas?.includes(cca));
+    const ccaMatch = selectedCCAs.length === 0 || selectedCCAs.some(cca => school.ccas?.some(c => c.name === cca));
     const subjectMatch = selectedSubjects.length === 0 || selectedSubjects.some(sub => school.subjects?.includes(sub));
     const natureMatch = selectedNatureCodes.length === 0 || selectedNatureCodes.includes(school.natureCode);
     const typeMatch = selectedSchoolTypes.length === 0 || selectedSchoolTypes.includes(school.type);
