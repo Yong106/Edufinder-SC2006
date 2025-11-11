@@ -13,6 +13,7 @@ const filterSchools = (
   selectedNatureCodes: string[],
   selectedSchoolTypes: string[],
   selectedSessionCodes: string[],
+  selectedLevels: string[],
   minCOP: number,
   maxCOP: number
 ): School[] => {
@@ -22,12 +23,13 @@ const filterSchools = (
     const ccaMatch = selectedCCAs.length === 0 || selectedCCAs.some(cca => school.ccas?.includes(cca));
     const subjectMatch = selectedSubjects.length === 0 || selectedSubjects.some(sub => school.subjects?.includes(sub));
     const natureMatch = selectedNatureCodes.length === 0 || selectedNatureCodes.includes(school.natureCode);
-    const typeMatch = selectedSchoolTypes.length === 0 || selectedSchoolTypes.includes(school.schoolType);
+    const typeMatch = selectedSchoolTypes.length === 0 || selectedSchoolTypes.includes(school.type);
     const sessionMatch = selectedSessionCodes.length === 0 || selectedSessionCodes.includes(school.sessionCode);
+    const levelMatch = selectedLevels.length === 0 || selectedLevels.includes(school.level);
     const copMatch = !school.minCutOffPoint || !school.maxCutOffPoint ||
       (school.minCutOffPoint >= minCOP && school.maxCutOffPoint <= maxCOP);
 
-    return nameMatch && locMatch && ccaMatch && subjectMatch && natureMatch && typeMatch && sessionMatch && copMatch;
+    return nameMatch && locMatch && ccaMatch && subjectMatch && natureMatch && typeMatch && sessionMatch && levelMatch && copMatch;
   });
 };
 
@@ -78,6 +80,7 @@ const Dashboard = () => {
         selectedNatureCodes,
         selectedSchoolTypes,
         selectedSessionCodes,
+        selectedLevels,
         min,
         max
       );
@@ -93,6 +96,7 @@ const Dashboard = () => {
     selectedNatureCodes,
     selectedSchoolTypes,
     selectedSessionCodes,
+    selectedLevels,
     minCOP,
     maxCOP
   ]);

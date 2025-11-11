@@ -202,8 +202,6 @@ const Header = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const allSchools = Array.from(schoolMap.values());
-
   return (
     <>
       <header>
@@ -330,6 +328,23 @@ const Header = ({
                 <span className="flex items-center transition-opacity duration-150 opacity-100 group-hover:opacity-0">
                   <Icon className="mr-2" icon="solar:clock-circle-linear" width={16} height={16} />
                   <span className="whitespace-nowrap">{selectedSessionCodes.length == 1 ? 'Session Code: ' : 'Session Codes: '} {selectedSessionCodes.join(', ')}</span>
+                </span>
+                <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none">
+                  ✕ Remove
+                </span>
+              </Button>
+            )}
+            {selectedLevels.length > 0 && (
+              <Button
+                color="primary"
+                className="relative border border-primary text-primary hover:bg-red-100 hover:text-red-600 hover:border-red-600 mx-1 group flex items-center flex-shrink-0"
+                pill
+                outline
+                onClick={() => setSelectedLevels([])}
+              >
+                <span className="flex items-center transition-opacity duration-150 opacity-100 group-hover:opacity-0">
+                  <Icon className="mr-2" icon="solar:square-academic-cap-outline" width={16} height={16} />
+                  <span className="whitespace-nowrap">{selectedLevels.length == 1 ? 'Session Code: ' : 'Session Codes: '} {selectedLevels.join(', ')}</span>
                 </span>
                 <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none">
                   ✕ Remove
