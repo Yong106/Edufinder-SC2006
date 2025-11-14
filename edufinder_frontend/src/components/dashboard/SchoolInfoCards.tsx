@@ -127,6 +127,20 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                   </div>
                 </TableCell>
               </TableRow>
+              <TableRow>
+                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">Cut-off Points</TableCell>
+                <TableCell className="whitespace-nowrap">
+                  <div className="flex gap-4 items-center">
+                    <div className="w-full md:pe-0 pe-10">
+                      <p className="text-ld text-sm font-medium">
+                        {school.minCutOffPoint && school.maxCutOffPoint
+                          ? `${school.minCutOffPoint} – ${school.maxCutOffPoint}`
+                          : "-"}
+                      </p>
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </div>
@@ -143,28 +157,69 @@ const SchoolInfoCards = ({school}: {school: School}) => {
                   <div className="flex gap-4 items-center">
                     <div className="w-full md:pe-0 pe-10">
                       <ul>
-                        {
-                          Object.entries(groupedCcas).map(([type, items]) =>
-                              items.length > 0 ? (
-                                <li key={type}>
-                                  <strong>{ccaLabels[type as CcaType]}:</strong>{" "}
-                                  <em>{items.join(", ")}</em>
-                                </li>
-                              ) : null
-                            )
-                        }
+                        {Object.entries(groupedCcas).map(([type, items]) =>
+                            items.length > 0 ? (
+                              <div key={type} className="mb-2">
+                                <strong>{ccaLabels[type as CcaType]}:</strong>{' '}
+                                <div className="mt-1 flex flex-wrap gap-1">
+                                  {items.map((cca) => (
+                                    <span
+                                      key={cca}
+                                      className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 rounded"
+                                    >
+                                      {cca}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : null
+                        )}
                       </ul>
                     </div>
                   </div>
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Special Programmes</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
+                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">
+                  Special Programmes
+                </TableCell>
+                <TableCell className="align-top">
+                  <div className="flex gap-4 items-start">
                     <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.programmes.length == 0 ? "-" : school.programmes.join(", ")}</p>
+                      {school.programmes.length === 0 ? (
+                        <p className="text-ld text-sm font-medium">-</p>
+                      ) : (
+                        <div className="flex flex-wrap gap-2">
+                          {school.programmes.map((prog) => (
+                            <span
+                              key={prog}
+                              className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 rounded"
+                            >
+                              {prog}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">Subjects Offered</TableCell>
+                <TableCell className="whitespace-normal">
+                  <div className="flex flex-wrap gap-1 text-ld text-sm font-medium">
+                    {school.subjects.length > 0 ? (
+                      school.subjects.map((subj) => (
+                        <span
+                          key={subj}
+                          className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 rounded"
+                        >
+                          {subj}
+                        </span>
+                      ))
+                    ) : (
+                      <span>-</span>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

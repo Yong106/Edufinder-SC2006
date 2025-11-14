@@ -133,7 +133,6 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
             </div>
           </div>
         </div>
-        )
       </CardBox>
       {
         comment.replies.map((reply: UserReply) => (
