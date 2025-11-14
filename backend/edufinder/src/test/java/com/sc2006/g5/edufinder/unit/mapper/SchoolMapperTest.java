@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SchoolMapperTest {
 
@@ -114,6 +115,20 @@ public class SchoolMapperTest {
             assertEquals(List.of(), school2.getProgrammes());
 
         }
+
+        @Test
+        @DisplayName("should return empty list when no school records")
+        void shouldReturnEmptyListWhenNoSchoolRecords() {
+            List<ApiSchool> result = schoolMapper.toApiSchools(
+                    List.of(),
+                    Map.of(),
+                    Map.of(),
+                    Map.of()
+            );
+
+            assertTrue(result.isEmpty());
+        }
+
 
     }
 }
