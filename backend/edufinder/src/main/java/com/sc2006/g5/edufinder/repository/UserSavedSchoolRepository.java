@@ -9,6 +9,9 @@ import org.springframework.data.repository.query.Param;
 import com.sc2006.g5.edufinder.model.user.UserSavedSchool;
 import com.sc2006.g5.edufinder.model.user.UserSavedSchoolId;
 
+/**
+ * JPA Repository for {@link UserSavedSchool}
+ */
 public interface UserSavedSchoolRepository extends JpaRepository<UserSavedSchool, UserSavedSchoolId> {
     @Query("SELECT uss.id.schoolId FROM UserSavedSchool uss WHERE uss.id.userId = :userId")
     List<Long> findSchoolIdsByUserId(@Param("userId") Long userId);

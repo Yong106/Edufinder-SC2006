@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sc2006.g5.edufinder.model.comment.Comment;
 
+/**
+ * JPA Repository for {@link Comment}
+ */
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllBySchoolId(Long schoolId);
     Optional<Comment> findOneByIdAndUserId(Long id, Long userId);
