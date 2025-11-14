@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sc2006.g5.edufinder.dto.api.ApiRecord;
 import com.sc2006.g5.edufinder.dto.api.ApiResponse;
-import com.sc2006.g5.edufinder.exception.util.JsonDecodingException;
+import com.sc2006.g5.edufinder.exception.util.JsonParsingException;
 
 /**
  * A utility class that provide methods to parse JSON to {@link ApiResponse}.
@@ -31,7 +31,7 @@ public class ApiResponseParser {
      *
      * @return an {@code ApiResponse} containing deserialized {@code ApiRecord} objects
      *
-     * @throws JsonDecodingException if the JSON cannot be parsed due to invalid formatting or structure
+     * @throws JsonParsingException if the JSON cannot be parsed due to invalid formatting or structure
      *
      * @see ApiResponse
      * @see ApiRecord
@@ -43,7 +43,7 @@ public class ApiResponseParser {
                 objectMapper.getTypeFactory().constructParametricType(ApiResponse.class, apiRecordClass)
             );
         } catch (JsonProcessingException e) {
-            throw new JsonDecodingException(e.getMessage());
+            throw new JsonParsingException(e.getMessage());
         }
     }
 }
