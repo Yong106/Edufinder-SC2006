@@ -139,12 +139,12 @@ const CompareSchoolsPrompt = () => {
               </div>
                   {addedSchools.length > 0 && (
                     <div className="overflow-x-auto mt-4">
-                      <table className="min-w-full text-sm">
+                      <table className="table-fixed w-full text-sm">
                         <thead className="bg-gray-50">
                           <tr>
-                            <th className="px-4 py-2 text-center font-medium text-gray-700"></th>
+                            <th className="w-20 px-4 py-2 text-center font-medium text-gray-700"></th>
                             {addedSchools.map((s) => (
-                              <th key={s.name} className="px-4 py-2 text-center font-medium text-gray-700 border-l border-gray-200">
+                              <th key={s.name} className="w-52 px-4 py-2 text-center font-medium text-gray-700 border-l border-gray-200">
                                 <div className="flex items-center justify-center">
                                   <div className="font-bold text-lg flex items-center gap-2 justify-center">
                                     <span>{s.name}</span>
@@ -184,13 +184,29 @@ const CompareSchoolsPrompt = () => {
                               key: 'ccas',
                               label: 'CCAs',
                               transform: (ccas: Cca[]) =>
-                                ccas.map((c) => c.name).join(', ') || '-',
+                                ccas.length > 0
+                                  ? (
+                                    <ul className="list-disc list-inside text-left">
+                                      {ccas.map((c) => (
+                                        <li key={c.name}>{c.name}</li>
+                                      ))}
+                                    </ul>
+                                  )
+                                  : '-',
                             },
                             {
                               key: 'subjects',
                               label: 'Subjects',
                               transform: (subs: string[]) =>
-                                subs.join(', ') || '-',
+                                subs.length > 0
+                                  ? (
+                                    <ul className="list-disc list-inside text-left">
+                                      {subs.map((s) => (
+                                        <li key={s}>{s}</li>
+                                      ))}
+                                    </ul>
+                                  )
+                                  : '-',
                             },
                             {
                               key: 'programmes',
@@ -216,7 +232,7 @@ const CompareSchoolsPrompt = () => {
                             },
                           ].map((row) => (
                             <tr key={row.key} className="border-b border-dotted border-gray-200">
-                              <td className="px-4 py-2 font-medium text-primary text-center">
+                              <td className="w-20 px-4 py-2 font-medium text-primary text-center">
                                 {row.label}
                               </td>
                               {addedSchools.map((s) => {
@@ -232,7 +248,7 @@ const CompareSchoolsPrompt = () => {
                                 return (
                                   <td
                                     key={`${s.name}-${row.key}`}
-                                    className="px-4 py-2 border-l border-gray-200 text-center"
+                                    className="w-52 px-4 py-2 border-l border-gray-200 text-center break-words"
                                   >
                                     {display}
                                   </td>

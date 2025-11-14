@@ -124,7 +124,7 @@ const TopSchools = ({
                           aria-label={`Save ${item.name}`}
                           className="!p-1 !h-auto !w-auto !border-0 !bg-transparent shadow-none"
                         >
-                          <Icon icon={ savedSchoolIds.includes(item.id) ? "solar:bookmark-outline" : "solar:bookmark-bold" } width={16} height={16} />
+                          <Icon className={savedSchoolIds.includes(item.id) ? "text-yellow-300" : "text-black"} icon={ savedSchoolIds.includes(item.id) ? "solar:bookmark-bold" : "solar:bookmark-outline" } width={16} height={16} />
                         </Button>
                       </TableCell>
                     </TableRow>
