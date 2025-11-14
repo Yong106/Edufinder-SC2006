@@ -4,6 +4,9 @@ import com.sc2006.g5.edufinder.model.user.Role;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Represents the response payload for a user returned by the API.
+ */
 @Data
 @Builder
 public class UserResponse {

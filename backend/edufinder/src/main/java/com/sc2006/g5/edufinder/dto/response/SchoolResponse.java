@@ -6,6 +6,9 @@ import com.sc2006.g5.edufinder.model.school.Cca;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Represents the response payload for a school returned by the API.
+ */
 @Data
 @Builder
 public class SchoolResponse {

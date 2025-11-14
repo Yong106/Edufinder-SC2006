@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Represents the response payload for list of schools returned by the API.
+ */
 @Data
 @Builder
 public class SchoolsResponse {

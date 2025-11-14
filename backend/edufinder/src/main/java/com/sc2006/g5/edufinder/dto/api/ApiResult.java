@@ -9,6 +9,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the result section of a response from the <a href="https://data.gov.sg/">data.gov.sg</a> API.
+ * <p>
+ * Contains fields:
+ * <ul>
+ *     <li>{@code records} – the data records returned by the API</li>
+ *     <li>{@code link} – the pagination links</li>
+ *     <li>{@code total} – the total number of records</li>
+ * </ul>
+ *
+ * @param <R> the type of {@link ApiRecord} contained in the response
+ *
+ * @see ApiResponse
+ * @see ApiRecord
+ * @see ApiLink
+ */
 @Data
 @Builder
 @Jacksonized

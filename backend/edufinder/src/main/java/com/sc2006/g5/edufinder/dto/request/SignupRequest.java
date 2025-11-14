@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Contains data needed to sign up new user.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class SignupRequest {
 
     @NotNull
+    @Size(min = 6, max = 14)
     private String username;
 
     @NotNull

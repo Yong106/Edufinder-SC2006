@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Contains data needed to log in a user.
+ */
 @Data
 @Builder
 @NoArgsConstructor

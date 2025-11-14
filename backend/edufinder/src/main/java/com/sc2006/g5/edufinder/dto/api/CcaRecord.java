@@ -8,6 +8,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the CCA data record contained within a response from the
+ * <a href="https://data.gov.sg/datasets?agencies=Ministry+of+Education+(MOE)&resultId=d_9aba12b5527843afb0b2e8e4ed6ac6bd">data.gov.sg</a> API.
+ *
+ * @see ApiRecord
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
