@@ -5,6 +5,7 @@ import AddReplyBox from 'src/views/comments/AddReplyBox.tsx';
 import CONSTANTS from 'src/constants.ts';
 import toast from 'react-hot-toast';
 import { Icon } from '@iconify/react';
+import { useAuth } from 'src/context/AuthProvider.tsx';
 
 const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: () => void; }) => {
 
@@ -12,6 +13,7 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
   const [userVoteType, setUserVoteType] = useState<VoteType>(comment.voteSummary.userVoteType);
   const [upvotes, setUpvotes] = useState<number>(comment.voteSummary.upvoteCount);
   const [downvotes, setDownvotes] = useState<number>(comment.voteSummary.downvoteCount);
+  const { user, isLoggedIn } = useAuth();
 
   useEffect(() => {
     if (comment.voteSummary.userVoteType) {
@@ -78,13 +80,42 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
 
   }
 
+  const handleDeleteComment = async () => {
+    try {
+      const res = await fetch(CONSTANTS.backendEndpoint + '/comments/' + comment.id, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!res.ok) throw new Error('Failed to delete comment');
+
+      toast.success('Comment deleted!');
+      getComments();
+    } catch (err) {
+      toast.error('Failed to delete comment');
+      console.error(err);
+    }
+  };
+
   return (
     <div className="mt-2 mb-2">
       <CardBox key={comment.id} className="mt-2 mb-2">
         <div className="flex gap-4 items-center">
           <div className="w-full md:pe-0 pe-10">
             <p className="text-ld text-xs font-thin text-gray-400">Posted by {comment.username} at {comment.createdAt.toLocaleString()}</p>
-            <p className="text-ld text-sm font-medium">{comment.content}</p>
+            <div className="flex justify-between items-center">
+              <p className="text-ld text-sm font-medium">{comment.content}</p>
+              {isLoggedIn && user?.username === comment.username && (
+                <button
+                  onClick={handleDeleteComment}
+                  className="text-red-500 hover:text-red-700"
+                  title="Delete Comment"
+                >
+                  <Icon icon="mdi:trash-can-outline" width={18} />
+                </button>
+              )}
+            </div>
+
             <div className="flex flex-row items-center px-2">
               <button
                 onClick={() => handleVote('UPVOTE')}
@@ -102,6 +133,7 @@ const CommentBox = ({comment, getComments}: {comment: UserComment; getComments: 
             </div>
           </div>
         </div>
+        )
       </CardBox>
       {
         comment.replies.map((reply: UserReply) => (
