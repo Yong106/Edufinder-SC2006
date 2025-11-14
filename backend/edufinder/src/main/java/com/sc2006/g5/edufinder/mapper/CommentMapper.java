@@ -11,6 +11,11 @@ import com.sc2006.g5.edufinder.model.comment.Comment;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Mapper for comment-related model.
+ * <p>
+ * Provides method to map {@link Comment} to {@link CommentResponse} DTOs.
+ */
 @Component
 @RequiredArgsConstructor
 public class CommentMapper {
@@ -18,6 +23,18 @@ public class CommentMapper {
     private final ReplyMapper replyMapper;
     private final VoteSummaryMapper voteSummaryMapper;
 
+    /**
+     * Converts a {@link Comment} entity into a {@link CommentResponse}, including
+     * its replies and the vote summary for the specified user.
+     *
+     * @param userId the id of the user requesting the comment, null if user is anonymous
+     * @param comment the comment to map
+     *
+     * @return the mapped {@code CommentResponse}
+     *
+     * @see Comment
+     * @see CommentResponse
+     */
     public CommentResponse toCommentResponse(Long userId, Comment comment) {
         Long commentId = comment.getId();
 
