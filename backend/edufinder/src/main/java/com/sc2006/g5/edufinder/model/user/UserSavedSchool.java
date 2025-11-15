@@ -13,6 +13,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a user saved school.
+ */
 @Entity
 @Table(name = "user_saved_schools")
 @Data

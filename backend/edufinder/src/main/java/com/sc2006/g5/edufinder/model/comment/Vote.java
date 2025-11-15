@@ -16,6 +16,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a user vote associated with a comment.
+ */
 @Entity
 @Table(name = "votes")
 @Data

@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents an embeddable id for {@link Vote}.
+ */
 @Embeddable
 @Data
 @Builder

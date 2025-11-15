@@ -11,6 +11,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a school entity with additional data to stored in db.
+ *
+ * @see ApiSchool
+ */
 @Entity
 @Table(name = "schools")
 @Data

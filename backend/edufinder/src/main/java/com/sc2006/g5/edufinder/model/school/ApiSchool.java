@@ -5,6 +5,9 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Represents a school entity fetched from the <a href="https://data.gov.sg/">data.gov.sg</a> API.
+ */
 @Data
 @Builder
 public class ApiSchool {
