@@ -76,6 +76,7 @@ These responses may include additional fields:
 ### GetAllSchools
 - **Path**: `GET /api/schools`
 - **Auth Required**: No
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Returns all available schools.
 
@@ -178,11 +179,39 @@ Not Required
 **Note:**
 Most of the response fields correspond to fields in data.gov.sg. Visit data.gov.sg to know the exact meaning or possible value of fields.
 
+### EditSchoolCutOffPoint
+- **Path**: `PUT /api/schools/{schoolId}`
+- **Auth Required**: No
+- **Admin Required**: Yes
+- **Success Code**: `204 NO CONTENT`
+- **Details**: Edit school cut off point.
+
+**Request Format**:
+```json
+{
+  "minCutOffPoint": 6,
+  "maxCutOffPoint": 30
+}
+```
+- `minCutOffPoint`: `Integer` between `4-32`
+- `maxCutOffPoint`: `Integer` between `4-32`
+
+**Response Format**: Not Returned
+
+**Error Code**:
+- `400 BAD REQUEST`
+    - `minCutOffPoint` is not `Integer` between `4-32`
+    - `maxCutOffPoint` is not `Integer` between `4-32`
+    - `maxCutOffPoint` is smaller than `minCutOffPoint`
+- `404 NOT FOUND`
+    - School not found
+
 ## Authentication
 
 ### Login
 - **Path**: `GET /api/auth/login`
 - **Auth Required**: No
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Login and get user information
 
@@ -215,6 +244,7 @@ Authentication cookie with be automatically issued.
 ### Signup
 - **Path**: `GET /api/auth/signup`
 - **Auth Required**: No
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Signup and get user information
 
@@ -269,6 +299,7 @@ Authentication cookie with be removed.
 ### EditUser
 - **Path**: `PUT /api/users`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Edit user profile.
 
@@ -294,9 +325,44 @@ Authentication cookie with be removed.
 - `400 BAD REQUEST`
     - Postal code doesn't consist of 6 digits
 
+### EditUserRole
+- **Path**: `PUT /api/users/{userId}`
+- **Auth Required**: Yes
+- **Admin Required**: Yes
+- **Success Code**: `200 OK`
+- **Details**: Edit user role.
+
+**Request Format**:
+```json
+{
+  "role": "USER"
+}
+```
+- `role`: User role, either `USER` or `ADMIN`.
+
+**Response Format**:
+```json
+{
+  "id": 1,
+  "username": "john",
+  "role": "USER",
+  "postalCode": "908765"
+}
+```
+- `role`: User role, either `USER` or `ADMIN`.
+
+**Error Code**:
+- `400 BAD REQUEST`
+    - `role` is neither `USER` nor `ADMIN`
+- `404 NOT FOUND`
+    - User not found
+- `409 CONFLICT`
+    - User is the last `ADMIN` and is demoting to `USER` 
+
 ### GetSavedSchoolIds
 - **Path**: `GET /api/users/saved-schools`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Get list of id of user saved schools.
 
@@ -315,6 +381,7 @@ Authentication cookie with be removed.
 ### AddSavedSchool
 - **Path**: `POST /api/users/saved-schools`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `204 NO CONTENT`
 - **Details**: Add a school to user's saved school
 
@@ -337,6 +404,7 @@ Authentication cookie with be removed.
 ### RemoveSavedSchool
 - **Path**: `DELETE /api/users/saved-schools`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `204 NO CONTENT`
 - **Details**: Remove a school from user's saved school
 
@@ -358,6 +426,7 @@ Authentication cookie with be removed.
 ### GetCommentsBySchoolId
 - **Path**: `GET /api/schools/{schoolId}/comments`
 - **Auth Required**: No
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Get all comments, include relevant replies and vote summary of a school.
 
@@ -416,6 +485,7 @@ Authentication cookie with be removed.
 ### CreateComment
 - **Path**: `POST /api/schools/{schoolId}/comments`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Create comment for a school.
 
@@ -450,6 +520,7 @@ Authentication cookie with be removed.
 ### DeleteComment
 - **Path**: `DELETE /api/comments/{commentId}`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `204 NO CONTENT`
 - **Details**: Delete a comment.
 
@@ -468,6 +539,7 @@ Authentication cookie with be removed.
 ### CreateComment
 - **Path**: `POST /api/comments/{commentId}/replies`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `200 OK`
 - **Details**: Create reply for a comment.
 
@@ -496,6 +568,7 @@ Authentication cookie with be removed.
 ### DeleteReply
 - **Path**: `DELETE /api/replies/{replyId}`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `204 NO CONTENT`
 - **Details**: Delete a reply.
 
@@ -514,6 +587,7 @@ Authentication cookie with be removed.
 ### SetVote
 - **Path**: `PUT /api/comments/{commentId}/votes`
 - **Auth Required**: Yes
+- **Admin Required**: No
 - **Success Code**: `200 NO CONTENT`
 - **Details**: Create or edit vote of user for a comment.
 
