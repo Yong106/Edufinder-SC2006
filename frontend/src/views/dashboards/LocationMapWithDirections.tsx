@@ -111,7 +111,7 @@ const LocationMapWithDirections = ({ postalCode }: { postalCode: number }) => {
         if (status === 'OK' && result.routes.length > 0) {
           setRoutes(result.routes);
           setSelectedRouteIndex(0);
-          setDirectionsResult(result); // only if needed
+          setDirectionsResult(result);
         } else {
           console.error('Directions request failed:', status, result);
         }

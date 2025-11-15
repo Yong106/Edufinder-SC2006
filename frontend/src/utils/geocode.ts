@@ -24,7 +24,6 @@ export const geocodePostalCode = async (postalCode: string): Promise<{ lat: numb
               toast.dismiss();
               resolve({ lat: location.lat(), lng: location.lng() });
             } else {
-              // Matched result doesn't actually contain the requested postal code
               resolve(null);
             }
           } else {

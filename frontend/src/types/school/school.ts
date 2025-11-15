@@ -32,9 +32,9 @@ export interface School {
   name: string;
   location: string;
 
-  ccas: Cca[];      // Co-curricular activities
+  ccas: Cca[];
   subjects: string[];
-  programmes: string[]; // Signature MOE programmes e.g. bicultural studies
+  programmes: string[];
 
   level: Level;
   natureCode: NatureCode;

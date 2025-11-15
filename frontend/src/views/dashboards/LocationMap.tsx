@@ -1,7 +1,6 @@
 import { MapCameraChangedEvent, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { useEffect, useState } from 'react';
 import { geocodePostalCode } from 'src/utils/geocode.ts';
-//import toast from 'react-hot-toast';
 
 const LocationMap = ({postalCode}: {postalCode: number} ) => {
 
