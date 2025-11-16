@@ -1,14 +1,14 @@
 # Lab Deliverables Index
 
 ## Documentation
-- [Lab 1](./docs/lab-delivarable/Group_5_Lab_1.pdf)
-- [Lab 2](./docs/lab-delivarable/Group_5_Lab_2.pdf)
-- [Lab 3](./docs/lab-delivarable/Group_5_Lab_3.pdf)
-- [Lab 4](./docs/lab-delivarable/Group_5_Lab_4.pdf)
-- [SRS]([./docs/lab-delivarable/Group_5_Final_SRS.pdf))
-- [Requirements](./docs/lab-delivarable/Requirements(Functional_And_Non-Functional).pdf)
-- [Use Cases](./docs/lab-delivarable/UseCases.pdf)
-- [Presentation Slides]([./docs/lab-delivarable/SC2006_Live_Demo_Slides.pdf))
+- [Lab 1](./docs/lab-deliverable/Group_5_Lab_1.pdf)
+- [Lab 2](./docs/lab-deliverable/Group_5_Lab_2.pdf)
+- [Lab 3](./docs/lab-deliverable/Group_5_Lab_3.pdf)
+- [Lab 4](./docs/lab-deliverable/Group_5_Lab_4.pdf)
+- [SRS]([./docs/lab-deliverable/Group_5_Final_SRS.pdf)
+- [Requirements](./docs/lab-deliverable/Requirements(Functional_And_Non-Functional).pdf)
+- [Use Cases](./docs/lab-deliverable/UseCases.pdf)
+- [Presentation Slides]([./docs/lab-deliverable/SC2006_Live_Demo_Slides.pdf)
 - [Video Demo](https://youtu.be/jWl_Qz3DzFE)
 
 ## Analysis Model
