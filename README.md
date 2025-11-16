@@ -67,7 +67,7 @@ Setup using either XAMPP or MySQL.
 
 For the easiest setup, install **XAMPP** and enable the **MySQL** service.
 1. Start **XAMPP** (**Run as administrator** if using **Windows**). 
-2. Start **MySQL** from the XAMPP Control Panel.
+2. Start **MySQL** and **Apache Web Server** from the XAMPP Control Panel.
 3. Ensure it is running on port **3306**.
 
 Populate the initial data:
@@ -205,6 +205,7 @@ Ctrl + C
 ├── frontend/              # Frontend
 ├── setup/                 # Setup script and database schema
 ├── .gitignore
+├── INDEX.md               # Index file to all lab deliverables
 └── README.md
 ```
 
