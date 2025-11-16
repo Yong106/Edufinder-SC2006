@@ -30,35 +30,14 @@ export const SchoolProvider = ({ children }: { children: ReactNode }) => {
     console.log("Data:", data);
 
     const map = new Map<number, School>();
-    data.schools.forEach(school => {map.set(school.id, school);});
+    data.schools.forEach((school: School) => {map.set(school.id, school);});
     console.log("School Map: ", map);
     setSchoolMap(map);
-    setIsLoading(false);
-
-    /*
-    await fetch(CONSTANTS.backendEndpoint + '/schools', {
-      method: 'GET',
-    })
-      .then(
-        res => {
-          console.log(res);
-          res.json();})
-
-      .then((data: School[]) => {
-        const map = new Map<number, School>();
-        data.forEach(school => {map.set(school.id, school);});
-        console.log("School Map: ", map);
-        setSchoolMap(map);
-      })
-      .catch(err => console.error("Failed to load schools: " + err))
-      .finally(() => setIsLoading(false));
-
-       */
-
   }
 
   useEffect(() => {
-    fetchers();
+    fetchers()
+        .then(() => setIsLoading(false));
   }, []);
 
   return (

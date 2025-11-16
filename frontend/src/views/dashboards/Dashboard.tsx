@@ -61,10 +61,8 @@ const Dashboard = () => {
   const [minCOP, setMinCOP] = useState('4');
   const [maxCOP, setMaxCOP] = useState('32');
 
-  if (isLoading) return <div>Loading...</div>;
-
   useEffect(() => {
-    if (schoolMap.size > 0) {
+    if (schoolMap && schoolMap.size > 0) {
       const allSchools = Array.from(schoolMap.values());
       setSchools(allSchools);
 
@@ -100,6 +98,8 @@ const Dashboard = () => {
     minCOP,
     maxCOP
   ]);
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
