@@ -1,7 +1,7 @@
+import {ReactNode} from "react";
 import CardBox from 'src/components/shared/CardBox.tsx';
 import { Table, TableBody, TableCell, TableRow } from 'flowbite-react';
 import { Cca, CcaType, School } from 'src/types/school/school.ts';
-import LocationMap from 'src/views/dashboards/LocationMap.tsx';
 import CommentSection from 'src/views/comments/CommentSection.tsx';
 import LocationMapWithDirections from 'src/views/dashboards/LocationMapWithDirections.tsx';
 
@@ -47,190 +47,164 @@ const SchoolInfoCards = ({school}: {school: School}) => {
 
   return (
     <div>
-      {/* General Information */}
-      <CardBox className="m-2">
-        <h5>General Information</h5>
-        <div className="overflow-x-auto overflow-y-hidden">
-          <Table className="table-fixed w-full">
-            <TableBody className="border-0">
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Location</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.address}</p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Website</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.website}</p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </CardBox>
-      {/* School Details */}
-      <CardBox className="m-2">
-        <h5>Details</h5>
-        <div className="overflow-x-auto overflow-y-hidden">
-          <Table className="">
-            <TableBody className="border-0">
-              {/* School Type */}
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">Type</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.type}</p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-              {/* School Nature */}
-              <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Nature</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{school.natureCode}</p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-              {/*} SAP / Autonomous / Gifted / Independent */}
-              <TableRow>
-                <TableCell className="text-20 font-semibold  py-3 whitespace-nowrap">Tags</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{tags.length == 0 ? "-" : tags}</p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-              {/* Mother Tongues Offered */}
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">Mother Tongues</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm  font-medium">{motherTongues}</p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">Cut-off Points</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <p className="text-ld text-sm font-medium">
-                        {school.minCutOffPoint && school.maxCutOffPoint
-                          ? `${school.minCutOffPoint} – ${school.maxCutOffPoint}`
-                          : "-"}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </CardBox>
-      {/* Programmes */}
-      <CardBox className="m-2">
-        <h5>General Information</h5>
-        <div className="overflow-x-auto overflow-y-hidden">
-          <Table className="">
-            <TableBody className="border-0">
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">CCAs</TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex gap-4 items-center">
-                    <div className="w-full md:pe-0 pe-10">
-                      <ul>
-                        {Object.entries(groupedCcas).map(([type, items]) =>
-                            items.length > 0 ? (
-                              <div key={type} className="mb-2">
+        {/* General Information */}
+        <SchoolInfoSection title="General Information" >
+            <SchoolInfoRow title="Level">
+                {school.level}
+            </SchoolInfoRow>
+            <SchoolInfoRow title="Type">
+                {school.type}
+            </SchoolInfoRow>
+            <SchoolInfoRow title="Nature Code">
+                {school.natureCode}
+            </SchoolInfoRow>
+            <SchoolInfoRow title="Session Code">
+                {school.sessionCode}
+            </SchoolInfoRow>
+            <SchoolInfoRow title="Cut-off Points">
+                {
+                    school.minCutOffPoint && school.maxCutOffPoint
+                    ? `${school.minCutOffPoint} – ${school.maxCutOffPoint}`
+                    : "-"
+                }
+            </SchoolInfoRow>
+            <SchoolInfoRow title="Mother Tongues">
+                { motherTongues }
+            </SchoolInfoRow>
+            <SchoolInfoRow title="Tags">
+                { tags.length == 0 ? "-" : tags }
+            </SchoolInfoRow>
+        </SchoolInfoSection>
+
+        <SchoolInfoSection title={"Location"}>
+            <SchoolInfoRow title={"Address"}>
+                { school.address }
+            </SchoolInfoRow>
+            <SchoolInfoRow title={"Location"}>
+                { school.location }
+            </SchoolInfoRow>
+            <SchoolInfoRow title={"Postal Code"}>
+                { school.postalCode }
+            </SchoolInfoRow>
+            <SchoolInfoRow title={"Nearby MRT Station"}>
+                { school.nearbyMrtStation }
+            </SchoolInfoRow>
+            <SchoolInfoRow title={"Nearby Bus Station"}>
+                { school.nearbyBusStation }
+            </SchoolInfoRow>
+        </SchoolInfoSection>
+
+        <SchoolInfoSection title={"Contact Info"}>
+            <SchoolInfoRow title={"Website"}>
+                <SchoolInfoLink href={school.website}>
+                    { school.website }
+                </SchoolInfoLink>
+            </SchoolInfoRow>
+            <SchoolInfoRow title={"Email"}>
+                <SchoolInfoLink href={`mailto:${school.email}`}>
+                    { school.email }
+                </SchoolInfoLink>
+            </SchoolInfoRow>
+            <SchoolInfoRow title={"Phone Number"}>
+                <SchoolInfoLink href={`tel:${school.phoneNumber}`}>
+                    { school.phoneNumber }
+                </SchoolInfoLink>
+            </SchoolInfoRow>
+            <SchoolInfoRow title={"Fax Number"}>
+                { school.faxNumber }
+            </SchoolInfoRow>
+        </SchoolInfoSection>
+
+        <SchoolInfoSection title="Subjects">
+            <SchoolInfoRow title={"Subjects"}>
+                <SchoolInfoMultipleEntry items={school.subjects} />
+            </SchoolInfoRow>
+        </SchoolInfoSection>
+
+        <SchoolInfoSection title="CCAs">
+            <SchoolInfoRow title={"CCAs"}>
+                <ul>
+                    {Object.entries(groupedCcas).map(([type, items]) =>
+                        items.length > 0 ? (
+                            <div key={type} className="mb-2">
                                 <strong>{ccaLabels[type as CcaType]}:</strong>{' '}
-                                <div className="mt-1 flex flex-wrap gap-1">
-                                  {items.map((cca) => (
-                                    <span
-                                      key={cca}
-                                      className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 rounded"
-                                    >
-                                      {cca}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                            ) : null
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">
-                  Special Programmes
-                </TableCell>
-                <TableCell className="align-top">
-                  <div className="flex gap-4 items-start">
-                    <div className="w-full md:pe-0 pe-10">
-                      {school.programmes.length === 0 ? (
-                        <p className="text-ld text-sm font-medium">-</p>
-                      ) : (
-                        <div className="flex flex-wrap gap-2">
-                          {school.programmes.map((prog) => (
-                            <span
-                              key={prog}
-                              className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 rounded"
-                            >
-                              {prog}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="w-48 text-20 font-semibold py-3 whitespace-nowrap">Subjects Offered</TableCell>
-                <TableCell className="whitespace-normal">
-                  <div className="flex flex-wrap gap-1 text-ld text-sm font-medium">
-                    {school.subjects.length > 0 ? (
-                      school.subjects.map((subj) => (
-                        <span
-                          key={subj}
-                          className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 rounded"
-                        >
-                          {subj}
-                        </span>
-                      ))
-                    ) : (
-                      <span>-</span>
+                                <SchoolInfoMultipleEntry items={items} />
+                            </div>
+                        ) : null
                     )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </CardBox>
-      <LocationMapWithDirections postalCode = {Number(school.postalCode)}/>
-      <CommentSection schoolId={school.id.toString()} />
+                </ul>
+            </SchoolInfoRow>
+        </SchoolInfoSection>
+
+        <SchoolInfoSection title="MOE Programmes">
+            <SchoolInfoRow title={"MOE Programmes"}>
+                <SchoolInfoMultipleEntry items={school.programmes} />
+            </SchoolInfoRow>
+        </SchoolInfoSection>
+
+        <LocationMapWithDirections postalCode = {Number(school.postalCode)}/>
+        <CommentSection schoolId={school.id.toString()} />
     </div>
   )
+}
+
+const SchoolInfoSection = (
+    { title, children } : { title: string; children: ReactNode }
+) => {
+    return (
+        <CardBox className="m-2">
+            <h5>{ title }</h5>
+            <div className="overflow-x-auto overflow-y-hidden">
+                <Table className="table-fixed w-full">
+                    <TableBody className="border-0">
+                        { children }
+                    </TableBody>
+                </Table>
+            </div>
+        </CardBox>
+    );
+}
+
+const SchoolInfoRow = (
+    { title, children } : { title: string; children: ReactNode }
+) => {
+    return (
+        <TableRow>
+            <TableCell className="w-48 text-20 font-semibold  py-3 whitespace-nowrap">{title}</TableCell>
+            <TableCell className="whitespace-nowrap text-sm font-medium">
+                { children }
+            </TableCell>
+        </TableRow>
+    );
+}
+
+const SchoolInfoLink = (
+    { href, children } : { href: string; children: ReactNode }
+) => {
+    return (
+        <a className={"hover:underline"} href={href} target={"_blank"} rel={"noopener noreferrer"}>
+            { children }
+        </a>
+    );
+}
+
+const SchoolInfoMultipleEntry = (
+    { items } : { items: Array<string>}
+) => {
+    if(items.length == 0) return "-"
+
+    return (
+        <div className="mt-1 flex flex-wrap gap-1">
+            {items.map((item) => (
+                <span
+                    key={item}
+                    className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 rounded"
+                >
+                  {item}
+                </span>
+            ))}
+        </div>
+    );
 }
 
 export default SchoolInfoCards;
