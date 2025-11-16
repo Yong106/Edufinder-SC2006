@@ -6,7 +6,6 @@ import { SchoolProvider } from "./context/SchoolProvider";
 import { APIProvider } from '@vis.gl/react-google-maps';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from 'src/context/AuthProvider.tsx';
-import { LoadScript } from '@react-google-maps/api';
 
 function App() {
 
@@ -17,10 +16,8 @@ function App() {
         <SchoolProvider>
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY} onLoad={() => console.log('Maps API has loaded.')}>
             <AuthProvider>
-              <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
                 <Toaster position="top-center"/>
                 <RouterProvider router={router} />
-              </LoadScript>
             </AuthProvider>
           </APIProvider>
         </SchoolProvider>
