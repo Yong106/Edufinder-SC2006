@@ -60,7 +60,8 @@ cd 2006-SCSH-90
 ---
 
 ### Database Setup
-The project requires a local **MySQL** server running on **port 3306**.
+The project requires a local **MySQL** server running on **port 3306**. 
+Setup using either XAMPP or MySQL.
 
 **XAMPP (Recommended)**
 
