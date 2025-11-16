@@ -241,7 +241,7 @@ Key documents include:
 
 - [API Reference](./docs/API_REFERENCE.md)
 - [Test Results](./docs/UnitTestResults.html)
-- [Lab Deliverables](./docs/lab-delivarable)
+- [Lab Deliverables](docs/lab-deliverable)
 - [Analysis Models](./docs/analysis-model)
 - [JavaDoc](./docs/javadoc)
 
