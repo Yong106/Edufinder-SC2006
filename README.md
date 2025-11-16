@@ -205,6 +205,7 @@ Ctrl + C
 ├── frontend/              # Frontend
 ├── setup/                 # Setup script and database schema
 ├── .gitignore
+├── INDEX.md               # Index file to all lab deliverables
 └── README.md
 ```
 
