@@ -67,10 +67,20 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
         logger.info("API schools refreshed");
     }
 
+    /**
+     * Fetch all record of a specific dataset from the <a href="https://data.gov.sg/">data.gov.sg</a> API.
+     * @param firstApiEndpoint the path of API after <a href="https://data.gov.sg/">https://data.gov.sg/</a>;
+     * @param apiRecordClass the class of {@code ApiRecord} to fetch
+     *
+     * @return {@code list} of {@code ApiRecord}
+     * @param <R> the type of {@code ApiRecord} to fetch
+     *
+     * @see ApiRecord
+     */
     private <R extends ApiRecord> List<R> getAllApiRecords(String firstApiEndpoint, Class<R> apiRecordClass){
 		List<R> records = new ArrayList<>();
 		String nextApiEndpoint = firstApiEndpoint;
-		int total = 1; 
+		int total = 1; // Initial value to fetch the first time
 
 		while(records.size() < total){
 			String json = apiClientService.get(API_DOMAIN + nextApiEndpoint, null);
@@ -87,11 +97,19 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 		return records;
 	}
 
+    /**
+     * Get all {@link SchoolRecord} from <a href="https://data.gov.sg/datasets?agencies=Ministry+of+Education+(MOE)&resultId=d_688b934f82c1059ed0a6993d2a829089">General information of schools</a>.
+     * @return all {@code SchoolRecord} fetched from the API
+     */
 	private List<SchoolRecord> getSchoolGeneralInformation() {
 		String firstApiEndpoint = API_ENDPOINT + GENERAL_INFORMATION_DATASET_ID;
 		return getAllApiRecords(firstApiEndpoint , SchoolRecord.class);
 	}
 
+    /**
+     * Get all schools' subjects from <a href="https://data.gov.sg/datasets?agencies=Ministry+of+Education+(MOE)&resultId=d_f1d144e423570c9d84dbc5102c2e664d">Subjects Offered</a>
+     * @return a map containing school name as the key and its list of subjects as value
+     */
 	private Map<String, List<String>> getSchoolSubjects() {
 		String firstApiEndpoint = API_ENDPOINT + SUBJECTS_DATASET_ID;
 		List<SubjectRecord> subjectRecords = getAllApiRecords(firstApiEndpoint, SubjectRecord.class);
@@ -110,6 +128,10 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 		return subjectMap;
 	}
 
+    /**
+     * Get all schools' CCAs from <a href="https://data.gov.sg/datasets?agencies=Ministry+of+Education+(MOE)&resultId=d_9aba12b5527843afb0b2e8e4ed6ac6bd">Co-curricular activities (CCAs)</a>
+     * @return a map containing school name as the key and its list of {@link Cca} as value
+     */
 	private Map<String, List<Cca>> getSchoolCcas() {
 		String firstApiEndpoint = API_ENDPOINT + CCAS_DATASET_ID;
 		List<CcaRecord> ccaRecords = getAllApiRecords(firstApiEndpoint, CcaRecord.class);
@@ -133,6 +155,10 @@ public class ApiSchoolRepositoryImpl implements ApiSchoolRepository {
 		return ccaMap;
 	}
 
+    /**
+     * Get all schools' MOE programmes from <a href="https://data.gov.sg/datasets?agencies=Ministry+of+Education+(MOE)&resultId=d_b0697d22a7837a4eddf72efb66a36fc2">MOE Programmes</a>
+     * @return a map containing school name as the key and its list of programmes as value
+     */
     private Map<String, List<String>> getSchoolProgrammes() {
         String firstApiEndpoint = API_ENDPOINT + MOE_PROGRAMMES_DATASET_ID;
         List<ProgrammeRecord> programmeRecords = getAllApiRecords(firstApiEndpoint, ProgrammeRecord.class);

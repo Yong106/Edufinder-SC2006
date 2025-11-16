@@ -7,6 +7,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the MOE Programme data record contained within a response from the
+ * <a href="https://data.gov.sg/datasets?agencies=Ministry+of+Education+(MOE)&resultId=d_b0697d22a7837a4eddf72efb66a36fc2">data.gov.sg</a> API.
+ *
+ * @see ApiRecord
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder

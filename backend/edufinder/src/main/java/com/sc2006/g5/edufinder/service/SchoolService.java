@@ -25,7 +25,7 @@ public interface SchoolService {
      * @param schoolId id of the school
      * @param editSchoolCutOffPointRequest request object containing data required to edit cut-off point
      *
-     * @throws com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException if school with `schoolId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException if school with {@code schoolId} is not found
      * @throws com.sc2006.g5.edufinder.exception.school.CutOffPointException if minimum cut-off point larger than maximum cut-off point
      *
      * @see EditSchoolCutOffPointRequest

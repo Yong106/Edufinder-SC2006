@@ -20,6 +20,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * A custom filter class that extends {@code OncePerRequestFilter} to enforce authentication.
+ * <p>
+ * If request contains cookie with valid jwt token,
+ * {@code SecurityContextHolder} will be set to {@code CustomUserDetails}.
+ * Otherwise, request remains unauthenticated.
+ *
+ * @see com.sc2006.g5.edufinder.model.user.CustomUserDetails
+ */
 @Component
 @RequiredArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
@@ -66,7 +75,7 @@ public class AuthFilter extends OncePerRequestFilter {
             var userDetails = userDetailsService.loadUserById(userId);
 
             var authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
+                userDetails, null, userDetails.getAuthorities()
             );
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

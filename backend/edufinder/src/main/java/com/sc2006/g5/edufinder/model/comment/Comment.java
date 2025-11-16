@@ -25,6 +25,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a user comment associated with a school.
+ */
 @Entity
 @Table(name = "comments")
 @Data

@@ -8,6 +8,13 @@ import com.sc2006.g5.edufinder.config.YesNoBooleanDeserializer;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the school general information data record contained within a response from the
+ * <a href="https://data.gov.sg/datasets?agencies=Ministry+of+Education+(MOE)&resultId=d_688b934f82c1059ed0a6993d2a829089">data.gov.sg</a> API.
+ * <p>
+ *
+ * @see ApiRecord
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder

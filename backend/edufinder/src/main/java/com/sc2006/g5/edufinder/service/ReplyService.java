@@ -19,8 +19,8 @@ public interface ReplyService {
      *
      * @return a response object containing the created reply
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
-     * @throws com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException if comment with `commentId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
+     * @throws com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException if comment with {@code commentId} is not found
      *
      * @see CreateReplyRequest
      * @see ReplyResponse

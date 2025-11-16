@@ -17,6 +17,9 @@ import com.sc2006.g5.edufinder.dto.request.LoginRequest;
 import com.sc2006.g5.edufinder.dto.request.SignupRequest;
 import com.sc2006.g5.edufinder.service.AuthService;
 
+/**
+ * Handle authentication-related endpoints.
+ */
 @RestController
 @RequestMapping("api/auth")
 @RequiredArgsConstructor
@@ -56,6 +59,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
+        // Replace auth cookie with expired cookie
         ResponseCookie cookie = createCookie(null, 0);
 
         return ResponseEntity.noContent()
@@ -63,6 +67,14 @@ public class AuthController {
             .build();
     }
 
+    /**
+     * Helper function to generates authentication {@code ResponseCookie}.
+     * Cookie is HTTP-only and secure.
+     *
+     * @param token the token in include in cookie
+     * @param maxAge the age of cookie
+     * @return a {@code ResponseCookie} containing the authentication token
+     */
     private ResponseCookie createCookie(String token, long maxAge) {
          return ResponseCookie.from(cookieName, token)
                 .httpOnly(true)

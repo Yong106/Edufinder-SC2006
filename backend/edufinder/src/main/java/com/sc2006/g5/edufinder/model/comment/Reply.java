@@ -20,6 +20,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a user reply associated with a comment.
+ */
 @Entity
 @Table(name = "replies")
 @Builder

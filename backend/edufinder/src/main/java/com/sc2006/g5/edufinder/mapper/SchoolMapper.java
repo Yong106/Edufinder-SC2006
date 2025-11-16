@@ -12,8 +12,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Mapper for school-related model.
+ * <p>
+ * Provides method to map to {@link SchoolResponse} DTOs and {@link ApiSchool} entity.
+ */
 @Component
 public class SchoolMapper {
+
+    /**
+     * Converts {@link ApiSchool} and {@link DbSchool} into a {@link SchoolResponse}.
+     *
+     * @param apiSchool the {@code ApiSchool} to map
+     * @param dbSchool the {@code DbSchool} to map
+     *
+     * @return the mapped {@code SchoolResponse}
+     *
+     * @see ApiSchool
+     * @see DbSchool
+     * @see SchoolResponse
+     */
     public SchoolResponse toSchoolResponse(ApiSchool apiSchool, DbSchool dbSchool){
         return SchoolResponse.builder()
             .id(dbSchool.getId())
@@ -46,6 +64,20 @@ public class SchoolMapper {
             .build();
     }
 
+    /**
+     * Converts a list of {@link SchoolRecord} into list of {@link ApiSchool}.
+     *
+     * @param schoolRecords the list of {@code SchoolRecord} to map
+     * @param subjectMap the map containing school name as the key and its list of subjects as value
+     * @param ccaMap the map containing school name as the key and its list of {@code Cca} as value
+     * @param programmeMap the map containing school name as the key and its list of programme as value
+     *
+     * @return a {@code List} containing the mapped {@code ApiSchool}
+     *
+     * @see ApiSchool
+     * @see SchoolRecord
+     * @see Cca
+     */
     public List<ApiSchool> toApiSchools(
             List<SchoolRecord> schoolRecords,
             Map<String, List<String>> subjectMap,

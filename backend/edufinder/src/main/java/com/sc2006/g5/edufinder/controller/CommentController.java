@@ -20,6 +20,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Handle comment-related endpoints.
+ */
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor

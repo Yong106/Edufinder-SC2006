@@ -6,6 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Represents the response payload for saved schools returned by the API.
+ * <p>
+ * Contains list of school id.
+ */
 @Builder
 @Data
 @AllArgsConstructor

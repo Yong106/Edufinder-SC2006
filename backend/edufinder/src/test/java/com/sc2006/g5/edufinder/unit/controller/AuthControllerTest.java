@@ -184,15 +184,41 @@ public class AuthControllerTest {
                 .andExpect(status().isBadRequest());
 
             mockMvc.perform(mockRawRequest("""
-                {"username": "1"}
+                {"username": "valid_username"}
             """)).andExpect(status().isBadRequest());
 
             mockMvc.perform(mockRawRequest("""
-                {"password": "1"}
+                {"password": "AbCd123@"}
             """)).andExpect(status().isBadRequest());
 
             verify(authService, never()).signup(any());
             verify(userService, never()).getUserByUsername(any());
+        }
+
+        @Test
+        @DisplayName("should return 400 when invalid password")
+        void shouldReturn400WhenInvalidUsername() throws Exception {
+            String shortUsername = "user1";
+            String longUsername = "user12341234123";
+
+            mockMvc.perform(mockRequest(shortUsername, CORRECT_PASSWORD))
+                    .andExpect(status().isBadRequest());
+
+            mockMvc.perform(mockRequest(longUsername, CORRECT_PASSWORD))
+                    .andExpect(status().isBadRequest());
+
+            verify(authService, never()).signup(any());
+
+            String validUsername1 = "user12";
+            String validUsername2 = "user1234123412";
+
+            mockMvc.perform(mockRequest(validUsername1, CORRECT_PASSWORD))
+                .andExpect(status().isOk());
+
+            mockMvc.perform(mockRequest(validUsername2, CORRECT_PASSWORD))
+                .andExpect(status().isOk());
+
+            verify(authService, times(2)).signup(any());
         }
 
         @Test

@@ -16,8 +16,8 @@ public interface VoteService {
      * @param commentId id of the comment
      * @param setVoteRequest request object containing data needed to set vote.
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with`userId` is not found
-     * @throws com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException if comment with `commentId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
+     * @throws com.sc2006.g5.edufinder.exception.comment.CommentNotFoundException if comment with {@code commentId} is not found
      */
     void setVote(Long userId, Long commentId, SetVoteRequest setVoteRequest);
 }

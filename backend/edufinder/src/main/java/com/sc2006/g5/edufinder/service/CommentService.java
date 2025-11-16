@@ -18,8 +18,8 @@ public interface CommentService {
      * @param schoolId id of the school
      * @return a response object containing all comments of the school and related data
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
-     * @throws com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException if school with `schoolId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
+     * @throws com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException if school with {@code schoolId} is not found
      *
      * @see CommentsResponse
      */
@@ -34,8 +34,8 @@ public interface CommentService {
      *
      * @return a response object containing the created comment and related data
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
-     * @throws com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException if school with `schoolId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
+     * @throws com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException if school with {@code schoolId} is not found
      *
      * @see CreateCommentRequest
      * @see CommentResponse

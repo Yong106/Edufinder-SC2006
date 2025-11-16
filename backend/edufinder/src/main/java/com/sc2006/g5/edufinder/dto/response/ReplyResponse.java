@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Represents the response payload for a reply returned by the API.
+ */
 @Data
 @Builder
 public class ReplyResponse {

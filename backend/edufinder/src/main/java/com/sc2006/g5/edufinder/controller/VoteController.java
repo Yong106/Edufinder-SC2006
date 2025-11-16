@@ -16,6 +16,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Handle vote-related endpoints.
+ */
 @RestController
 @RequestMapping("api/comments/{commentId}/votes")
 @RequiredArgsConstructor

@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Contains data needed to manage saved school.
+ */
 @Data
 @Builder
 @NoArgsConstructor

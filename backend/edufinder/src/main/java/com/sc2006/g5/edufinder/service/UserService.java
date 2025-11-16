@@ -19,7 +19,7 @@ public interface UserService {
      * @param username username of the user
      * @return a response object containing user information
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `username` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code username} is not found
      *
      * @see UserResponse
      */
@@ -33,7 +33,7 @@ public interface UserService {
      *
      * @return a response object containing edited user information
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
      *
      * @see EditUserRequest
      * @see UserResponse
@@ -48,7 +48,8 @@ public interface UserService {
      *
      * @return a response object containing edited user information
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.LastAdminException if user is the last admin and is demoting to user
      *
      * @see EditUserRoleRequest
      * @see UserResponse
@@ -61,7 +62,7 @@ public interface UserService {
      * @param userId id of the user
      * @return a response object containing id of all saved school.
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
      *
      * @see SavedSchoolResponse
      */
@@ -73,7 +74,7 @@ public interface UserService {
      * @param userId id of the user
      * @param savedSchoolRequest request object containing data required to add saved school
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
      * @throws com.sc2006.g5.edufinder.exception.school.SchoolNotFoundException if school to save is not found
      * @throws com.sc2006.g5.edufinder.exception.user.UserAlreadySaveSchoolException if user already save school
      *
@@ -87,7 +88,7 @@ public interface UserService {
      * @param userId id of the user
      * @param savedSchoolRequest request object containing data required to remove saved school
      *
-     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with `userId` is not found
+     * @throws com.sc2006.g5.edufinder.exception.user.UserNotFoundException if user with {@code userId} is not found
      * @throws com.sc2006.g5.edufinder.exception.user.UserNotSaveSchoolException if school is not saved by user
      *
      * @see SavedSchoolRequest

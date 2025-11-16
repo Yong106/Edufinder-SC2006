@@ -18,6 +18,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Handle reply-related endpoints.
+ */
 @RestController
 @RequestMapping("api")
 @RequiredArgsConstructor

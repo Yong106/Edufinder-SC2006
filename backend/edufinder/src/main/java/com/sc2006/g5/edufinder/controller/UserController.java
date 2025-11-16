@@ -17,6 +17,9 @@ import com.sc2006.g5.edufinder.service.UserService;
 
 import jakarta.validation.Valid;
 
+/**
+ * Handle user-related endpoints.
+ */
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor

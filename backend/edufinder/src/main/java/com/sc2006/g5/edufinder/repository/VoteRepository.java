@@ -6,6 +6,9 @@ import com.sc2006.g5.edufinder.model.comment.Vote;
 import com.sc2006.g5.edufinder.model.comment.VoteId;
 import com.sc2006.g5.edufinder.model.comment.VoteType;
 
+/**
+ * JPA Repository for {@link Vote}
+ */
 public interface VoteRepository extends JpaRepository<Vote, VoteId> {
     long countByIdCommentIdAndVoteType(Long commentId, VoteType voteType);
 }
