@@ -5,12 +5,38 @@ This document provides an overview of the project, setup instructions, and other
 ## Project Overview
 
 - **Project Name**: `edufinder`
-- **Frontend Domain**: [http://localhost:5173](http://localhost:5173)
 - **Backend Domain**: [http://localhost:8080](http://localhost:8080)
 - **Project Description**:
 
     This project was developed as part of the **2006-SCSH-90** group assignment. It provides a platform for searching educational institutions in Singapore, using data sourced from the official [data.gov.sg](https://data.gov.sg/)
-    datasets.
+    datasets. This repository only contains the backend code I developed for the project.
+
+---
+
+## Role & Contribution
+This was a **group academic project**. My contributions include:
+
+- Designing and implementing the **backend architecture**
+- Building **REST APIs** for frontend consumption
+- Implementing **authentication and authorization**
+- Handling **database schema, queries, and data processing**
+- Writing **unit tests** and backend documentation
+
+Frontend and UI were implemented by other team members.
+
+---
+
+## Technologies
+
+- **Language & Framework**: Java, Spring Boot
+- **Database**: MySQL
+- **Testing**: JUnit, Mockito
+- **Tools**: Maven, Git
+
+---
+
+## API Endpoints
+Full API documentation is in [API Reference](./docs/API_REFERENCE.md).
 
 ---
 
@@ -24,14 +50,6 @@ Ensure the following tools are installed and properly configured:
     Verify installation:
     ```bash
     git -v
-    ```
-
-- [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-
-    Verify installation:
-    ```bash
-    node -v
-    npm -v
     ```
   
 - [JDK 22](https://www.oracle.com/asean/java/technologies/downloads/)
@@ -53,8 +71,8 @@ Ensure the following tools are installed and properly configured:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/softwarelab3/2006-SCSH-90.git
-cd 2006-SCSH-90
+git https://github.com/Yong106/Edufinder-SC2006
+cd Edufinder-SC2006
 ```
 
 ---
@@ -147,9 +165,6 @@ chmod +x ./setup/dependencies/setup.sh
 cd backend/edufinder
 mvn clean install
 
-cd ../../frontend
-npm install
-
 cd ..
 ```
 
@@ -173,22 +188,11 @@ Replace `/path/to/java22` with the actual installation directory of JDK 22.
 
 Startup may take up to 2 minutes depending on your system and network.
 
-**Backend**
 ```bash
 cd backend/edufinder
 mvn spring-boot:run
 ```
-To stop the backend, press:
-```
-Ctrl + C
-```
-
-**Frontend**
-```bash
-cd frontend
-npm run dev
-```
-To stop the frontend, press:
+To stop, press:
 ```
 Ctrl + C
 ```
@@ -201,11 +205,9 @@ Ctrl + C
 ```
 2006-SCSH-90/
 ├── backend/               # Backend
-├── docs/                  # Other documentation, including analysis model and lab deliverables
-├── frontend/              # Frontend
+├── docs/                  # Other documentation
 ├── setup/                 # Setup script and database schema
 ├── .gitignore
-├── INDEX.md               # Index file to all lab deliverables
 └── README.md
 ```
 
@@ -241,16 +243,8 @@ Key documents include:
 
 - [API Reference](./docs/API_REFERENCE.md)
 - [Test Results](./docs/UnitTestResults.html)
-- [Lab Deliverables](docs/lab-deliverable)
-- [Analysis Models](./docs/analysis-model)
 - [JavaDoc](./docs/javadoc)
 
----
-
-## Contributors
-
-- **Lim Kiat Yang Ryan** (U2421937D)
-- **Peng Sizhe** (U2423895H)
-- **Tarun Ilangovan** (U2422251A)
-- **Yong Chee Seng** (U2420563K)
-- **Yu Wenhao** (U2421425F)
+## Notes
+- This repository is shared for **portfolio purposes** only.
+- All code is my own contribution to the project’s backend.

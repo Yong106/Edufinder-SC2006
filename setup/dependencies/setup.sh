@@ -13,16 +13,4 @@ fi
 
 cd ../..
 
-echo "=== Frontend Setup ==="
-cd frontend
-
-if command -v npm >/dev/null 2>&1; then
-    npm install
-else
-    echo "npm not installed. Install Node.js first."
-    exit 1
-fi
-
-cd ../..
-
 echo "=== Setup completed successfully ==="
